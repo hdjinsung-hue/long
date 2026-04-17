@@ -227,7 +227,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
 <body>
 
 <!-- 비밀번호 화면 -->
-<div id="pwScreen">
+<div id="pwScreen" style="display:none;">
   <div class="pw-box">
     <div class="pw-logo">🏆</div>
     <div class="pw-title">고객컨설팅 Master Ⅰ</div>
@@ -291,7 +291,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
       <div class="ps"><div class="psl">총 인원</div><div class="psv" id="hs-total">-</div></div>
       <div class="ps"><div class="psl">평균 달성률</div><div class="psv" id="hs-avg">-</div></div>
       <div class="ps"><div class="psl">5만원↑ 순증</div><div class="psv g" id="hs-over">-</div></div>
-      <div class="ps"><div class="psl">시상 대상</div><div class="psv gd" id="hs-elig">-</div></div>
+      <div class="ps"><div class="psl">순증 30만 이상</div><div class="psv gd" id="hs-elig">-</div></div>
       <div class="ps"><div class="psl">150% 지급</div><div class="psv g" id="hs-a5">-</div></div>
       <div class="ps"><div class="psl">120% 지급</div><div class="psv o" id="hs-a4">-</div></div>
     </div>
@@ -428,6 +428,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
     <div style="padding:18px;">
       <div id="perfPopupBody" style="font-size:14px;line-height:2;color:#0a2050;"></div>
       <div id="perfPopupIpum" style="margin-top:12px;padding:12px;border-radius:10px;text-align:center;font-size:15px;font-weight:700;"></div>
+      <div id="perfPopupCheer" style="margin-top:10px;padding:10px 12px;background:linear-gradient(135deg,#f0f8ff,#e8f4ff);border-radius:9px;border-left:4px solid #4a90d9;font-size:12px;font-weight:600;color:#1a3a6b;line-height:1.6;text-align:center;"></div>
     </div>
     <div style="padding:0 18px 16px;text-align:right;">
       <button onclick="closePerfPopup()" style="padding:7px 20px;background:#0d2554;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">닫기</button>
@@ -452,7 +453,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
       <div class="ar"><span class="al">평균 달성률</span><span class="av" id="adm-avg">-</span></div>
     </div>
     <div class="ac"><h3>🏆 시상 현황</h3>
-      <div class="ar"><span class="al">시상 대상(30만↑)</span><span class="av gn" id="adm-elig">-</span></div>
+      <div class="ar"><span class="al">순증 30만 이상(30만↑)</span><span class="av gn" id="adm-elig">-</span></div>
       <div class="ar"><span class="al">150% 지급</span><span class="av gn" id="adm-a5">-</span></div>
       <div class="ar"><span class="al">120% 지급</span><span class="av gn" id="adm-a4">-</span></div>
       <div class="ar"><span class="al">현금 시상</span><span class="av or" id="adm-a3">-</span></div>
@@ -626,6 +627,8 @@ const GROUPS = [
     {name:'김애덕', branch:'새광주지점',  base:419},
   ]},
 ];
+const CHEERS=["오늘도 최고의 하루를 만들어가고 계십니다!", "고객의 미래를 지키는 든든한 파트너!", "당신의 열정이 고객의 안심이 됩니다!", "한 걸음 한 걸음이 모여 큰 성과를 만듭니다!", "오늘의 노력이 내일의 결실로 돌아옵니다!", "고객과의 신뢰, 그것이 진정한 재산입니다!", "포기하지 않는 당신이 진짜 챔피언입니다!", "진심은 반드시 통합니다, 믿으세요!", "당신이 있어 고객이 행복합니다!", "매일 성장하는 당신을 응원합니다!", "고객의 웃음 뒤에는 당신의 노력이 있습니다!", "오늘도 멋지게 해내실 줄 알았습니다!", "당신의 진심이 고객의 마음을 움직입니다!", "작은 계약 하나하나가 큰 꿈을 이룹니다!", "지금 이 순간도 최선을 다하는 당신, 존경합니다!", "고객을 위한 당신의 헌신에 박수를 보냅니다!", "어제보다 오늘이 더 빛나는 당신입니다!", "당신의 열정은 팀 전체에 에너지를 줍니다!", "힘든 순간도 결국 성장의 발판이 됩니다!", "당신이 만드는 안심이 고객 가족을 지킵니다!", "오늘 뿌린 씨앗이 반드시 꽃을 피웁니다!", "당신의 미소가 고객의 결심을 바꿉니다!", "포기란 없는 당신의 사전, 아름답습니다!", "고객의 눈물을 닦아주는 진정한 파트너!", "오늘도 기적 같은 하루를 만들어가세요!", "당신이 상담한 고객은 정말 행운아입니다!", "끝까지 해내는 당신이 진정한 프로입니다!", "당신의 노력이 가족의 안전망이 됩니다!", "한 번의 상담이 평생의 감사가 됩니다!", "오늘도 당신답게 멋지게 해내세요!", "고객의 믿음이 당신의 가장 큰 보상입니다!", "당신의 열정은 그 누구도 따라올 수 없습니다!", "지금 이 순간 최선을 다하는 당신을 응원!", "힘내세요, 당신은 반드시 해낼 수 있습니다!", "당신의 진심 어린 상담이 기적을 만듭니다!", "오늘도 고객을 위해 뛰어주셔서 감사합니다!", "당신의 열정이 팀의 자부심입니다!", "포기하지 않는 당신, 오늘도 화이팅!", "고객의 내일을 오늘 준비하는 당신, 대단합니다!", "당신이 흘린 땀방울이 빛나는 성과로 돌아옵니다!", "진심으로 상담하는 당신을 고객이 기억합니다!", "당신의 꿈을 향한 도전을 멈추지 마세요!", "오늘도 고객에게 희망을 주는 당신입니다!", "작은 친절이 큰 신뢰를 만듭니다!", "당신이 있어 이 팀이 더욱 강해집니다!", "고객의 감사 인사가 당신의 보람입니다!", "오늘의 도전이 내일의 전설이 됩니다!", "당신의 상담 하나가 가족을 지킵니다!", "포기 없이 달려온 당신, 정말 멋집니다!", "매 순간 최선을 다하는 당신을 존경합니다!", "당신의 전화 한 통이 고객의 인생을 바꿉니다!", "오늘도 기쁜 소식을 만들어가세요!", "당신의 성실함이 최고의 스펙입니다!", "고객 곁에 늘 함께하는 당신, 고맙습니다!", "열정은 재능을 이깁니다, 당신이 그 증거입니다!", "오늘도 당신의 빛나는 하루를 응원합니다!", "당신의 한 마디가 고객에게 용기가 됩니다!", "꾸준한 당신이 결국 승리합니다!", "고객의 미래를 설계하는 당신은 예술가입니다!", "오늘도 끝까지 포기하지 마세요!", "당신의 따뜻한 상담이 차가운 걱정을 녹입니다!", "성공은 포기하지 않는 자의 것입니다!", "당신이 만드는 안심이 세상을 따뜻하게 합니다!", "오늘도 당신은 누군가의 영웅입니다!", "고객의 신뢰를 쌓아가는 당신, 대단합니다!", "당신의 노력은 절대 배신하지 않습니다!", "오늘도 최고의 결과를 만들어낼 당신입니다!", "진심이 담긴 상담은 반드시 통합니다!", "당신의 열정이 팀에 활력을 불어넣습니다!", "고객의 미소가 당신의 에너지입니다!", "오늘도 멈추지 않는 당신을 응원합니다!", "당신이 있어 고객이 믿을 수 있습니다!", "한 발짝씩 나아가는 당신이 존경스럽습니다!", "오늘의 땀이 내일의 영광이 됩니다!", "당신의 상담은 고객 인생 최고의 투자입니다!", "포기를 모르는 당신, 오늘도 화이팅!", "당신이 뛰는 만큼 고객이 안심합니다!", "진심 어린 한 마디가 계약을 만듭니다!", "오늘도 빛나는 당신의 하루를 기원합니다!", "당신의 꾸준함이 결국 큰 산을 넘습니다!", "고객을 향한 당신의 진심, 반드시 통합니다!", "오늘도 최선을 다하는 당신이 자랑스럽습니다!", "당신의 성실함이 최고의 영업 비결입니다!", "고객의 미래를 함께 그려가는 당신, 멋집니다!", "오늘도 당신의 열정에 박수를 보냅니다!", "당신이 만드는 변화가 세상을 이롭게 합니다!", "포기하지 않는 한 실패는 없습니다!", "당신의 상담이 고객 가족의 버팀목입니다!", "오늘도 한 걸음 더 나아가는 당신입니다!", "당신의 진심이 고객의 마음을 열었습니다!", "힘든 하루도 당신에겐 성장의 기회입니다!", "오늘도 고객과 함께 빛나는 당신입니다!", "당신의 노력이 팀 전체를 이끕니다!", "포기란 없는 당신의 사전을 본받겠습니다!", "오늘도 고객을 위해 달려주셔서 감사합니다!", "당신의 열정은 어떤 역경도 이깁니다!", "고객의 고민을 내 일처럼 여기는 당신!", "오늘도 새로운 가능성을 열어가는 당신!", "당신의 상담 한 번이 가족을 지킵니다!", "꾸준함이 당신의 가장 큰 무기입니다!", "오늘도 당신의 눈부신 활약을 응원합니다!", "진심을 다하는 당신, 고객이 알아봅니다!", "당신의 발걸음이 고객의 안심이 됩니다!", "오늘도 최고의 상담사 당신을 응원합니다!", "당신이 있어 팀이 든든합니다!", "고객의 눈물을 미소로 바꾸는 당신입니다!", "오늘도 포기 없이 전진하는 당신을 응원!", "당신의 열정이 고객의 믿음을 만듭니다!", "힘내세요, 오늘도 당신은 해낼 수 있습니다!", "당신의 진심 어린 한 마디가 기적을 씁니다!", "오늘도 당신은 누군가의 든든한 파트너!", "고객을 위해 뛰는 당신, 진정한 프로입니다!", "당신의 열정 앞에 불가능은 없습니다!", "오늘도 빛나는 성과를 만들어내세요!", "당신이 상담한 고객은 행복한 선택을 했습니다!", "매일 성장하는 당신이 팀의 자랑입니다!", "오늘도 당신의 노력이 결실을 맺습니다!", "고객의 신뢰를 얻는 것, 당신이 최고입니다!", "포기를 모르는 당신의 정신이 팀을 이끕니다!", "오늘도 고객과 함께 성장하는 당신입니다!", "당신의 상담은 고객에게 최고의 선물입니다!", "오늘도 당신의 진심이 고객을 움직입니다!", "힘든 시간도 결국 당신을 더 강하게 만듭니다!", "당신이 있어 고객이 안심할 수 있습니다!", "오늘도 최선을 다하는 당신, 정말 대단합니다!", "고객의 미래를 오늘 지키는 당신입니다!", "당신의 열정이 이 팀의 원동력입니다!", "오늘도 당신의 빛나는 활약을 기대합니다!", "진심은 결코 배신하지 않습니다!", "당신의 상담이 고객의 인생을 바꿉니다!", "오늘도 새로운 기적을 만들어가는 당신!", "고객을 향한 당신의 사랑이 느껴집니다!", "당신의 꾸준함이 반드시 빛을 발합니다!", "오늘도 당신의 노력에 감사합니다!", "힘내세요, 당신 뒤에 팀이 있습니다!", "당신의 한 통의 전화가 가족을 지킵니다!", "오늘도 최고의 하루를 만들어가세요!", "당신의 열정은 고객에게 희망이 됩니다!", "포기 없이 달리는 당신, 반드시 승리합니다!", "오늘도 당신의 진심을 고객이 느낍니다!", "당신이 만드는 안심이 가정을 지킵니다!", "오늘도 한 발짝 더 나아가는 당신입니다!", "고객의 믿음은 당신의 진심에서 시작됩니다!", "오늘도 당신은 최고의 파트너입니다!", "당신의 노력이 팀을 빛나게 합니다!", "힘든 길을 묵묵히 걷는 당신, 존경합니다!", "오늘도 고객에게 최선을 다하는 당신!", "당신의 열정이 고객의 결정을 이끕니다!", "포기하지 않는 당신이 결국 이깁니다!", "오늘도 당신의 활약을 기대하겠습니다!", "고객의 행복이 당신의 성공입니다!", "당신의 상담 하나가 평생의 인연을 만듭니다!", "오늘도 빛나는 결과를 만들어내실 겁니다!", "당신의 진심이 고객의 마음 문을 엽니다!", "힘내세요, 오늘도 당신을 응원합니다!", "당신의 노력은 절대 헛되지 않습니다!", "오늘도 최고의 상담사로 빛나는 당신!", "고객의 안심을 위해 뛰는 당신, 고맙습니다!", "당신의 열정이 팀 전체를 이끕니다!", "오늘도 포기하지 않는 당신을 응원합니다!", "진심 어린 상담이 최고의 영업입니다!", "당신의 꿈을 향해 달려가세요, 응원합니다!", "오늘도 고객과 함께 빛나는 하루 되세요!", "당신이 있어 고객이 든든합니다!", "열정과 진심으로 무장한 당신, 최고입니다!", "오늘도 당신의 노력이 결실을 맺길 바랍니다!", "고객을 향한 당신의 헌신에 감사합니다!", "당신의 상담은 고객 가족의 든든한 버팀목!", "오늘도 포기 없이 전진하는 당신입니다!", "당신의 열정이 오늘도 기적을 만듭니다!", "힘든 순간도 당신에겐 성공의 발판입니다!", "오늘도 최선을 다하는 당신이 자랑스럽습니다!", "당신이 만드는 변화가 고객의 삶을 바꿉니다!", "오늘도 당신의 진심이 통하길 바랍니다!", "고객의 미소가 당신의 가장 큰 보상입니다!", "오늘도 새로운 가능성을 열어가는 당신!", "당신의 꾸준한 노력이 최고의 실적을 만듭니다!", "힘내세요, 당신은 반드시 해낼 수 있습니다!", "당신의 열정이 팀에 활력을 줍니다!", "오늘도 고객을 위해 최선을 다하는 당신!", "당신의 진심 어린 상담이 고객을 행복하게!", "포기하지 않는 한 불가능은 없습니다!", "오늘도 당신의 빛나는 활약을 기대합니다!", "당신이 있어 팀이 더욱 강해집니다!", "고객의 내일을 오늘 준비하는 당신!", "오늘도 한 걸음씩 나아가는 당신입니다!", "당신의 상담이 고객에게 가장 좋은 선택!", "힘든 하루도 당신에겐 성장의 기회입니다!", "오늘도 당신의 노력에 박수를 보냅니다!", "고객을 위해 뛰는 당신, 진정한 챔피언!", "당신의 열정 앞에 어떤 어려움도 없습니다!", "오늘도 최고의 하루를 만들어가세요!", "진심을 다하는 당신, 반드시 통합니다!", "당신의 꿈을 향한 열정, 멈추지 마세요!", "오늘도 고객과 함께 성장하는 당신입니다!", "당신이 만드는 안심이 가족을 지킵니다!", "오늘도 포기 없이 달리는 당신을 응원!", "고객의 신뢰를 얻는 당신이 진짜 프로!", "당신의 열정이 오늘도 새로운 기적을 씁니다!", "힘내세요, 오늘도 당신은 최고입니다!", "당신의 노력이 고객의 안심을 만듭니다!", "오늘도 빛나는 성과를 향해 달려가세요!", "당신이 있어 고객이 행복합니다!", "포기를 모르는 당신의 열정, 최고입니다!", "오늘도 당신의 진심이 결과를 만듭니다!", "고객을 위해 오늘도 뛰어주셔서 감사합니다!", "당신의 상담 한 번이 인생을 바꿉니다!", "오늘도 새로운 도전을 두려워하지 마세요!", "당신의 열정이 팀을 이끄는 원동력입니다!", "힘든 길도 당신과 함께라면 즐거운 여정!", "오늘도 고객에게 최고의 상담사 당신입니다!", "당신의 진심이 고객의 마음을 움직입니다!", "포기하지 않는 당신, 오늘도 파이팅!", "당신의 꾸준함이 결국 빛을 발합니다!", "오늘도 당신의 열정에 감사드립니다!", "고객의 안심을 위해 오늘도 뛰는 당신!", "당신이 만드는 신뢰가 최고의 자산입니다!", "오늘도 최선을 다하는 당신을 응원합니다!", "당신의 열정이 고객에게 희망을 줍니다!", "힘내세요, 당신 뒤에 팀이 있습니다!", "당신의 노력은 반드시 결실을 맺습니다!", "오늘도 고객과 함께 빛나는 당신입니다!", "진심을 다하면 반드시 통합니다!", "당신의 상담이 고객 가족의 버팀목입니다!", "오늘도 포기 없이 전진하는 당신!", "당신의 열정이 이 팀을 자랑스럽게 합니다!", "오늘도 한 발짝 더 나아가는 당신을 응원!", "고객의 미래를 지키는 당신, 존경합니다!", "당신이 있어 이 팀이 더욱 빛납니다!", "오늘도 당신의 진심이 기적을 만듭니다!", "힘든 순간도 당신을 더 강하게 만듭니다!", "당신의 열정은 그 무엇도 막을 수 없습니다!", "오늘도 최고의 상담으로 고객을 만나세요!", "당신이 흘린 땀방울이 성과로 돌아옵니다!", "포기하지 않는 한 당신은 반드시 성공합니다!", "오늘도 고객을 위해 최선을 다하는 당신!", "당신의 상담이 고객에게 가장 큰 선물!", "힘내세요, 오늘도 당신을 믿습니다!", "당신의 꾸준한 노력이 팀을 이끕니다!", "오늘도 빛나는 당신의 하루를 응원합니다!", "당신의 진심이 담긴 상담, 고객이 느낍니다!", "오늘도 새로운 기적을 써 내려가는 당신!", "고객의 행복이 당신의 성공입니다!", "당신의 열정이 오늘도 최고의 결과를 냅니다!", "힘든 길도 결국 당신을 성장시킵니다!", "오늘도 당신은 최고의 파트너입니다!", "당신이 만드는 안심이 세상을 따뜻하게!", "포기 없이 달리는 당신, 반드시 이깁니다!", "오늘도 당신의 노력이 고객을 행복하게!", "당신의 열정이 팀 전체의 자부심입니다!", "고객을 향한 당신의 진심, 오늘도 빛납니다!", "오늘도 최선을 다하는 당신이 멋집니다!", "당신의 상담 하나가 평생의 감사가 됩니다!", "힘내세요, 당신은 오늘도 해낼 수 있습니다!", "당신의 열정이 불가능을 가능으로 만듭니다!", "오늘도 고객과 함께 성장하는 당신입니다!", "당신이 있어 고객이 든든합니다!", "진심 어린 노력은 반드시 빛을 발합니다!", "오늘도 당신의 빛나는 활약을 기대합니다!", "당신의 꿈을 향해 오늘도 달려가세요!", "고객의 믿음이 당신의 가장 큰 자산입니다!", "오늘도 포기하지 않는 당신을 응원합니다!", "당신의 열정이 고객의 결심을 이끕니다!", "힘든 하루도 당신에겐 값진 경험입니다!", "오늘도 최고의 하루를 만들어가는 당신!", "당신의 진심이 고객의 마음을 사로잡습니다!", "포기를 모르는 당신, 진정한 승자입니다!", "오늘도 고객을 위해 뛰는 당신, 고맙습니다!", "당신의 노력이 팀에 희망을 줍니다!", "오늘도 새로운 가능성을 열어가세요!", "당신의 상담이 고객의 인생을 바꿉니다!", "힘내세요, 오늘도 당신을 응원합니다!", "당신의 열정이 이 팀을 이끄는 힘입니다!", "오늘도 최선을 다하는 당신이 자랑스럽습니다!", "고객의 안심을 만드는 당신, 최고입니다!"];
+function getRandomCheer(){return CHEERS[Math.floor(Math.random()*CHEERS.length)];}
 const Nf=v=>Math.round(v).toLocaleString();
 const RB=r=>{if(!r)return'<span style="color:#ccc;font-size:9px;">-</span>';const c=r===1?'r1':r===2?'r2':r===3?'r3':'rt';return`<span class="rb ${c}">${r}</span>`;};
 const mc=k=>k===0?'m1':k===1?'m2':k===2?'m3':'';
@@ -852,6 +855,9 @@ function openPerfPopup(i){
     ipumEl.style.cssText='margin-top:12px;padding:12px;border-radius:10px;text-align:center;font-weight:700;background:#f5f5f5;border:2px solid #ccc;color:#556688;';
     ipumEl.innerHTML='✨ 인생의 품격<br><span style="font-size:16px;">'+name+' 사장님, 인품을 챙겨주세요</span>';
   }
+  // 응원 문구 랜덤 표시
+  var cheerEl=document.getElementById('perfPopupCheer');
+  if(cheerEl)cheerEl.textContent=getRandomCheer();
   document.getElementById('perfPopup').style.display='flex';
 }
 function closePerfPopup(){document.getElementById('perfPopup').style.display='none';}
@@ -915,14 +921,14 @@ function renderAll(){
     :'<div style="padding:14px 0;text-align:center;color:#aaa;font-size:10px;">관리자에서 입력하세요</div>';
   renderHomeGrp();
   // KPI
-  document.getElementById('kpi-perf').innerHTML=`<div class="kpi sky"><div class="kl">총 인원</div><div class="kv">${total}명</div></div><div class="kpi g"><div class="kl">5만원↑ 순증자</div><div class="kv" style="color:#005030">${over5}명</div></div><div class="kpi gd"><div class="kl">시상 대상(30만↑)</div><div class="kv" style="color:#7a5000">${elig.length}명</div></div><div class="kpi"><div class="kl">평균 달성률</div><div class="kv">${avgR.toFixed(1)}%</div></div>`;
+  document.getElementById('kpi-perf').innerHTML=`<div class="kpi sky"><div class="kl">총 인원</div><div class="kv">${total}명</div></div><div class="kpi g"><div class="kl">5만원↑ 순증자</div><div class="kv" style="color:#005030">${over5}명</div></div><div class="kpi gd"><div class="kl">순증 30만 이상</div><div class="kv" style="color:#7a5000">${elig.length}명</div></div><div class="kpi"><div class="kl">평균 달성률</div><div class="kv">${avgR.toFixed(1)}%</div></div>`;
   // 실적 테이블
   document.getElementById('mainTbody').innerHTML=[...byAmt].map(({i,d},rank)=>{
     const nc=d[10]>=120?'c-over':d[10]>=100?'c-good':d[10]>=80?'c-mid':'c-low';
     const netc=d[11]>0?'net-p':d[11]<0?'net-m':'';
     const awd=d[11]>=500000?'<span class="bdg b-g">150%지급</span>':d[11]>=300000?'<span class="bdg b-g">120%지급</span>':d[11]>=200000?'<span class="bdg b-gr">20만원</span>':d[11]>=100000?'<span class="bdg b-gr">10만원</span>':d[11]>=50000?'<span class="bdg b-gr">5만원</span>':'<span class="b-no">-</span>';
     const ipRk=ipRank[i]?RB(ipRank[i]):'<span style="color:#ccc;font-size:9px;">-</span>';
-    return `<tr><td>${RB(rank+1)}</td><td class="td-name" style="cursor:pointer;" onclick="openPerfPopup(${i})">${d[5]}</td><td class="td-r col-extra">${Nf(d[8])}</td><td class="td-r col-extra">${Nf(d[9])}</td><td class="${nc}">${d[10].toFixed(1)}%</td><td class="td-r ${netc}">${d[11]>=0?'+':''}${Nf(d[11])}</td><td class="col-extra">${awd}</td><td class="col-extra">${RB(rRank[i])}</td><td class="col-extra">${RB(aRank[i])}</td><td class="col-extra">${ipRk}</td></tr>`;
+    return `<tr style="cursor:pointer;" onclick="openPerfPopup(${i})"><td>${RB(rank+1)}</td><td class="td-name">${d[5]}</td><td class="td-r col-extra">${Nf(d[8])}</td><td class="td-r col-extra">${Nf(d[9])}</td><td class="${nc}">${d[10].toFixed(1)}%</td><td class="td-r ${netc}">${d[11]>=0?'+':''}${Nf(d[11])}</td><td class="col-extra">${awd}</td><td class="col-extra">${RB(rRank[i])}</td><td class="col-extra">${RB(aRank[i])}</td><td class="col-extra">${ipRk}</td></tr>`;
   }).join('');
   // 포디움
   function makePod(top3,valFn,subFn,prizeFn){
