@@ -96,7 +96,7 @@ html{background:linear-gradient(160deg,#0d2554,#1a6090,#0d2554) fixed;}
 .stitle{font-size:13px;font-weight:700;color:#0a2050;padding-bottom:8px;border-bottom:2px solid #b8d4ee;margin-bottom:10px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
 .ssub{font-size:10px;font-weight:400;color:var(--muted);}
 .sbtn{margin-left:auto;padding:3px 9px;background:#ddeeff;border:1px solid #99aacc;border-radius:9px;font-size:10px;font-weight:700;color:#0a2050;cursor:pointer;font-family:inherit;}
-.crit{background:#fff0f0;border:2px solid #cc0000;border-radius:7px;padding:7px 12px;margin-bottom:10px;font-size:11px;font-weight:700;color:#cc0000;}
+.crit{background:#fff0f0;border:2px solid #cc0000;border-radius:7px;padding:5px 10px;margin-bottom:8px;font-size:10px;font-weight:700;color:#cc0000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 /* 시상바 */
 .abar{display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap;}
 .ab{flex:1;min-width:70px;border-radius:9px;padding:9px 7px;text-align:center;border:2px solid transparent;display:flex;flex-direction:column;align-items:center;gap:2px;}
@@ -1000,7 +1000,7 @@ function renderAll(){
     :'<div style="padding:14px 0;text-align:center;color:#aaa;font-size:10px;">관리자에서 입력하세요</div>';
   renderHomeGrp();
   // KPI
-  document.getElementById('kpi-perf').innerHTML=`<div class="kpi sky"><div class="kl">총 인원</div><div class="kv">${total}명</div></div><div class="kpi g"><div class="kl">5만원↑ 순증자</div><div class="kv" style="color:#005030">${over5}명</div></div><div class="kpi gd"><div class="kl">30만원↑ 순증자</div><div class="kv" style="color:#7a5000">${elig.length}명</div></div><div class="kpi"><div class="kl">평균 달성률</div><div class="kv">${avgR.toFixed(1)}%</div></div>`;
+  document.getElementById('kpi-perf').innerHTML=`<div class="kpi sky"><div class="kl">총 인원</div><div class="kv">${total}명</div></div><div class="kpi g"><div class="kl">5만원↑ 순증자</div><div class="kv" style="color:#005030">${over5}명</div></div><div class="kpi gd"><div class="kl">30만원↑ 순증</div><div class="kv" style="color:#7a5000">${elig.length}명</div></div><div class="kpi"><div class="kl">평균 달성률</div><div class="kv">${avgR.toFixed(1)}%</div></div>`;
   // 실적 테이블
   document.getElementById('mainTbody').innerHTML=[...byAmt].map(({i,d},rank)=>{
     const nc=d[10]>=120?'c-over':d[10]>=100?'c-good':d[10]>=80?'c-mid':'c-low';
@@ -1291,7 +1291,7 @@ function renderAll(){
     :'<div style="padding:14px 0;text-align:center;color:#aaa;font-size:10px;">관리자에서 입력하세요</div>';
   renderHomeGrp();
   // KPI
-  document.getElementById('kpi-perf').innerHTML=`<div class="kpi sky"><div class="kl">총 인원</div><div class="kv">${total}명</div></div><div class="kpi g"><div class="kl">5만원↑ 순증자</div><div class="kv" style="color:#005030">${over5}명</div></div><div class="kpi gd"><div class="kl">30만원↑ 순증자</div><div class="kv" style="color:#7a5000">${elig.length}명</div></div><div class="kpi"><div class="kl">평균 달성률</div><div class="kv">${avgR.toFixed(1)}%</div></div>`;
+  document.getElementById('kpi-perf').innerHTML=`<div class="kpi sky"><div class="kl">총 인원</div><div class="kv">${total}명</div></div><div class="kpi g"><div class="kl">5만원↑ 순증자</div><div class="kv" style="color:#005030">${over5}명</div></div><div class="kpi gd"><div class="kl">30만원↑ 순증</div><div class="kv" style="color:#7a5000">${elig.length}명</div></div><div class="kpi"><div class="kl">평균 달성률</div><div class="kv">${avgR.toFixed(1)}%</div></div>`;
   // 실적 테이블
   document.getElementById('mainTbody').innerHTML=[...byAmt].map(({i,d},rank)=>{
     const nc=d[10]>=120?'c-over':d[10]>=100?'c-good':d[10]>=80?'c-mid':'c-low';
