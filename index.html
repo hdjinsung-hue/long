@@ -773,7 +773,7 @@ function renderHomeGrp(){
   var lbl='<div style="text-align:right;font-size:10px;font-weight:700;color:#888;padding:2px 0 4px;border-bottom:1px solid rgba(0,0,0,.08);">달성률</div>';
   var rows=ranked.slice(0,3).map(function(r,k){
     var mN=r.members.map(function(m){return m.name;}).join('·');
-    return '<div style="display:grid;grid-template-columns:24px 1fr auto;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid rgba(0,0,0,.05);">'
+    return '<div style="display:flex;align-items:center;gap:7px;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.05);">'
       +'<span class="mn '+mc2[k]+'">'+(k+1)+'</span>'
       +'<div><div style="font-size:12px;font-weight:900;color:#0a2050;">'+r.id+'팀</div>'
       +'<div style="font-size:9px;color:#556688;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+mN+'</div></div>'
@@ -817,14 +817,14 @@ function renderAll(){
     if(d[11]<300000){aw='기준미충족';st='mb-r';}
     else if(dualIds.has(d[3])){aw='신장액시상 적용';st='mb-b';}
     else{const ek=rEffMap[d[3]];aw=ek!==undefined?rPrize(ek):'-';st='mb-g';}
-    return `<div style="display:grid;grid-template-columns:26px 1fr auto;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid rgba(0,0,0,.06);"><span class="mn ${mc(k)}">${k+1}</span><div style="min-width:0;"><div style="font-size:12px;font-weight:900;color:#0a2050;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${d[5]}&nbsp;<span style="font-size:11px;color:#0040b0;">${gr}%</span></div><div style="margin-top:1px;"><span class="mbadge ${st}" style="font-size:9px;padding:1px 5px;">${aw}</span></div></div></div>`;
+    return `<div style="display:flex;align-items:center;gap:7px;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.06);"><span class="mn ${mc(k)}">${k+1}</span><div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:900;color:#0a2050;">${d[5]}&nbsp;<span style="font-size:12px;font-weight:700;color:#0040b0;">${gr}%</span></div><div style="margin-top:2px;"><span class="mbadge ${st}" style="font-size:10px;">${aw}</span></div></div></div>`;
   }).join('');
   document.getElementById('home-amt').innerHTML=byAmt.slice(0,3).map(({d},k)=>{
     const aw=d[11]>=300000?aPrize(k):'기준미충족';const st=d[11]>=300000?'mb-g':'mb-r';
-    return `<div style="display:grid;grid-template-columns:26px 1fr auto;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid rgba(0,0,0,.06);"><span class="mn ${mc(k)}">${k+1}</span><div style="min-width:0;"><div style="font-size:12px;font-weight:900;color:#0a2050;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${d[5]}&nbsp;<span style="font-size:11px;color:#0040b0;">+${Nf(d[11])}원</span></div><div style="margin-top:1px;"><span class="mbadge ${st}" style="font-size:9px;padding:1px 5px;">${aw}</span></div></div></div>`;
+    return `<div style="display:flex;align-items:center;gap:7px;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.06);"><span class="mn ${mc(k)}">${k+1}</span><div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:900;color:#0a2050;">${d[5]}&nbsp;<span style="font-size:12px;font-weight:700;color:#0040b0;">+${Nf(d[11])}원</span></div><div style="margin-top:2px;"><span class="mbadge ${st}" style="font-size:10px;">${aw}</span></div></div></div>`;
   }).join('');
   document.getElementById('home-ipum').innerHTML=ipumTop.length>0
-    ?ipumTop.slice(0,3).map(({d},k)=>{const grade=['인품황제','인품제왕','인품왕'][k];return `<div style="display:grid;grid-template-columns:26px 1fr auto;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid rgba(0,0,0,.06);"><span class="mn ${mc(k)}">${k+1}</span><div style="min-width:0;"><div style="font-size:12px;font-weight:900;color:#0a2050;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${d[5]}&nbsp;<span style="font-size:10px;color:#334466;">${Nf(d[13])}원</span></div><div style="margin-top:1px;"><span class="mbadge mb-p" style="font-size:9px;padding:1px 5px;">${grade}</span></div></div></div>`;}).join('')
+    ?ipumTop.slice(0,3).map(({d},k)=>{const grade=['인품황제','인품제왕','인품왕'][k];return `<div style="display:flex;align-items:center;gap:7px;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.06);"><span class="mn ${mc(k)}">${k+1}</span><div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:900;color:#0a2050;">${d[5]}&nbsp;<span style="font-size:11px;font-weight:600;color:#334466;">${Nf(d[13])}원</span></div><div style="margin-top:2px;"><span class="mbadge mb-p" style="font-size:10px;">${grade}</span></div></div></div>`;}).join('')
     :'<div style="padding:14px 0;text-align:center;color:#aaa;font-size:10px;">관리자에서 입력하세요</div>';
   renderHomeGrp();
   // KPI
