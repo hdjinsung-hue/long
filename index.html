@@ -493,24 +493,12 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
 
 <!-- 팀별 상세 팝업 -->
 <div id="grpPopup" onclick="if(event.target===this)closeGrpPopup()">
-  <div style="background:#fff;border-radius:14px;width:92%;max-width:560px;max-height:85vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.25);">
+  <div style="background:#fff;border-radius:14px;width:96%;max-width:680px;max-height:90vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.25);">
     <div style="padding:14px 16px;display:flex;align-items:center;justify-content:space-between;background:#0d2554;border-radius:14px 14px 0 0;">
       <span id="grpPopupTitle" style="font-size:16px;font-weight:900;color:#fff;"></span>
       <button onclick="closeGrpPopup()" style="border:none;background:rgba(255,255,255,.2);border-radius:50%;width:28px;height:28px;font-size:16px;cursor:pointer;color:#fff;">✕</button>
     </div>
-    <div style="padding:14px 16px;">
-      <table style="width:100%;border-collapse:collapse;font-size:12px;">
-        <thead><tr style="background:#1a3a6b;color:#fff;">
-          <th style="padding:8px 6px;text-align:center;">성명</th>
-          <th style="padding:8px 6px;text-align:right;">기준(천원)</th>
-          <th style="padding:8px 6px;text-align:right;">현재(천원)</th>
-          <th style="padding:8px 6px;text-align:right;">순증(천원)</th>
-          <th style="padding:8px 6px;text-align:center;">달성률</th>
-          <th style="padding:8px 6px;text-align:center;">5만↑</th>
-        </tr></thead>
-        <tbody id="grpPopupBody"></tbody>
-      </table>
-    </div>
+    <div id="grpPopupBody" style="padding:0;"></div>
   </div>
 </div>
 
@@ -753,8 +741,31 @@ function saveGroupData(){const msg=document.getElementById('grpSaveMsg');if(msg)
 
 function openGrpDetail(gi){
   var g=GROUPS[gi];
-  document.getElementById('grpPopupTitle').textContent=g.id+'팀';
-  var rows='';
+  var base=g.members.map(function(m){return m.base;});
+  var cur=g.members.map(function(m){var f=D.find(function(d){return d[5]===m.name;});return f?Math.round(f[9]/1000):m.base;});
+  var bSum=base.reduce(function(s,v){return s+v;},0);
+  var cSum=cur.reduce(function(s,v){return s+v;},0);
+  var grpRate=bSum>0?(cSum-bSum)/bSum*100:0;
+  var achvRate=bSum>0?cSum/bSum*100:0;
+  var allOver5=g.members.every(function(m,mi){return cur[mi]-base[mi]>=50;});
+  var g2prize=grpRate>=25?'15만원':grpRate>=15?'7만원':grpRate>=5?'3만원':'해당없음';
+  var g2lv=grpRate>=25?'25%':grpRate>=15?'15%':grpRate>=5?'5%':'미달';
+  var nextTarget=0,nextPrize='';
+  if(grpRate<5){nextTarget=Math.ceil(bSum*0.05)-(cSum-bSum);if(nextTarget<0)nextTarget=0;nextPrize='5%신장 3만원';}
+  else if(grpRate<15){nextTarget=Math.ceil(bSum*0.15)-(cSum-bSum);if(nextTarget<0)nextTarget=0;nextPrize='15%신장 7만원';}
+  else if(grpRate<25){nextTarget=Math.ceil(bSum*0.25)-(cSum-bSum);if(nextTarget<0)nextTarget=0;nextPrize='25%신장 15만원';}
+  document.getElementById('grpPopupTitle').textContent=g.id+'팀  달성률 '+achvRate.toFixed(1)+'%';
+
+  // 테이블: 이름칸 좁게, 전체 너비 100%
+  var rows='<table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px;">'
+    +'<thead><tr style="background:#1a3a6b;color:#fff;">'
+    +'<th style="padding:6px 4px;text-align:left;width:60px;">성명</th>'
+    +'<th style="padding:6px 4px;text-align:right;width:55px;">기준</th>'
+    +'<th style="padding:6px 4px;text-align:right;width:55px;">현재</th>'
+    +'<th style="padding:6px 4px;text-align:right;width:60px;">순증</th>'
+    +'<th style="padding:6px 4px;text-align:center;width:55px;">달성률</th>'
+    +'<th style="padding:6px 4px;text-align:center;">5만↑</th>'
+    +'</tr></thead><tbody>';
   g.members.forEach(function(m,mi){
     var f=D.find(function(d){return d[5]===m.name;});
     var bc=m.base*1000,cc=f?f[9]:bc,net=cc-bc;
@@ -762,18 +773,357 @@ function openGrpDetail(gi){
     var nc=achv>=100?'#006030':achv>=80?'#1a6030':achv>=50?'#884400':'#880000';
     var netc=net>0?'#0040b0':'#880000';
     var bg=mi%2===0?'#fff':'#f5f8ff';
-    rows+='<tr style="border-bottom:1px solid #e8eef8;background:'+bg+';">'
-      +'<td style="padding:8px 6px;text-align:center;font-weight:700;color:#0a2050;">'+m.name+'</td>'
-      +'<td style="padding:8px 6px;text-align:right;">'+Math.round(bc/1000).toLocaleString()+'</td>'
-      +'<td style="padding:8px 6px;text-align:right;font-weight:700;">'+Math.round(cc/1000).toLocaleString()+'</td>'
-      +'<td style="padding:8px 6px;text-align:right;font-weight:700;color:'+netc+';">'+(net>=0?'+':'')+Math.round(net/1000).toLocaleString()+'</td>'
-      +'<td style="padding:8px 6px;text-align:center;font-weight:900;color:'+nc+';">'+achv.toFixed(1)+'%</td>'
-      +'<td style="padding:8px 6px;text-align:center;">'+(net>=50000?'<span style="color:#006030;font-weight:900;">✅</span>':'<span style="color:#cc0000;">✗</span>')+'</td>'
+    var netk=Math.round(net/1000);
+    var needk=50-Math.round(net/1000);
+    rows+='<tr style="background:'+bg+';border-bottom:1px solid #e8eef8;">'
+      +'<td style="padding:5px 4px;font-weight:700;color:#0a2050;white-space:nowrap;">'+m.name+'</td>'
+      +'<td style="padding:5px 4px;text-align:right;color:#556688;">'+m.base.toLocaleString()+'</td>'
+      +'<td style="padding:5px 4px;text-align:right;font-weight:700;">'+Math.round(cc/1000).toLocaleString()+'</td>'
+      +'<td style="padding:5px 4px;text-align:right;font-weight:700;color:'+netc+';">'+(netk>=0?'+':'')+netk.toLocaleString()+'</td>'
+      +'<td style="padding:5px 4px;text-align:center;font-weight:900;color:'+nc+';">'+achv.toFixed(1)+'%</td>'
+      +'<td style="padding:5px 4px;text-align:center;">'+(net>=50000?'<span style="color:#006030;font-weight:900;">✅</span>':'<span style="color:#cc5500;font-size:10px;">'+needk+'k↑</span>')+'</td>'
       +'</tr>';
   });
-  document.getElementById('grpPopupBody').innerHTML=rows;
+  rows+='</tbody></table>';
+
+  // 그룹시상1·2 — 테이블과 동일 너비, 동일 높이 맞춤
+  var g1c=allOver5?'#006030':'#cc5500';
+  var g1bg=allOver5?'#e8fff0':'#fffbe6';
+  var g1br=allOver5?'#1e7e3a':'#e0a800';
+  var g1html='<div style="flex:1;background:'+g1bg+';border:2px solid '+g1br+';border-radius:10px;padding:10px 12px;">'
+    +'<div style="font-size:13px;font-weight:900;color:'+g1c+';margin-bottom:6px;">💰 그룹시상1 '+(allOver5?'✅ 달성!':'')+'</div>';
+  if(allOver5){
+    g1html+='<div style="font-size:14px;color:#006030;font-weight:700;text-align:center;padding:8px 0;">🎉 인당 5만원 지급!</div>';
+  } else {
+    g.members.forEach(function(m,mi){
+      if(cur[mi]-base[mi]<50){
+        var need=50-(cur[mi]-base[mi]);
+        g1html+='<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px solid #f0e8cc;">'
+          +'<b>'+m.name+'</b><span style="color:#cc5500;font-weight:700;">+'+need.toLocaleString()+'k 필요</span></div>';
+      }
+    });
+    g1html+='<div style="font-size:16px;font-weight:900;color:#884400;margin-top:8px;text-align:center;padding:6px;background:#fff8e0;border-radius:7px;\">달성시 인당 5만원 지급</div>';
+  }
+  g1html+='</div>';
+
+  var g2html='<div style="flex:1;background:#f0f4ff;border:2px solid #4a90d9;border-radius:10px;padding:10px 12px;">'
+    +'<div style="font-size:13px;font-weight:900;color:#0a2050;margin-bottom:5px;">🎯 그룹시상2</div>'
+    +'<div style="font-size:13px;font-weight:700;color:'+(g2lv!=='미달'?'#006030':'#cc0000')+';margin-bottom:5px;">'
+    +'현재 '+grpRate.toFixed(1)+'%'+(g2lv!=='미달'?' ('+g2lv+' → '+g2prize+' 인당)':'')+'</div>';
+  if(nextPrize){
+    var pp=Math.ceil(nextTarget/g.members.length);
+    g2html+='<div style="font-size:12px;color:#1a5cb0;font-weight:700;margin-bottom:3px;">상위 목표: '+nextPrize+'</div>'
+      +'<div style="font-size:12px;color:#334466;">팀 <b>'+nextTarget.toLocaleString()+'k↑</b> 필요</div>'
+      +'<div style="font-size:11px;color:#556688;margin-top:2px;">1인당 약 <b>'+pp.toLocaleString()+'k</b></div>';
+  } else {
+    g2html+='<div style="font-size:13px;color:#006030;font-weight:700;text-align:center;padding:8px 0;">🎉 최고 등급!<br>인당 15만원</div>';
+  }
+  g2html+='</div>';
+
+  var tc=["함께라면 불가능은 없습니다!", "한 팀, 한 마음, 한 목표!", "우리가 함께할 때 진정한 강함이 나옵니다!", "혼자 가면 빠르고, 함께 가면 멀리 갑니다!", "팀의 힘이 곧 나의 힘입니다!", "서로를 믿을 때 기적이 일어납니다!", "함께 흘린 땀이 함께하는 성공을 만듭니다!", "우리 팀은 하나입니다!", "팀원의 성공이 곧 나의 성공입니다!", "힘을 합치면 무엇이든 이룰 수 있습니다!", "같은 방향으로 달리면 반드시 도착합니다!", "팀이 함께하면 어떤 목표도 두렵지 않습니다!", "서로 응원하는 팀이 가장 강한 팀입니다!", "우리의 단결이 최고의 무기입니다!", "함께이기에 더욱 빛납니다!", "팀원 한 명 한 명이 소중한 보물입니다!", "우리 팀의 열정이 고객을 감동시킵니다!", "함께 웃고 함께 성장하는 우리 팀!", "서로를 세워주는 팀이 최고입니다!", "우리는 함께 이 목표를 반드시 이룹니다!", "팀의 화합이 최고의 실적을 만듭니다!", "한 명이 넘어지면 함께 일으켜줍니다!", "우리 팀의 가능성은 무한합니다!", "함께라면 어떤 어려움도 이겨냅니다!", "팀워크가 꿈을 현실로 만듭니다!", "서로의 장점이 모여 완벽한 팀이 됩니다!", "우리 팀의 단합이 고객의 신뢰를 얻습니다!", "함께 달리면 목표가 더욱 가까워집니다!", "팀원을 믿고 나아가면 반드시 이깁니다!", "우리는 최고의 팀입니다!", "힘든 순간일수록 함께하는 힘이 빛납니다!", "팀의 응원이 개인의 한계를 뛰어넘게 합니다!", "우리 팀의 열정이 최고의 성과를 만듭니다!", "함께 흘린 땀방울이 빛나는 결과가 됩니다!", "서로 돕는 팀이 가장 멀리 갑니다!", "우리 팀의 화합이 고객을 행복하게 합니다!", "함께이기에 두렵지 않습니다!", "팀원의 성공을 함께 기뻐하는 우리입니다!", "우리의 단결이 불가능을 가능으로 만듭니다!", "함께 달성하는 목표가 가장 값집니다!", "팀의 힘을 믿으세요, 반드시 됩니다!", "서로를 이끌고 함께 성장하는 우리 팀!", "우리 팀은 오늘도 최선을 다합니다!", "함께 웃을 날을 위해 오늘도 달립니다!", "팀워크가 승리의 비결입니다!", "오늘도 함께 뛰어주는 팀원들, 감사합니다!", "우리의 약속이 팀의 결과를 만듭니다!", "서로에게 힘이 되는 우리 팀입니다!", "함께 만들어가는 성공이 가장 아름답습니다!", "우리 팀의 끈끈함이 최고의 자산입니다!", "팀원을 응원하면 나도 힘이 납니다!", "함께라면 오르지 못할 산이 없습니다!", "우리 팀의 하나된 마음이 기적을 만듭니다!", "서로의 부족함을 채워주는 우리 팀!", "오늘도 함께하는 우리, 정말 자랑스럽습니다!", "팀의 단합이 모든 역경을 이깁니다!", "우리가 함께이기에 두려울 게 없습니다!", "서로 믿고 달리면 반드시 이깁니다!", "함께 세운 목표는 반드시 이루어집니다!", "우리 팀의 화합이 최고의 결과를 냅니다!", "팀원 한 명의 미소가 팀 전체를 밝힙니다!", "오늘도 우리 팀의 열정이 빛납니다!", "함께라는 것이 우리의 가장 큰 힘입니다!", "서로의 땀을 알아주는 우리 팀입니다!", "우리 팀의 우정이 성과를 만듭니다!", "힘든 길도 함께라면 즐거운 여정입니다!", "팀원을 위해 오늘도 최선을 다합니다!", "우리가 하나가 될 때 기적이 일어납니다!", "함께 흘리는 땀이 우리를 더 강하게 합니다!", "서로 응원하고 격려하는 우리 팀, 최고!", "우리 팀의 신뢰가 최고의 성과입니다!", "오늘도 팀원들과 함께 빛나는 하루 되세요!", "함께 만드는 꿈은 반드시 현실이 됩니다!", "팀의 힘으로 어떤 목표도 이룰 수 있습니다!", "서로를 아끼는 팀이 가장 강한 팀입니다!", "우리 팀이 함께라면 못할 일이 없습니다!", "함께 달려온 시간이 우리를 하나로 만듭니다!", "팀원의 열정이 나의 에너지가 됩니다!", "오늘도 함께 목표를 향해 달립시다!", "우리 팀의 화합이 고객을 감동시킵니다!", "함께라면 더 빨리, 더 멀리 갈 수 있습니다!", "팀의 단합이 모든 것을 가능하게 합니다!", "서로를 믿는 팀이 결국 이깁니다!", "우리 팀의 도전이 오늘도 계속됩니다!", "함께 세운 꿈은 함께 이루어집니다!", "팀원의 응원이 나를 더 강하게 만듭니다!", "오늘도 우리 팀이 함께 빛납니다!", "서로의 성공이 모여 팀의 승리가 됩니다!", "우리 팀의 끈끈함이 불가능을 이깁니다!", "함께하는 팀워크가 최고의 전략입니다!", "팀의 결속이 최고의 성과를 만듭니다!", "우리 팀은 오늘도 함께 성장합니다!", "서로 돕고 나누는 우리 팀, 자랑스럽습니다!", "함께 이뤄낸 성과가 가장 빛납니다!", "팀원 모두의 노력이 하나의 성공을 만듭니다!", "오늘도 함께 뛰어주는 우리 팀, 고맙습니다!", "우리의 단결이 승리의 씨앗입니다!", "서로를 지지하는 팀이 가장 멀리 갑니다!", "함께라는 단어가 우리의 힘입니다!", "팀의 화합 앞에 어떤 장벽도 없습니다!", "우리 팀의 열정이 오늘도 불타오릅니다!", "서로의 장점을 믿고 함께 나아갑시다!", "함께 달성하는 기쁨이 가장 큽니다!", "팀원 모두가 주인공인 우리 팀!", "우리가 함께하는 한 실패는 없습니다!", "오늘도 팀워크로 최고의 하루를 만듭시다!", "서로에게 힘이 되어주는 우리, 최고입니다!", "함께 흘린 땀이 빛나는 보람이 됩니다!", "팀의 단합이 고객의 마음을 움직입니다!", "우리 팀의 신뢰가 기적을 만들어냅니다!", "함께라면 어떤 목표도 이룰 수 있습니다!", "팀원의 미소가 오늘의 에너지입니다!", "서로 응원하는 우리 팀이 가장 강합니다!", "우리의 화합이 최고의 무기입니다!", "함께 만드는 내일이 더욱 빛납니다!", "팀의 결속이 어떤 어려움도 이깁니다!", "우리 팀의 도전은 오늘도 멈추지 않습니다!", "서로를 위해 달리는 우리 팀, 대단합니다!", "함께 이루는 성공이 가장 소중합니다!", "팀원과 함께라면 두렵지 않습니다!", "오늘도 하나된 마음으로 목표를 향합시다!", "우리 팀의 우정이 성과의 원동력입니다!", "서로 믿고 의지하는 우리 팀이 최고입니다!", "함께라는 것이 우리의 가장 큰 장점입니다!", "팀의 열정이 고객을 행복하게 만듭니다!", "우리 팀이 하나가 될 때 가장 강해집니다!", "함께 달리면 어떤 목표도 가능합니다!", "서로의 노력이 하나의 기적을 만듭니다!", "팀원 모두가 소중한 우리 팀, 함께 갑시다!", "오늘도 우리 팀의 화합이 빛납니다!", "함께 이뤄낸 한 걸음이 가장 값집니다!", "팀의 단합이 불가능을 가능으로 바꿉니다!", "서로를 세워주는 팀이 가장 멀리 갑니다!", "우리 팀의 끈끈함이 최고의 결과를 만듭니다!", "함께 웃을 때 팀이 가장 빛납니다!", "팀원의 성장이 팀 전체의 기쁨입니다!", "오늘도 함께하는 우리 팀이 자랑스럽습니다!", "서로 의지하고 응원하는 우리 팀!", "우리가 함께라면 어떤 도전도 두렵지 않습니다!", "함께 달성하는 목표가 가장 빛납니다!", "팀의 화합이 오늘도 기적을 씁니다!", "우리 팀의 열정이 최고의 성과를 냅니다!", "서로의 강점이 모여 팀을 완성합니다!", "함께라는 신뢰가 우리의 가장 큰 힘입니다!", "팀원 모두의 노력이 빛나는 성과가 됩니다!", "오늘도 함께 최선을 다하는 우리 팀!", "우리의 단결이 모든 역경을 이깁니다!", "서로 돕고 격려하는 팀이 진짜 강팀!", "함께 흘린 땀이 결국 빛나는 보상이 됩니다!", "팀워크가 곧 우리의 경쟁력입니다!", "우리 팀이 함께하는 한 포기는 없습니다!", "서로를 믿는 힘이 팀을 이끕니다!", "함께 만들어가는 성공이 가장 아름답습니다!", "팀의 단합이 오늘도 새로운 기적을 씁니다!", "우리 팀의 화합이 고객의 신뢰를 얻습니다!", "함께라면 오르지 못할 산이 없습니다!", "팀원을 향한 신뢰가 팀을 강하게 합니다!", "서로 응원하며 달리는 우리 팀, 최고!", "우리 팀의 끈끈함이 오늘도 빛납니다!", "함께 세운 목표는 반드시 이루어집니다!", "팀의 열정이 고객의 마음을 움직입니다!", "오늘도 하나된 마음으로 달리는 우리 팀!", "서로의 미소가 팀 전체에 에너지를 줍니다!", "함께라면 더 빠르게, 더 높이 날 수 있습니다!", "우리 팀의 도전이 세상을 바꿉니다!", "팀원과 함께 달리는 오늘이 가장 행복합니다!", "서로의 땀을 알아주고 응원하는 우리 팀!", "함께 이루는 성공이 가장 값진 보람입니다!", "우리 팀의 화합이 불가능을 이깁니다!", "팀의 단합이 어떤 어려움도 극복합니다!", "오늘도 함께 빛나는 우리 팀입니다!", "서로를 북돋아주는 팀이 가장 강합니다!", "함께 달리면 목표가 더욱 선명해집니다!", "팀원 모두의 열정이 하나의 빛이 됩니다!", "우리가 함께라면 어떤 목표도 이룰 수 있습니다!", "팀의 결속이 최고의 성과를 만들어냅니다!", "서로 믿고 의지하는 우리, 자랑스럽습니다!", "함께라는 것이 우리 팀의 가장 큰 힘!", "오늘도 팀워크로 기적을 만들어가는 우리!", "우리 팀의 화합이 오늘도 빛을 발합니다!", "함께 달성하는 기쁨이 어떤 것보다 큽니다!", "팀원의 노력이 모여 최고의 팀이 됩니다!", "서로 응원하고 격려하는 우리 팀, 최고!", "우리 팀의 열정이 오늘도 멈추지 않습니다!", "함께 이뤄낸 성공이 가장 소중합니다!", "팀의 힘이 개인의 한계를 뛰어넘게 합니다!", "오늘도 함께하는 것만으로도 힘이 납니다!", "서로를 이끄는 팀이 결국 승리합니다!", "우리 팀의 단합이 최고의 무기입니다!", "함께 만드는 오늘이 빛나는 내일이 됩니다!", "팀원을 위해 최선을 다하는 우리 팀!", "서로의 성공을 응원하는 팀이 가장 아름답습니다!", "함께라면 어떤 역경도 이겨낼 수 있습니다!", "우리 팀의 화합이 기적을 만들어냅니다!", "팀의 단결이 오늘도 새로운 성과를 씁니다!", "오늘도 하나된 마음으로 전진하는 우리 팀!", "서로 돕고 나누는 팀이 진정 강한 팀입니다!", "함께 흘린 땀방울이 가장 아름다운 보물!", "우리 팀의 끈끈함이 고객의 신뢰를 만듭니다!", "팀원 모두의 열정이 오늘도 빛납니다!", "함께라는 두 글자가 우리의 가장 큰 힘!", "팀의 화합이 불가능을 가능으로 만듭니다!", "서로를 믿는 우리 팀, 오늘도 파이팅!", "우리가 함께하는 한 못 이룰 목표가 없습니다!", "함께 달성하는 목표가 가장 값집니다!", "팀원의 응원이 새로운 힘을 만들어냅니다!", "오늘도 함께 빛나는 성과를 향해 달립시다!", "서로의 노력이 모여 팀의 자랑이 됩니다!", "우리 팀의 열정이 고객을 감동시킵니다!", "함께라면 오늘도 기적을 만들 수 있습니다!", "팀의 결속이 어떤 장벽도 넘게 합니다!", "서로 응원하는 우리 팀이 가장 강합니다!", "함께 만들어가는 오늘이 최고의 내일!", "우리 팀의 단합이 승리의 비결입니다!", "팀원과 함께라면 두렵지 않습니다!", "오늘도 서로를 믿고 달리는 우리 팀!", "함께 이루는 성공이 가장 큰 보람입니다!", "서로의 강점이 모여 완벽한 팀을 만듭니다!", "우리 팀의 화합이 오늘도 기적을 씁니다!", "팀의 열정이 최고의 성과를 만들어냅니다!", "함께라면 어떤 도전도 두렵지 않습니다!", "팀원 모두가 빛나는 우리 팀, 자랑스럽습니다!", "서로 격려하고 응원하는 팀이 진짜 챔피언!", "우리 팀의 끈끈함이 오늘도 빛을 발합니다!", "함께 달성하는 기쁨이 어떤 것보다 소중합니다!", "팀의 단합이 오늘도 새로운 역사를 씁니다!", "서로를 세워주는 우리 팀이 최고입니다!", "오늘도 함께 최선을 다하는 우리 팀, 파이팅!", "우리가 함께라면 반드시 이룹니다!", "함께 만드는 성공이 가장 아름답습니다!", "팀원의 노력이 모여 최고의 결과가 됩니다!", "서로 믿고 의지하는 팀이 결국 승리합니다!", "우리 팀의 화합이 고객에게 감동을 줍니다!", "함께라는 믿음이 우리의 가장 큰 자산!", "팀의 결속이 불가능을 가능으로 바꿉니다!", "오늘도 하나된 마음으로 달리는 우리!", "서로의 땀을 응원하는 팀이 가장 강합니다!", "함께 흘린 땀이 빛나는 결과로 돌아옵니다!", "우리 팀의 끈끈함이 최고의 무기입니다!", "팀원과 함께 만드는 오늘이 가장 빛납니다!", "함께라면 어떤 목표도 반드시 이룹니다!", "서로 응원하고 격려하는 우리 팀, 최고!", "우리 팀의 열정이 오늘도 멈추지 않습니다!", "팀의 화합이 최고의 성과를 만들어냅니다!", "함께 달성하는 목표가 가장 소중합니다!", "팀원 모두의 노력이 빛나는 성공이 됩니다!", "오늘도 서로를 믿는 우리 팀, 파이팅!", "서로의 성공을 기뻐하는 팀이 진짜 팀!", "우리가 함께하는 한 포기란 없습니다!", "함께 이루는 기적이 오늘도 계속됩니다!", "팀의 단합이 어떤 역경도 이겨냅니다!", "서로를 이끄는 힘이 팀을 강하게 합니다!", "함께라면 오늘도 새로운 기적이 가능합니다!", "우리 팀의 화합이 고객의 마음을 사로잡습니다!", "팀원의 미소가 우리 팀의 가장 큰 힘입니다!", "서로 돕고 나누는 팀이 가장 오래 갑니다!", "함께 세운 꿈이 반드시 현실이 됩니다!", "우리 팀의 단결이 새로운 역사를 씁니다!", "팀워크가 곧 우리의 가장 큰 경쟁력!", "오늘도 팀원과 함께라서 든든합니다!", "서로를 응원하는 목소리가 팀을 이끕니다!", "함께 달리는 우리가 가장 아름답습니다!", "팀의 열정이 오늘도 새로운 성과를 만듭니다!", "우리 팀의 신뢰가 최고의 결과를 냅니다!", "함께라면 어떤 장벽도 넘을 수 있습니다!", "팀원 모두가 영웅인 우리 팀, 최고!", "서로의 노력을 알아주는 팀이 진짜 강팀!", "우리가 하나가 될 때 가장 빛납니다!", "함께 이루어가는 오늘이 내일의 자랑이 됩니다!", "팀의 화합이 고객에게 최고의 서비스가 됩니다!", "오늘도 서로를 믿고 앞으로 나아갑시다!", "서로의 열정이 모여 팀을 빛나게 합니다!", "함께하는 우리 팀의 가능성은 무한합니다!", "우리 팀의 끈끈함이 오늘도 승리를 만듭니다!", "팀원의 응원 한 마디가 기적을 만듭니다!", "함께라면 힘든 길도 즐거운 여정입니다!", "서로 응원하고 격려하며 함께 성장합시다!", "우리 팀의 단합이 오늘도 빛을 발합니다!", "팀의 열정이 고객의 신뢰를 만들어냅니다!", "함께 만드는 성공이 가장 오래 기억됩니다!", "팀원 모두의 꿈이 하나의 목표가 됩니다!", "서로를 믿는 팀이 결국 최고가 됩니다!", "우리 팀의 화합이 오늘도 기적을 씁니다!", "함께 달리면 어떤 목표도 가능합니다!", "팀워크가 우리의 가장 빛나는 자산입니다!", "오늘도 함께 빛나는 하루를 만들어갑시다!", "서로의 부족함을 메워주는 우리 팀, 최고!", "우리가 함께하는 한 못 이룰 것이 없습니다!", "함께 흘린 땀이 가장 아름다운 훈장입니다!", "팀의 단결이 불가능을 가능으로 바꿉니다!", "팀원과 함께라면 두려울 것이 없습니다!", "서로 돕고 세워주는 우리 팀, 자랑스럽습니다!", "함께 이루는 성공이 가장 큰 보람입니다!", "우리 팀의 열정이 오늘도 고객을 감동시킵니다!", "팀의 화합 앞에 어떤 어려움도 없습니다!", "함께라면 오늘보다 내일이 더 빛납니다!", "서로를 응원하는 팀이 가장 강한 팀입니다!", "우리 팀의 단합이 최고의 무기입니다!", "팀원 모두의 노력이 하나의 빛이 됩니다!", "오늘도 함께 최선을 다하는 우리 팀, 파이팅!", "서로의 성공을 함께 기뻐하는 우리 팀!", "함께 달성하는 기쁨이 가장 큰 행복입니다!", "우리 팀의 끈끈함이 어떤 역경도 이깁니다!", "팀의 결속이 오늘도 새로운 성과를 씁니다!", "함께라면 더 빠르게, 더 멀리 갑니다!", "팀원의 열정이 나의 에너지가 됩니다!", "서로 믿고 의지하는 우리 팀이 최고!", "우리 팀의 화합이 고객의 마음을 얻습니다!", "함께 만드는 내일이 오늘보다 빛납니다!", "팀의 힘이 개인의 한계를 넘게 합니다!", "오늘도 하나된 마음으로 목표를 향합시다!", "서로를 세워주는 우리가 최고의 팀입니다!", "함께 흘린 땀이 빛나는 성과가 됩니다!", "우리 팀의 단합이 승리의 씨앗입니다!", "팀워크가 꿈을 현실로 만들어냅니다!", "팀원과 함께 달리는 오늘이 가장 값집니다!", "서로 응원하며 함께 성장하는 우리 팀!", "우리 팀의 열정이 최고의 결과를 만듭니다!", "함께라는 믿음이 우리의 가장 큰 힘!", "팀의 결속이 모든 어려움을 이겨냅니다!", "오늘도 함께 목표를 향해 달리는 우리!", "서로의 강점이 모여 완벽한 팀이 됩니다!", "우리가 함께라면 반드시 이룹니다!", "함께 만들어가는 성공이 가장 아름답습니다!", "팀의 화합이 오늘도 기적을 만들어냅니다!", "팀원 모두가 주인공인 우리 팀, 파이팅!", "서로 돕고 나누는 팀이 가장 강합니다!", "함께 달성하는 목표가 가장 소중합니다!", "우리 팀의 끈끈함이 고객의 신뢰를 얻습니다!", "팀의 단합이 불가능을 가능으로 만듭니다!", "오늘도 서로를 믿는 우리 팀이 빛납니다!", "서로의 노력이 하나의 기적을 만들어냅니다!", "함께라면 어떤 도전도 두렵지 않습니다!", "우리 팀의 화합이 오늘도 빛을 발합니다!", "팀원의 응원이 새로운 힘을 불어넣습니다!", "함께 이루는 기적이 오늘도 계속됩니다!", "서로 응원하고 격려하는 팀이 진짜 챔피언!", "우리 팀의 열정이 오늘도 고객을 행복하게!", "팀의 화합이 최고의 성과를 만들어냅니다!", "함께라면 어떤 역경도 이겨낼 수 있습니다!", "팀원 모두의 열정이 오늘도 빛납니다!", "서로를 이끌고 함께 성장하는 우리!", "우리 팀의 단결이 승리의 비결입니다!", "함께 달리는 우리가 가장 강한 팀입니다!", "팀의 끈끈함이 어떤 장벽도 넘게 합니다!", "오늘도 함께하는 우리 팀이 자랑스럽습니다!", "서로의 미소가 팀 전체에 에너지를 줍니다!", "함께라면 더 높이 더 멀리 갈 수 있습니다!", "우리 팀의 화합이 최고의 무기입니다!", "팀원의 성공이 곧 우리 모두의 성공입니다!", "함께 만드는 성공이 가장 오래 기억됩니다!", "서로를 믿고 달리면 반드시 이깁니다!", "우리 팀의 열정이 오늘도 멈추지 않습니다!", "팀의 화합이 고객의 마음을 움직입니다!", "함께 달성하는 기쁨이 어떤 것보다 큽니다!", "팀원과 함께하는 모든 순간이 소중합니다!", "서로 응원하는 팀이 가장 오래 빛납니다!", "우리 팀의 단합이 오늘도 새로운 기적을 씁니다!", "함께라면 못 이룰 목표가 없습니다!", "팀의 결속이 최고의 성과를 만들어냅니다!", "오늘도 하나된 마음으로 전진하는 우리 팀!", "서로의 땀을 알아주고 응원하는 우리!", "함께 이루어낸 성과가 가장 빛납니다!", "우리 팀의 끈끈함이 고객을 감동시킵니다!", "팀워크가 승리의 가장 큰 비결입니다!", "팀원의 한 마디 응원이 기적을 만듭니다!", "오늘도 함께 빛나는 우리 팀의 하루!", "서로 격려하며 달리는 우리, 최고입니다!", "우리의 화합이 오늘도 고객을 행복하게 합니다!", "함께라면 험한 길도 꽃길이 됩니다!", "팀의 단합이 오늘도 새 역사를 씁니다!", "서로를 향한 믿음이 팀을 더 강하게!", "우리 팀의 열정이 어떤 목표도 이룹니다!", "함께 달리는 팀이 가장 멀리 갑니다!", "팀원의 노력 하나하나가 팀의 성과입니다!", "오늘도 함께라서 든든한 우리 팀!", "서로의 꿈이 모여 팀의 목표가 됩니다!", "함께 흘린 땀이 가장 값진 보물입니다!", "우리 팀의 화합이 최고의 전략입니다!", "팀의 결속이 모든 역경을 이깁니다!", "서로를 이끄는 팀이 결국 최고가 됩니다!", "함께라면 오늘도 기적을 만들 수 있습니다!", "우리 팀의 단합이 고객의 믿음을 얻습니다!", "팀원 모두가 빛나는 오늘의 주인공!", "오늘도 함께 최선을 다하는 우리, 파이팅!", "서로 응원하는 목소리가 팀을 이끕니다!", "함께 이루는 성공이 가장 빛납니다!", "우리 팀의 열정이 고객의 마음을 사로잡습니다!", "팀의 화합이 불가능을 가능으로 만듭니다!", "함께라면 어떤 어려움도 즐거운 도전입니다!", "팀원과 함께하는 오늘이 가장 소중합니다!", "서로의 성공이 모여 팀의 승리가 됩니다!", "우리 팀의 끈끈함이 오늘도 승리를 만듭니다!", "함께 달성하는 기쁨이 가장 큰 행복!", "팀의 단합이 어떤 목표도 가능하게 합니다!", "오늘도 서로를 믿고 앞으로 달리는 우리!", "서로 돕고 세워주는 팀이 가장 오래 갑니다!", "함께 만드는 내일이 가장 아름답습니다!", "우리 팀의 화합이 최고의 성과를 냅니다!", "팀원의 응원이 오늘도 힘을 불어넣습니다!", "함께라면 더 빠르게 목표에 도달합니다!", "서로를 믿는 우리 팀의 힘이 최고입니다!", "우리 팀의 열정이 오늘도 새 기적을 씁니다!", "팀의 결속이 고객의 신뢰를 만들어냅니다!", "함께 이루어낸 성과가 가장 빛납니다!", "팀원 모두가 영웅인 오늘의 우리 팀!", "서로 응원하고 격려하는 팀이 최고의 팀!", "우리 팀의 단합이 불가능을 이깁니다!", "함께라면 어떤 도전도 두렵지 않습니다!", "팀의 화합이 오늘도 최고의 결과를 만듭니다!", "오늘도 하나된 마음으로 달리는 우리!", "서로의 강점이 모여 완벽한 팀을 만듭니다!", "함께 달성하는 목표가 가장 값집니다!", "우리 팀의 끈끈함이 최고의 무기입니다!", "팀워크가 오늘도 기적을 만들어냅니다!", "팀원과 함께 만드는 오늘이 가장 빛납니다!", "서로를 세워주는 우리 팀이 최고입니다!", "함께 흘린 땀이 빛나는 성과가 됩니다!", "우리 팀의 화합이 승리의 비결입니다!", "팀의 단합이 오늘도 새로운 성과를 냅니다!", "오늘도 함께 빛나는 성과를 향해 달립시다!", "서로의 노력이 하나로 모여 팀을 빛냅니다!", "우리가 함께라면 반드시 이루어냅니다!", "함께 만들어가는 성공이 가장 소중합니다!", "팀의 화합이 고객을 감동시킵니다!", "팀원 모두의 노력이 오늘도 빛납니다!", "서로 믿고 의지하는 팀이 결국 승리!", "우리 팀의 열정이 오늘도 멈추지 않습니다!", "함께라면 어떤 역경도 극복할 수 있습니다!", "팀의 결속이 최고의 성과를 만들어냅니다!", "오늘도 함께하는 우리 팀이 자랑스럽습니다!", "서로를 이끌고 함께 성장하는 우리!", "함께 달리는 우리가 가장 강한 팀!", "우리 팀의 단합이 오늘도 기적을 씁니다!", "팀원의 응원 한 마디가 힘이 됩니다!", "함께라면 오늘도 새로운 기적이 가능합니다!", "서로 응원하는 우리 팀, 오늘도 파이팅!", "우리 팀의 화합이 고객의 신뢰를 얻습니다!", "팀의 단합이 모든 어려움을 이겨냅니다!", "함께 이루는 기적이 오늘도 계속됩니다!", "팀원과 함께하는 모든 순간이 값집니다!", "서로의 땀을 응원하는 팀이 가장 강합니다!", "우리 팀의 끈끈함이 고객을 행복하게 합니다!", "함께 달성하는 목표가 가장 아름답습니다!", "팀의 화합이 불가능을 가능으로 바꿉니다!", "오늘도 서로를 믿는 우리 팀의 열정!", "서로의 성공을 기뻐하는 팀이 진짜 팀!", "함께라면 더 높이 더 멀리 날 수 있습니다!", "우리 팀의 화합이 오늘도 새 성과를 씁니다!", "팀원 모두가 주인공인 우리 팀, 최고!", "함께 만드는 내일이 오늘보다 빛납니다!", "서로를 믿고 달리면 반드시 이깁니다!", "우리 팀의 단합이 승리의 씨앗입니다!", "팀의 열정이 고객의 마음을 움직입니다!", "함께 달성하는 기쁨이 가장 큰 보람!", "팀원의 한 마디 응원이 기적을 씁니다!", "서로 돕고 나누는 우리 팀, 자랑스럽습니다!", "우리가 함께하는 한 못 이룰 것이 없습니다!", "함께 흘린 땀방울이 빛나는 훈장입니다!", "팀의 결속이 어떤 장벽도 넘게 합니다!", "오늘도 함께 목표를 향해 전진하는 우리!", "서로를 향한 응원이 팀을 더 강하게!", "우리 팀의 화합이 최고의 결과를 만듭니다!", "함께라면 어떤 도전도 즐거운 여정입니다!", "팀원 모두의 꿈이 하나로 모입니다!", "서로의 노력을 알아주는 팀이 가장 강합니다!", "함께 달리는 우리가 가장 아름답습니다!", "우리 팀의 열정이 오늘도 새 기록을 씁니다!", "팀의 단합이 고객의 마음을 얻습니다!", "함께 이루어가는 성공이 가장 빛납니다!", "팀원과 함께라서 오늘도 든든합니다!", "서로 응원하고 격려하는 우리 팀, 최고!", "우리 팀의 끈끈함이 오늘도 빛을 발합니다!", "함께라면 어떤 목표도 반드시 이룹니다!", "팀의 화합이 오늘도 기적을 만들어냅니다!", "오늘도 하나된 마음으로 달리는 우리 팀!", "서로를 세워주는 팀이 가장 멀리 갑니다!", "함께 달성하는 목표가 가장 소중합니다!", "우리 팀의 단합이 오늘도 새 역사를 씁니다!", "팀원의 응원이 오늘도 기적을 만듭니다!", "함께라면 더 빠르게 목표를 이룹니다!", "서로의 강점이 모여 팀을 완성합니다!", "우리 팀의 화합이 고객을 행복하게 합니다!", "팀의 결속이 불가능을 가능으로 만듭니다!", "함께 이루는 성공이 가장 큰 행복입니다!", "팀원 모두의 열정이 빛나는 오늘!", "서로 믿고 달리면 어떤 목표도 가능합니다!", "우리 팀의 끈끈함이 최고의 자산입니다!", "함께라면 힘든 순간도 이겨냅니다!", "팀의 단합이 오늘도 새로운 가능성을 엽니다!", "오늘도 서로를 응원하는 우리 팀의 하루!", "서로를 믿는 팀이 결국 최고가 됩니다!", "함께 만드는 성공이 가장 오래 빛납니다!", "우리 팀의 화합이 오늘도 승리를 만듭니다!", "팀원과 함께하는 모든 순간이 소중합니다!"];
+  var cheer=tc[Math.floor(Math.random()*tc.length)];
+  var cheerHtml='<div style="background:linear-gradient(135deg,#0d2554,#1a3a6b);border-radius:10px;padding:12px 16px;text-align:center;width:100%;box-sizing:border-box;">'
+    +'<div style="font-size:10px;color:#94b8e0;margin-bottom:5px;">🤝 오늘의 팀 구호</div>'
+    +'<div style="font-size:15px;font-weight:700;color:#fff;line-height:1.6;">'+cheer+'</div>'
+    +'</div>';
+
+  document.getElementById('grpPopupBody').innerHTML='<div style="padding:8px 10px;">'+rows
+    +'<div style="display:flex;gap:8px;margin-bottom:8px;">'+g1html+g2html+'</div>'
+    +cheerHtml+'</div>';
   document.getElementById('grpPopup').style.display='flex';
 }
+
+function closeGrpPopup(){document.getElementById('grpPopup').style.display='none';}
+
+function renderHomeGrp(){
+  var hgrp=document.getElementById('home-grp');
+  if(!hgrp)return;
+  var ranked=GROUPS.map(function(g,gi){
+    var base=g.members.map(function(m){return m.base;});
+    var cur=g.members.map(function(m){var f=D.find(function(d){return d[5]===m.name;});return f?Math.round(f[9]/1000):m.base;});
+    var bSum=base.reduce(function(s,v){return s+v;},0);
+    var cSum=cur.reduce(function(s,v){return s+v;},0);
+    return {id:g.id,gi:gi,achv:bSum>0?cSum/bSum*100:0,members:g.members};
+  }).sort(function(a,b){return b.achv-a.achv;});
+  var mc2=['m1','m2','m3'];
+  var cols=['#c8960c','#888','#a05020'];
+  var lbl='<div style="text-align:right;font-size:10px;font-weight:700;color:#888;padding:2px 0 4px;border-bottom:1px solid rgba(0,0,0,.08);">달성률</div>';
+  var rows=ranked.slice(0,3).map(function(r,k){
+    var mN=r.members.map(function(m){return m.name;}).join('·');
+    return '<div style="display:flex;align-items:center;gap:7px;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.05);">'
+      +'<span class="mn '+mc2[k]+'">'+(k+1)+'</span>'
+      +'<div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:900;color:#0a2050;">'+r.id+'팀</div>'
+      +'<div style="font-size:9px;color:#556688;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+mN+'</div></div>'
+      +'<span style="font-size:14px;font-weight:900;color:'+cols[k]+';">'+r.achv.toFixed(1)+'%</span>'
+      +'</div>';
+  }).join('');
+  hgrp.innerHTML=lbl+rows;
+}
+
+// ── 개인 실적 팝업 ──
+function openPerfPopup(i){
+  var d=D[i];
+  var name=d[5],branch=d[2];
+  var net=d[11],rate=d[10];
+  var ipumAmt=d[13];
+  // 순증액 시상 계산
+  var netAwd='',netAwdAmt=0;
+  if(net>=500000){netAwdAmt=Math.round(net*1.5);netAwd=netAwdAmt.toLocaleString()+'원';}
+  else if(net>=300000){netAwdAmt=Math.round(net*1.2);netAwd=netAwdAmt.toLocaleString()+'원';}
+  else if(net>=200000){netAwdAmt=200000;netAwd='20만원';}
+  else if(net>=100000){netAwdAmt=100000;netAwd='10만원';}
+  else if(net>=50000){netAwdAmt=50000;netAwd='5만원';}
+  else{netAwd='해당없음';netAwdAmt=0;}
+  // 순위 시상 계산 (신장률/신장액 TOP10)
+  var rRankV=0,aRankV=0,rankAwd='',rankAwdAmt=0;
+  var byRateTmp=D.map(function(dd,ii){return{i:ii,d:dd};}).sort(function(a,b){return(b.d[11]/b.d[8])-(a.d[11]/a.d[8]);});
+  var byAmtTmp=D.map(function(dd,ii){return{i:ii,d:dd};}).sort(function(a,b){return b.d[11]-a.d[11];});
+  var aExcTmp=new Set(byAmtTmp.filter(function(x,k){return k<2&&x.d[11]>=300000;}).map(function(x){return x.d[3];}));
+  var rFinalTmp=byRateTmp.filter(function(x){return !aExcTmp.has(x.d[3]);});
+  var rIdx=rFinalTmp.findIndex(function(x){return x.d[5]===name;});
+  var aIdx=byAmtTmp.findIndex(function(x){return x.d[5]===name;});
+  var rPrizeTmp=function(k){return k===0?300000:k<=2?200000:k<10?50000:0;};
+  var aPrizeTmp=function(k){return k===0?500000:k<=2?300000:k<10?100000:0;};
+  if(rIdx>=0&&rIdx<10&&d[11]>=300000){rankAwdAmt=Math.max(rankAwdAmt,rPrizeTmp(rIdx));rRankV=rIdx+1;}
+  if(aIdx>=0&&aIdx<10&&d[11]>=300000){var aAmt=aPrizeTmp(aIdx);if(aAmt>=rankAwdAmt){rankAwdAmt=aAmt;aRankV=aIdx+1;rRankV=0;}}
+  if(rankAwdAmt>0){
+    if(aRankV>0)rankAwd='신장액 '+aRankV+'위: '+rankAwdAmt.toLocaleString()+'원';
+    else if(rRankV>0)rankAwd='신장률 '+rRankV+'위: '+rankAwdAmt.toLocaleString()+'원';
+  } else {rankAwd='해당없음';}
+  // 합계
+  var totalAmt=netAwdAmt+rankAwdAmt;
+  // 그룹시상 계산
+  var grpAwd='없음';
+  for(var gi=0;gi<GROUPS.length;gi++){
+    var g=GROUPS[gi];
+    var found=g.members.find(function(m){return m.name===name;});
+    if(!found)continue;
+    var base2=g.members.map(function(m){return m.base;});
+    var cur2=g.members.map(function(m){var f=D.find(function(dd){return dd[5]===m.name;});return f?Math.round(f[9]/1000):m.base;});
+    var bSum=base2.reduce(function(s,v){return s+v;},0);
+    var cSum=cur2.reduce(function(s,v){return s+v;},0);
+    var grpRate=bSum>0?(cSum-bSum)/bSum*100:0;
+    var parts=[];
+    if(grpRate>=25)parts.push('그룹시상2 15만원 인당');
+    else if(grpRate>=15)parts.push('그룹시상2 7만원 인당');
+    else if(grpRate>=5)parts.push('그룹시상2 3만원 인당');
+    var allOver=cur2.every(function(c,ii){return c-base2[ii]>=50;});
+    if(allOver)parts.push('그룹시상1 5만원 인당');
+    grpAwd=parts.length>0?parts.join(' + '):'미달';
+    break;
+  }
+  var netStr=(net>=0?'+':'')+Math.round(net).toLocaleString()+'원';
+  document.getElementById('perfPopupName').textContent=name+' 사장님';
+  document.getElementById('perfPopupBranch').textContent=branch;
+  var body='';
+  body+='<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eef;"><span style="color:#556688;">현재 인보험 순증</span><span style="font-weight:900;color:'+(net>=0?'#0040b0':'#cc0000')+';">'+netStr+'</span></div>';
+  body+='<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eef;"><span style="color:#556688;">달성률</span><span style="font-weight:900;color:'+(rate>=100?'#006030':rate>=80?'#334466':'#880000')+';">'+rate.toFixed(1)+'%</span></div>';
+  body+='<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eef;"><span style="color:#556688;">순증액 시상</span><span style="font-weight:900;color:#cc5500;font-size:12px;">'+netAwd+'</span></div>';
+  body+='<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eef;"><span style="color:#556688;">순위 시상</span><span style="font-weight:900;color:#1a3a6b;font-size:12px;">'+rankAwd+'</span></div>';
+  body+='<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eef;"><span style="color:#556688;">그룹시상</span><span style="font-weight:900;color:#5a20c0;font-size:12px;">'+grpAwd+'</span></div>';
+  body+='<div style="display:flex;justify-content:space-between;padding:7px 0;background:#f0f8ff;margin-top:2px;border-radius:7px;padding:7px 10px;"><span style="color:#0a2050;font-weight:700;">💰 예상 시상 합계</span><span style="font-weight:900;color:#cc0000;font-size:15px;">'+(totalAmt>0?totalAmt.toLocaleString()+'원':'해당없음')+'</span></div>';
+  document.getElementById('perfPopupBody').innerHTML=body;
+  var ipumEl=document.getElementById('perfPopupIpum');
+  if(ipumAmt>=300000){
+    ipumEl.style.cssText='margin-top:12px;padding:12px;border-radius:10px;text-align:center;font-weight:700;background:linear-gradient(135deg,#fff0f8,#ffe8f4);border:2px solid #e91e8c;color:#b0006a;';
+    ipumEl.innerHTML='✨ 인생의 품격<br><span style="font-size:17px;">인품이 좋으신 '+name+' 사장님!</span>';
+  }else if(ipumAmt>0){
+    ipumEl.style.cssText='margin-top:12px;padding:12px;border-radius:10px;text-align:center;font-weight:700;background:linear-gradient(135deg,#f0f8ff,#e8f4ff);border:2px solid #4a90d9;color:#1a3a6b;';
+    ipumEl.innerHTML='✨ 인생의 품격<br><span style="font-size:17px;">인품있는 '+name+' 사장님</span>';
+  }else{
+    ipumEl.style.cssText='margin-top:12px;padding:12px;border-radius:10px;text-align:center;font-weight:700;background:#f5f5f5;border:2px solid #ccc;color:#556688;';
+    ipumEl.innerHTML='✨ 인생의 품격<br><span style="font-size:16px;">'+name+' 사장님, 인품을 챙겨주세요</span>';
+  }
+  // 응원 문구 랜덤 표시
+  var cheerEl=document.getElementById('perfPopupCheer');
+  if(cheerEl)cheerEl.textContent=getRandomCheer();
+  document.getElementById('perfPopup').style.display='flex';
+}
+function closePerfPopup(){document.getElementById('perfPopup').style.display='none';}
+
+// ── 인쇄 ──
+
+// ── renderAll ──
+function renderAll(){
+  const total=D.length;
+  const avgR=D.reduce((s,d)=>s+d[10],0)/total;
+  const over5=D.filter(d=>d[11]>=50000).length;
+  const elig=D.filter(d=>d[11]>=300000);
+  const byRate=D.map((d,i)=>({i,d})).sort((a,b)=>(b.d[11]/b.d[8])-(a.d[11]/a.d[8]));
+  const byAmt=D.map((d,i)=>({i,d})).sort((a,b)=>b.d[11]-a.d[11]);
+  const byIpum=D.map((d,i)=>({i,d})).sort((a,b)=>b.d[13]-a.d[13]||b.d[12]-a.d[12]);
+  const rRank={},aRank={},ipRank={};
+  byRate.forEach((x,k)=>rRank[x.i]=k+1);byAmt.forEach((x,k)=>aRank[x.i]=k+1);
+  byIpum.forEach((x,k)=>{if(x.d[13]>0)ipRank[x.i]=k+1;});
+  const ipumTop=byIpum.filter(x=>x.d[13]>0);
+  // 홈 KPI
+  document.getElementById('hs-total').textContent=total+'명';
+  document.getElementById('hs-avg').textContent=avgR.toFixed(1)+'%';
+  document.getElementById('hs-over').textContent=over5+'명';
+  document.getElementById('hs-elig').textContent=elig.length+'명';
+  document.getElementById('hs-a5').textContent=D.filter(d=>d[11]>=500000).length+'명';
+  document.getElementById('hs-a4').textContent=D.filter(d=>d[11]>=300000&&d[11]<500000).length+'명';
+  // 중복시상
+  // 신장액 시상이 신장률 시상보다 큰 경우만 신장률에서 제외
+  // 신장액 1위=50만>신장률1위=30만, 신장액 2위=30만>=신장률시상
+  // → 신장액 TOP2 기준달성자(순증30만이상)를 신장률에서 제외
+  const aExcludeIds=new Set(byAmt.filter((x,k)=>k<2&&x.d[11]>=300000).map(x=>x.d[3]));
+  // 하위 호환을 위해 dualIds도 유지 (배지 표시용)
+  const rTop=new Set(byRate.slice(0,10).map(x=>x.d[3]));
+  const aTop=new Set(byAmt.slice(0,10).map(x=>x.d[3]));
+  const dualIds=new Set([...rTop].filter(id=>aTop.has(id)));
+  // 신장률 실질 순위: 신장액 TOP2 제외
+  const rFinalList=byRate.filter(x=>!aExcludeIds.has(x.d[3]));
+  const rPrize=k=>k===0?'시상30만원':k<=2?'시상20만원':'주유권5만';
+  const aPrize=k=>k===0?'시상50만원':k<=2?'시상30만원':'주유권10만';
+  let rEff=0;const rEffMap={};
+  for(let i=0;i<rFinalList.length&&rEff<10;i++){const id=rFinalList[i].d[3];if(rFinalList[i].d[11]>=300000){rEffMap[id]=rEff++;}}
+  // 홈 미니카드
+  // 홈카드: 신장액시상 적용자 제외 후 차순위, 없으면 안내 표시
+  const rHomeList=rFinalList.slice(0,3);
+  if(rHomeList.length===0){
+    document.getElementById('home-rate').innerHTML='<div style="padding:12px 0;text-align:center;color:#888;font-size:11px;">신장액시상 제외 후 신장률 시상 대상자 없음</div>';
+  } else {
+    document.getElementById('home-rate').innerHTML=rHomeList.map(({d},k)=>{
+      const gr=(d[11]/d[8]*100).toFixed(1);let aw,st;
+      if(d[11]<300000){aw='기준미충족';st='mb-r';}
+      else{const ek=rEffMap[d[3]];aw=ek!==undefined?rPrize(ek):'기준미충족';st=ek!==undefined?'mb-g':'mb-r';}
+      return `<div style="display:flex;align-items:center;gap:7px;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.06);"><span class="mn ${mc(k)}">${k+1}</span><div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:900;color:#0a2050;">${d[5]}&nbsp;<span style="font-size:12px;font-weight:700;color:#0040b0;">${gr}%</span></div><div style="margin-top:2px;"><span class="mbadge ${st}" style="font-size:10px;">${aw}</span></div></div></div>`;
+    }).join('');
+  }
+  document.getElementById('home-amt').innerHTML=byAmt.slice(0,3).map(({d},k)=>{
+    const aw=d[11]>=300000?aPrize(k):'기준미충족';const st=d[11]>=300000?'mb-g':'mb-r';
+    return `<div style="display:flex;align-items:center;gap:7px;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.06);"><span class="mn ${mc(k)}">${k+1}</span><div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:900;color:#0a2050;">${d[5]}&nbsp;<span style="font-size:12px;font-weight:700;color:#0040b0;">+${Nf(d[11])}원</span></div><div style="margin-top:2px;"><span class="mbadge ${st}" style="font-size:10px;">${aw}</span></div></div></div>`;
+  }).join('');
+  document.getElementById('home-ipum').innerHTML=ipumTop.length>0
+    ?ipumTop.slice(0,3).map(({d},k)=>{const grade=['인품의 황제','인품의 제왕','인품의 왕'][k];return `<div style="display:flex;align-items:center;gap:7px;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.06);"><span class="mn ${mc(k)}">${k+1}</span><div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:900;color:#0a2050;">${d[5]}&nbsp;<span style="font-size:11px;font-weight:600;color:#334466;">${Nf(d[13])}원</span></div><div style="margin-top:2px;"><span class="mbadge mb-p" style="font-size:10px;">${grade}</span></div></div></div>`;}).join('')
+    :'<div style="padding:14px 0;text-align:center;color:#aaa;font-size:10px;">관리자에서 입력하세요</div>';
+  renderHomeGrp();
+  // KPI
+  document.getElementById('kpi-perf').innerHTML=`<div class="kpi sky"><div class="kl">총 인원</div><div class="kv">${total}명</div></div><div class="kpi g"><div class="kl">5만원↑ 순증자</div><div class="kv" style="color:#005030">${over5}명</div></div><div class="kpi gd"><div class="kl">30만원↑ 순증자</div><div class="kv" style="color:#7a5000">${elig.length}명</div></div><div class="kpi"><div class="kl">평균 달성률</div><div class="kv">${avgR.toFixed(1)}%</div></div>`;
+  // 실적 테이블
+  document.getElementById('mainTbody').innerHTML=[...byAmt].map(({i,d},rank)=>{
+    const nc=d[10]>=120?'c-over':d[10]>=100?'c-good':d[10]>=80?'c-mid':'c-low';
+    const netc=d[11]>0?'net-p':d[11]<0?'net-m':'';
+    const awd=d[11]>=500000?'<span class="bdg b-g">150%지급</span>':d[11]>=300000?'<span class="bdg b-g">120%지급</span>':d[11]>=200000?'<span class="bdg b-gr">20만원</span>':d[11]>=100000?'<span class="bdg b-gr">10만원</span>':d[11]>=50000?'<span class="bdg b-gr">5만원</span>':'<span class="b-no">-</span>';
+    const ipRk=ipRank[i]?RB(ipRank[i]):'<span style="color:#ccc;font-size:9px;">-</span>';
+    return `<tr style="cursor:pointer;" onclick="openPerfPopup(${i})"><td>${RB(rank+1)}</td><td class="td-name">${d[5]}</td><td class="td-r col-extra">${Nf(d[8])}</td><td class="td-r col-extra">${Nf(d[9])}</td><td class="${nc}">${d[10].toFixed(1)}%</td><td class="td-r ${netc}">${d[11]>=0?'+':''}${Nf(d[11])}</td><td class="col-extra">${awd}</td><td class="col-extra">${RB(rRank[i])}</td><td class="col-extra">${RB(aRank[i])}</td><td class="col-extra">${ipRk}</td></tr>`;
+  }).join('');
+  // 포디움
+  function makePod(top3,valFn,subFn,prizeFn){
+    return['p1','p2','p3'].map((cls,k)=>{if(!top3[k])return'';const d=top3[k].d;const crown=['👑','🥈','🥉'][k];const lbl=['1위','2위','3위'][k];const pr=prizeFn(k,d);const dual=pr.includes('적용');return`<div class="pc ${cls}"><div class="pcrown">${crown}</div><div class="prank">${lbl}</div><div class="pname">${d[5]}</div><div class="pbranch">${d[2]}</div><div class="pval">${valFn(d)}</div><div class="psub2">${subFn(d)}</div><div class="pprize ${dual?'dual':''}">${pr}</div><div class="pbar"></div></div>`;}).join('');
+  }
+  const ratePrizeFn=(k,d)=>{if(d[11]<300000)return'기준미충족';const ek=rEffMap[d[3]];return ek!==undefined?rPrize(ek):'기준미충족';};
+  const rAwardCell=d=>{if(d[11]<300000)return'<span class="bdg b-ms">기준미충족</span>';const ek=rEffMap[d[3]];if(ek===undefined)return'<span class="bdg b-ms">기준미충족</span>';return`<span class="bdg b-g">${rPrize(ek)}</span>`;};
+  // 신장률 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
+  if(rFinalList.length>=1)document.getElementById('ratePodium').innerHTML=makePod(rFinalList.slice(0,3),d=>((d[11]/d[8])*100).toFixed(1)+'%',d=>'순증 +'+Nf(d[11])+'원',ratePrizeFn);
+  document.getElementById('rateRest').innerHTML=rFinalList.slice(3,10).map(({d},k)=>`<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td class="td-r net-p">+${Nf(d[11])}</td><td class="c-over">${(d[11]/d[8]*100).toFixed(1)}%</td><td>${rAwardCell(d)}</td></tr>`).join('');
+  // 신장액 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
+  if(byAmt.length>=1)document.getElementById('amtPodium').innerHTML=makePod(byAmt.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>((d[11]/d[8])*100).toFixed(1)+'% 신장',(k,d)=>d[11]<300000?'기준미달성':aPrize(k));
+  document.getElementById('amtRest').innerHTML=byAmt.slice(3,10).map(function(x,k){
+    var d=x.d;
+    var badge=d[11]>=300000?'<span class="bdg b-g">'+aPrize(k+3)+'</span>':'<span class="bdg b-ms">기준미달성</span>';
+    return '<tr><td>'+RB(k+4)+'</td><td>'+d[2]+'</td><td class="td-name">'+d[5]+'</td><td class="td-r">'+Nf(d[8])+'</td><td class="td-r net-p">+'+Nf(d[11])+'</td><td class="c-over">'+(d[11]/d[8]*100).toFixed(1)+'%</td><td>'+badge+'</td></tr>';
+  }).join('');
+  // 인품왕
+  document.getElementById('ipumPodium').innerHTML=ipumTop.slice(0,3).map(({d},k)=>{const cls=['ip1','ip2','ip3'][k];const medals=['🌟','⭐','✨'][k];const ranks=['인품의 황제','인품의 제왕','인품의 왕'][k];return`<div class="ip ${cls}"><div class="ipmed">${medals}</div><div class="iprk">${ranks}</div><div class="ipname">${d[5]}</div><div class="ipbr">${d[2]}</div><div class="ipval">${Nf(d[13])}원</div><div class="ipsub">${d[12]}건</div></div>`;}).join('')||'<div style="padding:16px;text-align:center;color:#aaa;">관리자에서 입력하세요</div>';
+  document.getElementById('ipumRest').innerHTML=ipumTop.slice(3,10).map(({d},k)=>`<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r" style="font-weight:700;color:#b0006a;">${Nf(d[13])}원</td><td>${d[12]}건</td></tr>`).join('');
+  // 관리자
+  document.getElementById('adm-total').textContent=total+'명';
+  document.getElementById('adm-over').textContent=over5+'명';
+  document.getElementById('adm-good').textContent=D.filter(d=>d[10]>=80&&d[10]<100).length+'명';
+  document.getElementById('adm-mid').textContent=D.filter(d=>d[10]>=50&&d[10]<80).length+'명';
+  document.getElementById('adm-low').textContent=D.filter(d=>d[10]<50).length+'명';
+  document.getElementById('adm-avg').textContent=avgR.toFixed(1)+'%';
+  document.getElementById('adm-elig').textContent=elig.length+'명';
+  document.getElementById('adm-a5').textContent=D.filter(d=>d[11]>=500000).length+'명';
+  document.getElementById('adm-a4').textContent=D.filter(d=>d[11]>=300000&&d[11]<500000).length+'명';
+  document.getElementById('adm-a3').textContent=D.filter(d=>d[11]>=50000&&d[11]<300000).length+'명';
+  document.getElementById('adm-a0').textContent=D.filter(d=>d[11]<50000).length+'명';
+  document.getElementById('editTbody').innerHTML=D.map((d,i)=>`<tr><td>${i+1}</td><td>${d[2]}</td><td>${d[3]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td><input type="number" id="e9_${i}" value="${d[9]}" oninput="autoCalc(${i})"/></td><td><input type="number" id="e10_${i}" value="${d[10].toFixed(1)}" step="0.1" readonly/></td><td><input type="number" id="e11_${i}" value="${d[11]}" readonly/></td><td><input type="number" id="e12_${i}" value="${d[12]}" min="0"/></td><td><input type="number" id="e13_${i}" value="${d[13]}" min="0"/></td></tr>`).join('');
+  document.getElementById('ipumEditTbody').innerHTML=D.map((d,i)=>`<tr><td>${i+1}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td><input type="number" id="ip12_${i}" value="${d[12]}" min="0"/></td><td><input type="number" id="ip13_${i}" value="${d[13]}" min="0"/></td></tr>`).join('');
+}
+function printSection(viewId){
+  var titles={vperf:'실적 진도 현황',vrate:'최고 신장률 TOP10',vamt:'최고 신장액 TOP10',vipum:'인품왕 TOP10',vgroup:'조별 시상 현황'};
+  var title=titles[viewId]||viewId;
+  // 해당 뷰가 보이도록 임시 표시
+  var el=document.getElementById(viewId);
+  if(!el){alert(title+' 화면을 먼저 탭에서 열어주세요.');return;}
+  var wasHidden=(el.style.display==='none'||el.style.display==='');
+  if(wasHidden)el.style.display='block';
+  // 스타일 수집
+  var styleText='';
+  try{styleText=document.querySelector('style').innerHTML;}catch(e){}
+  // 새 창 열기
+  var w=window.open('','_blank','width=1000,height=750');
+  if(!w){alert('팝업 차단을 해제한 후 다시 시도해주세요.');if(wasHidden)el.style.display='none';return;}
+  w.document.open();
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8">');
+  w.document.write('<title>고객컨설팅 Master I - '+title+'</title>');
+  w.document.write('<style>'+styleText);
+  w.document.write('body{background:#fff!important;padding:16px;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;}');
+  w.document.write('.print-btn,.sbtn,.sbtn2,.back-btn,.abar,.snav,.overlay,.mtoggle,.stitle button{display:none!important;}');
+  w.document.write('table{width:100%;border-collapse:collapse;font-size:11px;}');
+  w.document.write('th,td{padding:5px 7px;border:1px solid #ccc;}');
+  w.document.write('.sec{background:#fff!important;box-shadow:none!important;border:1px solid #ddd!important;}');
+  w.document.write('@media print{@page{size:A4 landscape;}body{padding:8px;}}</style>');
+  w.document.write('</head><body>');
+  w.document.write('<div style="background:#0a2050;color:#fff;padding:10px 14px;border-radius:8px;margin-bottom:14px;">');
+  w.document.write('<div style="font-size:13px;font-weight:700;">고객컨설팅 Master I 과정</div>');
+  w.document.write('<div style="font-size:17px;font-weight:900;margin-top:2px;">'+title+'</div></div>');
+  w.document.write(el.innerHTML);
+  w.document.write('</body></html>');
+  w.document.close();
+  if(wasHidden)el.style.display='none';
+  setTimeout(function(){try{w.focus();w.print();}catch(e){}},900);
+}
+
+function printAll(){
+  var views=['vperf','vrate','vamt','vipum','vgroup'];
+  var titles={vperf:'실적 진도 현황',vrate:'최고 신장률 TOP10',vamt:'최고 신장액 TOP10',vipum:'인품왕 TOP10',vgroup:'조별 시상 현황'};
+  // 모든 뷰 임시 표시
+  var hidden=[];
+  views.forEach(function(v){
+    var el=document.getElementById(v);
+    if(el&&(el.style.display==='none'||el.style.display==='')){el.style.display='block';hidden.push(v);}
+  });
+  var styleText='';
+  try{styleText=document.querySelector('style').innerHTML;}catch(e){}
+  var w=window.open('','_blank','width=1000,height=750');
+  if(!w){alert('팝업 차단을 해제한 후 다시 시도해주세요.');hidden.forEach(function(v){document.getElementById(v).style.display='none';});return;}
+  w.document.open();
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>고객컨설팅 Master I 전체</title>');
+  w.document.write('<style>'+styleText);
+  w.document.write('body{background:#fff!important;padding:16px;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;}');
+  w.document.write('.print-btn,.sbtn,.sbtn2,.back-btn,.abar,.snav,.overlay,.mtoggle,.stitle button{display:none!important;}');
+  w.document.write('table{width:100%;border-collapse:collapse;font-size:10px;}th,td{padding:4px 6px;border:1px solid #ccc;}');
+  w.document.write('.sec{background:#fff!important;box-shadow:none!important;border:1px solid #ddd!important;}');
+  w.document.write('.section-wrap{page-break-before:always;margin-top:20px;}');
+  w.document.write('.section-wrap:first-child{page-break-before:auto;}');
+  w.document.write('@media print{@page{size:A4 landscape;}body{padding:6px;}}</style></head><body>');
+  w.document.write('<div style="background:#0a2050;color:#fff;padding:10px 14px;border-radius:8px;margin-bottom:16px;">');
+  w.document.write('<div style="font-size:13px;font-weight:700;">고객컨설팅 Master I 과정</div>');
+  w.document.write('<div style="font-size:17px;font-weight:900;margin-top:2px;">전체 현황 보고서</div></div>');
+  views.forEach(function(v){
+    var el=document.getElementById(v);
+    if(!el)return;
+    w.document.write('<div class="section-wrap">');
+    w.document.write('<div style="background:#1a3a6b;color:#fff;padding:7px 12px;border-radius:6px;margin-bottom:10px;font-size:14px;font-weight:900;">'+titles[v]+'</div>');
+    w.document.write(el.innerHTML);
+    w.document.write('</div>');
+  });
+  w.document.write('</body></html>');
+  w.document.close();
+  hidden.forEach(function(v){document.getElementById(v).style.display='none';});
+  setTimeout(function(){try{w.focus();w.print();}catch(e){}},1200);
+}
+// 초기화
+renderAll();renderGrpTable();
+document.getElementById('pg-home').style.display='block';
+document.getElementById('pg-detail').style.display='none';
+document.getElementById('pg-admin').style.display='none';
+document.getElementById('mtoggle').style.display='none';
+window.addEventListener('load',function(){setTimeout(initFirebase,500);});
 function closeGrpPopup(){document.getElementById('grpPopup').style.display='none';}
 
 function renderHomeGrp(){
