@@ -807,14 +807,32 @@ function openPerfPopup(i){
   var name=d[5],branch=d[2];
   var net=d[11],rate=d[10];
   var ipumAmt=d[13];
-  // 개인 달성시상
-  var awd='';
-  if(net>=500000){awd='시상금 '+Math.round(net*1.5).toLocaleString()+'원 (순증액×150%)';}
-  else if(net>=300000){awd='시상금 '+Math.round(net*1.2).toLocaleString()+'원 (순증액×120%)';}
-  else if(net>=200000){awd='시상금 20만원';}
-  else if(net>=100000){awd='시상금 10만원';}
-  else if(net>=50000){awd='시상금 5만원';}
-  else{awd='해당없음';}
+  // 순증액 시상 계산
+  var netAwd='',netAwdAmt=0;
+  if(net>=500000){netAwdAmt=Math.round(net*1.5);netAwd=netAwdAmt.toLocaleString()+'원';}
+  else if(net>=300000){netAwdAmt=Math.round(net*1.2);netAwd=netAwdAmt.toLocaleString()+'원';}
+  else if(net>=200000){netAwdAmt=200000;netAwd='20만원';}
+  else if(net>=100000){netAwdAmt=100000;netAwd='10만원';}
+  else if(net>=50000){netAwdAmt=50000;netAwd='5만원';}
+  else{netAwd='해당없음';netAwdAmt=0;}
+  // 순위 시상 계산 (신장률/신장액 TOP10)
+  var rRankV=0,aRankV=0,rankAwd='',rankAwdAmt=0;
+  var byRateTmp=D.map(function(dd,ii){return{i:ii,d:dd};}).sort(function(a,b){return(b.d[11]/b.d[8])-(a.d[11]/a.d[8]);});
+  var byAmtTmp=D.map(function(dd,ii){return{i:ii,d:dd};}).sort(function(a,b){return b.d[11]-a.d[11];});
+  var aExcTmp=new Set(byAmtTmp.filter(function(x,k){return k<2&&x.d[11]>=300000;}).map(function(x){return x.d[3];}));
+  var rFinalTmp=byRateTmp.filter(function(x){return !aExcTmp.has(x.d[3]);});
+  var rIdx=rFinalTmp.findIndex(function(x){return x.d[5]===name;});
+  var aIdx=byAmtTmp.findIndex(function(x){return x.d[5]===name;});
+  var rPrizeTmp=function(k){return k===0?300000:k<=2?200000:k<10?50000:0;};
+  var aPrizeTmp=function(k){return k===0?500000:k<=2?300000:k<10?100000:0;};
+  if(rIdx>=0&&rIdx<10&&d[11]>=300000){rankAwdAmt=Math.max(rankAwdAmt,rPrizeTmp(rIdx));rRankV=rIdx+1;}
+  if(aIdx>=0&&aIdx<10&&d[11]>=300000){var aAmt=aPrizeTmp(aIdx);if(aAmt>=rankAwdAmt){rankAwdAmt=aAmt;aRankV=aIdx+1;rRankV=0;}}
+  if(rankAwdAmt>0){
+    if(aRankV>0)rankAwd='신장액 '+aRankV+'위: '+rankAwdAmt.toLocaleString()+'원';
+    else if(rRankV>0)rankAwd='신장률 '+rRankV+'위: '+rankAwdAmt.toLocaleString()+'원';
+  } else {rankAwd='해당없음';}
+  // 합계
+  var totalAmt=netAwdAmt+rankAwdAmt;
   // 그룹시상 계산
   var grpAwd='없음';
   for(var gi=0;gi<GROUPS.length;gi++){
@@ -841,8 +859,10 @@ function openPerfPopup(i){
   var body='';
   body+='<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eef;"><span style="color:#556688;">현재 인보험 순증</span><span style="font-weight:900;color:'+(net>=0?'#0040b0':'#cc0000')+';">'+netStr+'</span></div>';
   body+='<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eef;"><span style="color:#556688;">달성률</span><span style="font-weight:900;color:'+(rate>=100?'#006030':rate>=80?'#334466':'#880000')+';">'+rate.toFixed(1)+'%</span></div>';
-  body+='<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eef;flex-wrap:wrap;gap:4px;"><span style="color:#556688;">개인시상</span><span style="font-weight:900;color:#cc5500;font-size:12px;">'+awd+'</span></div>';
-  body+='<div style="display:flex;justify-content:space-between;padding:5px 0;flex-wrap:wrap;gap:4px;"><span style="color:#556688;">그룹시상</span><span style="font-weight:900;color:#5a20c0;font-size:12px;">'+grpAwd+'</span></div>';
+  body+='<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eef;"><span style="color:#556688;">순증액 시상</span><span style="font-weight:900;color:#cc5500;font-size:12px;">'+netAwd+'</span></div>';
+  body+='<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eef;"><span style="color:#556688;">순위 시상</span><span style="font-weight:900;color:#1a3a6b;font-size:12px;">'+rankAwd+'</span></div>';
+  body+='<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eef;"><span style="color:#556688;">그룹시상</span><span style="font-weight:900;color:#5a20c0;font-size:12px;">'+grpAwd+'</span></div>';
+  body+='<div style="display:flex;justify-content:space-between;padding:7px 0;background:#f0f8ff;margin-top:2px;border-radius:7px;padding:7px 10px;"><span style="color:#0a2050;font-weight:700;">💰 예상 시상 합계</span><span style="font-weight:900;color:#cc0000;font-size:15px;">'+(totalAmt>0?totalAmt.toLocaleString()+'원':'해당없음')+'</span></div>';
   document.getElementById('perfPopupBody').innerHTML=body;
   var ipumEl=document.getElementById('perfPopupIpum');
   if(ipumAmt>=300000){
@@ -921,7 +941,7 @@ function renderAll(){
     :'<div style="padding:14px 0;text-align:center;color:#aaa;font-size:10px;">관리자에서 입력하세요</div>';
   renderHomeGrp();
   // KPI
-  document.getElementById('kpi-perf').innerHTML=`<div class="kpi sky"><div class="kl">총 인원</div><div class="kv">${total}명</div></div><div class="kpi g"><div class="kl">5만원↑ 순증자</div><div class="kv" style="color:#005030">${over5}명</div></div><div class="kpi gd"><div class="kl">순증 30만 이상</div><div class="kv" style="color:#7a5000">${elig.length}명</div></div><div class="kpi"><div class="kl">평균 달성률</div><div class="kv">${avgR.toFixed(1)}%</div></div>`;
+  document.getElementById('kpi-perf').innerHTML=`<div class="kpi sky"><div class="kl">총 인원</div><div class="kv">${total}명</div></div><div class="kpi g"><div class="kl">5만원↑ 순증자</div><div class="kv" style="color:#005030">${over5}명</div></div><div class="kpi gd"><div class="kl">30만원↑ 순증자</div><div class="kv" style="color:#7a5000">${elig.length}명</div></div><div class="kpi"><div class="kl">평균 달성률</div><div class="kv">${avgR.toFixed(1)}%</div></div>`;
   // 실적 테이블
   document.getElementById('mainTbody').innerHTML=[...byAmt].map(({i,d},rank)=>{
     const nc=d[10]>=120?'c-over':d[10]>=100?'c-good':d[10]>=80?'c-mid':'c-low';
