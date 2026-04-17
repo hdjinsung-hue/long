@@ -291,7 +291,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
       <div class="ps"><div class="psl">총 인원</div><div class="psv" id="hs-total">-</div></div>
       <div class="ps"><div class="psl">평균 달성률</div><div class="psv" id="hs-avg">-</div></div>
       <div class="ps"><div class="psl">5만원↑ 순증</div><div class="psv g" id="hs-over">-</div></div>
-      <div class="ps"><div class="psl">순증 30만 이상</div><div class="psv gd" id="hs-elig">-</div></div>
+      <div class="ps"><div class="psl">30만원↑ 순증</div><div class="psv gd" id="hs-elig">-</div></div>
       <div class="ps"><div class="psl">150% 지급</div><div class="psv g" id="hs-a5">-</div></div>
       <div class="ps"><div class="psl">120% 지급</div><div class="psv o" id="hs-a4">-</div></div>
     </div>
@@ -339,7 +339,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
     </div>
     <div class="podium" id="ratePodium"></div>
     <div class="rlbl">📋 4위 ~ 10위</div>
-    <div class="tbl" style="margin-top:6px"><table><thead><tr class="hd1"><th>순위</th><th>지점</th><th>성명</th><th>기준실적</th><th>순증액</th><th>신장률</th><th>시상</th></tr></thead><tbody id="rateRest"></tbody></table></div>
+    <div class="tbl" style="margin-top:6px"><table><thead><tr class="hd1"><th>순위</th><th>지점</th><th>성명</th><th>기준실적</th><th>신장률</th><th>시상</th></tr></thead><tbody id="rateRest"></tbody></table></div>
     </div>
   </div>
   <div id="vamt" style="display:none">
@@ -353,7 +353,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
     </div>
     <div class="podium" id="amtPodium"></div>
     <div class="rlbl">📋 4위 ~ 10위</div>
-    <div class="tbl" style="margin-top:6px"><table><thead><tr class="hd1"><th>순위</th><th>지점</th><th>성명</th><th>기준실적</th><th>신장액</th><th>신장률</th><th>시상</th></tr></thead><tbody id="amtRest"></tbody></table></div>
+    <div class="tbl" style="margin-top:6px"><table><thead><tr class="hd1"><th>순위</th><th>지점</th><th>성명</th><th>기준실적</th><th>신장액</th><th>시상</th></tr></thead><tbody id="amtRest"></tbody></table></div>
     </div>
   </div>
   <div id="vipum" style="display:none">
@@ -453,7 +453,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
       <div class="ar"><span class="al">평균 달성률</span><span class="av" id="adm-avg">-</span></div>
     </div>
     <div class="ac"><h3>🏆 시상 현황</h3>
-      <div class="ar"><span class="al">순증 30만 이상(30만↑)</span><span class="av gn" id="adm-elig">-</span></div>
+      <div class="ar"><span class="al">30만원↑ 순증</span><span class="av gn" id="adm-elig">-</span></div>
       <div class="ar"><span class="al">150% 지급</span><span class="av gn" id="adm-a5">-</span></div>
       <div class="ar"><span class="al">120% 지급</span><span class="av gn" id="adm-a4">-</span></div>
       <div class="ar"><span class="al">현금 시상</span><span class="av or" id="adm-a3">-</span></div>
@@ -615,6 +615,8 @@ const GROUPS = [
     {name:'김애덕', branch:'새광주지점',  base:419},
   ]},
 ];
+
+
 const CHEERS=["오늘도 최고의 하루를 만들어가고 계십니다!", "고객의 미래를 지키는 든든한 파트너!", "당신의 열정이 고객의 안심이 됩니다!", "한 걸음 한 걸음이 모여 큰 성과를 만듭니다!", "오늘의 노력이 내일의 결실로 돌아옵니다!", "고객과의 신뢰, 그것이 진정한 재산입니다!", "포기하지 않는 당신이 진짜 챔피언입니다!", "진심은 반드시 통합니다, 믿으세요!", "당신이 있어 고객이 행복합니다!", "매일 성장하는 당신을 응원합니다!", "고객의 웃음 뒤에는 당신의 노력이 있습니다!", "오늘도 멋지게 해내실 줄 알았습니다!", "당신의 진심이 고객의 마음을 움직입니다!", "작은 계약 하나하나가 큰 꿈을 이룹니다!", "지금 이 순간도 최선을 다하는 당신, 존경합니다!", "고객을 위한 당신의 헌신에 박수를 보냅니다!", "어제보다 오늘이 더 빛나는 당신입니다!", "당신의 열정은 팀 전체에 에너지를 줍니다!", "힘든 순간도 결국 성장의 발판이 됩니다!", "당신이 만드는 안심이 고객 가족을 지킵니다!", "오늘 뿌린 씨앗이 반드시 꽃을 피웁니다!", "당신의 미소가 고객의 결심을 바꿉니다!", "포기란 없는 당신의 사전, 아름답습니다!", "고객의 눈물을 닦아주는 진정한 파트너!", "오늘도 기적 같은 하루를 만들어가세요!", "당신이 상담한 고객은 정말 행운아입니다!", "끝까지 해내는 당신이 진정한 프로입니다!", "당신의 노력이 가족의 안전망이 됩니다!", "한 번의 상담이 평생의 감사가 됩니다!", "오늘도 당신답게 멋지게 해내세요!", "고객의 믿음이 당신의 가장 큰 보상입니다!", "당신의 열정은 그 누구도 따라올 수 없습니다!", "지금 이 순간 최선을 다하는 당신을 응원!", "힘내세요, 당신은 반드시 해낼 수 있습니다!", "당신의 진심 어린 상담이 기적을 만듭니다!", "오늘도 고객을 위해 뛰어주셔서 감사합니다!", "당신의 열정이 팀의 자부심입니다!", "포기하지 않는 당신, 오늘도 화이팅!", "고객의 내일을 오늘 준비하는 당신, 대단합니다!", "당신이 흘린 땀방울이 빛나는 성과로 돌아옵니다!", "진심으로 상담하는 당신을 고객이 기억합니다!", "당신의 꿈을 향한 도전을 멈추지 마세요!", "오늘도 고객에게 희망을 주는 당신입니다!", "작은 친절이 큰 신뢰를 만듭니다!", "당신이 있어 이 팀이 더욱 강해집니다!", "고객의 감사 인사가 당신의 보람입니다!", "오늘의 도전이 내일의 전설이 됩니다!", "당신의 상담 하나가 가족을 지킵니다!", "포기 없이 달려온 당신, 정말 멋집니다!", "매 순간 최선을 다하는 당신을 존경합니다!", "당신의 전화 한 통이 고객의 인생을 바꿉니다!", "오늘도 기쁜 소식을 만들어가세요!", "당신의 성실함이 최고의 스펙입니다!", "고객 곁에 늘 함께하는 당신, 고맙습니다!", "열정은 재능을 이깁니다, 당신이 그 증거입니다!", "오늘도 당신의 빛나는 하루를 응원합니다!", "당신의 한 마디가 고객에게 용기가 됩니다!", "꾸준한 당신이 결국 승리합니다!", "고객의 미래를 설계하는 당신은 예술가입니다!", "오늘도 끝까지 포기하지 마세요!", "당신의 따뜻한 상담이 차가운 걱정을 녹입니다!", "성공은 포기하지 않는 자의 것입니다!", "당신이 만드는 안심이 세상을 따뜻하게 합니다!", "오늘도 당신은 누군가의 영웅입니다!", "고객의 신뢰를 쌓아가는 당신, 대단합니다!", "당신의 노력은 절대 배신하지 않습니다!", "오늘도 최고의 결과를 만들어낼 당신입니다!", "진심이 담긴 상담은 반드시 통합니다!", "당신의 열정이 팀에 활력을 불어넣습니다!", "고객의 미소가 당신의 에너지입니다!", "오늘도 멈추지 않는 당신을 응원합니다!", "당신이 있어 고객이 믿을 수 있습니다!", "한 발짝씩 나아가는 당신이 존경스럽습니다!", "오늘의 땀이 내일의 영광이 됩니다!", "당신의 상담은 고객 인생 최고의 투자입니다!", "포기를 모르는 당신, 오늘도 화이팅!", "당신이 뛰는 만큼 고객이 안심합니다!", "진심 어린 한 마디가 계약을 만듭니다!", "오늘도 빛나는 당신의 하루를 기원합니다!", "당신의 꾸준함이 결국 큰 산을 넘습니다!", "고객을 향한 당신의 진심, 반드시 통합니다!", "오늘도 최선을 다하는 당신이 자랑스럽습니다!", "당신의 성실함이 최고의 영업 비결입니다!", "고객의 미래를 함께 그려가는 당신, 멋집니다!", "오늘도 당신의 열정에 박수를 보냅니다!", "당신이 만드는 변화가 세상을 이롭게 합니다!", "포기하지 않는 한 실패는 없습니다!", "당신의 상담이 고객 가족의 버팀목입니다!", "오늘도 한 걸음 더 나아가는 당신입니다!", "당신의 진심이 고객의 마음을 열었습니다!", "힘든 하루도 당신에겐 성장의 기회입니다!", "오늘도 고객과 함께 빛나는 당신입니다!", "당신의 노력이 팀 전체를 이끕니다!", "포기란 없는 당신의 사전을 본받겠습니다!", "오늘도 고객을 위해 달려주셔서 감사합니다!", "당신의 열정은 어떤 역경도 이깁니다!", "고객의 고민을 내 일처럼 여기는 당신!", "오늘도 새로운 가능성을 열어가는 당신!", "당신의 상담 한 번이 가족을 지킵니다!", "꾸준함이 당신의 가장 큰 무기입니다!", "오늘도 당신의 눈부신 활약을 응원합니다!", "진심을 다하는 당신, 고객이 알아봅니다!", "당신의 발걸음이 고객의 안심이 됩니다!", "오늘도 최고의 상담사 당신을 응원합니다!", "당신이 있어 팀이 든든합니다!", "고객의 눈물을 미소로 바꾸는 당신입니다!", "오늘도 포기 없이 전진하는 당신을 응원!", "당신의 열정이 고객의 믿음을 만듭니다!", "힘내세요, 오늘도 당신은 해낼 수 있습니다!", "당신의 진심 어린 한 마디가 기적을 씁니다!", "오늘도 당신은 누군가의 든든한 파트너!", "고객을 위해 뛰는 당신, 진정한 프로입니다!", "당신의 열정 앞에 불가능은 없습니다!", "오늘도 빛나는 성과를 만들어내세요!", "당신이 상담한 고객은 행복한 선택을 했습니다!", "매일 성장하는 당신이 팀의 자랑입니다!", "오늘도 당신의 노력이 결실을 맺습니다!", "고객의 신뢰를 얻는 것, 당신이 최고입니다!", "포기를 모르는 당신의 정신이 팀을 이끕니다!", "오늘도 고객과 함께 성장하는 당신입니다!", "당신의 상담은 고객에게 최고의 선물입니다!", "오늘도 당신의 진심이 고객을 움직입니다!", "힘든 시간도 결국 당신을 더 강하게 만듭니다!", "당신이 있어 고객이 안심할 수 있습니다!", "오늘도 최선을 다하는 당신, 정말 대단합니다!", "고객의 미래를 오늘 지키는 당신입니다!", "당신의 열정이 이 팀의 원동력입니다!", "오늘도 당신의 빛나는 활약을 기대합니다!", "진심은 결코 배신하지 않습니다!", "당신의 상담이 고객의 인생을 바꿉니다!", "오늘도 새로운 기적을 만들어가는 당신!", "고객을 향한 당신의 사랑이 느껴집니다!", "당신의 꾸준함이 반드시 빛을 발합니다!", "오늘도 당신의 노력에 감사합니다!", "힘내세요, 당신 뒤에 팀이 있습니다!", "당신의 한 통의 전화가 가족을 지킵니다!", "오늘도 최고의 하루를 만들어가세요!", "당신의 열정은 고객에게 희망이 됩니다!", "포기 없이 달리는 당신, 반드시 승리합니다!", "오늘도 당신의 진심을 고객이 느낍니다!", "당신이 만드는 안심이 가정을 지킵니다!", "오늘도 한 발짝 더 나아가는 당신입니다!", "고객의 믿음은 당신의 진심에서 시작됩니다!", "오늘도 당신은 최고의 파트너입니다!", "당신의 노력이 팀을 빛나게 합니다!", "힘든 길을 묵묵히 걷는 당신, 존경합니다!", "오늘도 고객에게 최선을 다하는 당신!", "당신의 열정이 고객의 결정을 이끕니다!", "포기하지 않는 당신이 결국 이깁니다!", "오늘도 당신의 활약을 기대하겠습니다!", "고객의 행복이 당신의 성공입니다!", "당신의 상담 하나가 평생의 인연을 만듭니다!", "오늘도 빛나는 결과를 만들어내실 겁니다!", "당신의 진심이 고객의 마음 문을 엽니다!", "힘내세요, 오늘도 당신을 응원합니다!", "당신의 노력은 절대 헛되지 않습니다!", "오늘도 최고의 상담사로 빛나는 당신!", "고객의 안심을 위해 뛰는 당신, 고맙습니다!", "당신의 열정이 팀 전체를 이끕니다!", "오늘도 포기하지 않는 당신을 응원합니다!", "진심 어린 상담이 최고의 영업입니다!", "당신의 꿈을 향해 달려가세요, 응원합니다!", "오늘도 고객과 함께 빛나는 하루 되세요!", "당신이 있어 고객이 든든합니다!", "열정과 진심으로 무장한 당신, 최고입니다!", "오늘도 당신의 노력이 결실을 맺길 바랍니다!", "고객을 향한 당신의 헌신에 감사합니다!", "당신의 상담은 고객 가족의 든든한 버팀목!", "오늘도 포기 없이 전진하는 당신입니다!", "당신의 열정이 오늘도 기적을 만듭니다!", "힘든 순간도 당신에겐 성공의 발판입니다!", "오늘도 최선을 다하는 당신이 자랑스럽습니다!", "당신이 만드는 변화가 고객의 삶을 바꿉니다!", "오늘도 당신의 진심이 통하길 바랍니다!", "고객의 미소가 당신의 가장 큰 보상입니다!", "오늘도 새로운 가능성을 열어가는 당신!", "당신의 꾸준한 노력이 최고의 실적을 만듭니다!", "힘내세요, 당신은 반드시 해낼 수 있습니다!", "당신의 열정이 팀에 활력을 줍니다!", "오늘도 고객을 위해 최선을 다하는 당신!", "당신의 진심 어린 상담이 고객을 행복하게!", "포기하지 않는 한 불가능은 없습니다!", "오늘도 당신의 빛나는 활약을 기대합니다!", "당신이 있어 팀이 더욱 강해집니다!", "고객의 내일을 오늘 준비하는 당신!", "오늘도 한 걸음씩 나아가는 당신입니다!", "당신의 상담이 고객에게 가장 좋은 선택!", "힘든 하루도 당신에겐 성장의 기회입니다!", "오늘도 당신의 노력에 박수를 보냅니다!", "고객을 위해 뛰는 당신, 진정한 챔피언!", "당신의 열정 앞에 어떤 어려움도 없습니다!", "오늘도 최고의 하루를 만들어가세요!", "진심을 다하는 당신, 반드시 통합니다!", "당신의 꿈을 향한 열정, 멈추지 마세요!", "오늘도 고객과 함께 성장하는 당신입니다!", "당신이 만드는 안심이 가족을 지킵니다!", "오늘도 포기 없이 달리는 당신을 응원!", "고객의 신뢰를 얻는 당신이 진짜 프로!", "당신의 열정이 오늘도 새로운 기적을 씁니다!", "힘내세요, 오늘도 당신은 최고입니다!", "당신의 노력이 고객의 안심을 만듭니다!", "오늘도 빛나는 성과를 향해 달려가세요!", "당신이 있어 고객이 행복합니다!", "포기를 모르는 당신의 열정, 최고입니다!", "오늘도 당신의 진심이 결과를 만듭니다!", "고객을 위해 오늘도 뛰어주셔서 감사합니다!", "당신의 상담 한 번이 인생을 바꿉니다!", "오늘도 새로운 도전을 두려워하지 마세요!", "당신의 열정이 팀을 이끄는 원동력입니다!", "힘든 길도 당신과 함께라면 즐거운 여정!", "오늘도 고객에게 최고의 상담사 당신입니다!", "당신의 진심이 고객의 마음을 움직입니다!", "포기하지 않는 당신, 오늘도 파이팅!", "당신의 꾸준함이 결국 빛을 발합니다!", "오늘도 당신의 열정에 감사드립니다!", "고객의 안심을 위해 오늘도 뛰는 당신!", "당신이 만드는 신뢰가 최고의 자산입니다!", "오늘도 최선을 다하는 당신을 응원합니다!", "당신의 열정이 고객에게 희망을 줍니다!", "힘내세요, 당신 뒤에 팀이 있습니다!", "당신의 노력은 반드시 결실을 맺습니다!", "오늘도 고객과 함께 빛나는 당신입니다!", "진심을 다하면 반드시 통합니다!", "당신의 상담이 고객 가족의 버팀목입니다!", "오늘도 포기 없이 전진하는 당신!", "당신의 열정이 이 팀을 자랑스럽게 합니다!", "오늘도 한 발짝 더 나아가는 당신을 응원!", "고객의 미래를 지키는 당신, 존경합니다!", "당신이 있어 이 팀이 더욱 빛납니다!", "오늘도 당신의 진심이 기적을 만듭니다!", "힘든 순간도 당신을 더 강하게 만듭니다!", "당신의 열정은 그 무엇도 막을 수 없습니다!", "오늘도 최고의 상담으로 고객을 만나세요!", "당신이 흘린 땀방울이 성과로 돌아옵니다!", "포기하지 않는 한 당신은 반드시 성공합니다!", "오늘도 고객을 위해 최선을 다하는 당신!", "당신의 상담이 고객에게 가장 큰 선물!", "힘내세요, 오늘도 당신을 믿습니다!", "당신의 꾸준한 노력이 팀을 이끕니다!", "오늘도 빛나는 당신의 하루를 응원합니다!", "당신의 진심이 담긴 상담, 고객이 느낍니다!", "오늘도 새로운 기적을 써 내려가는 당신!", "고객의 행복이 당신의 성공입니다!", "당신의 열정이 오늘도 최고의 결과를 냅니다!", "힘든 길도 결국 당신을 성장시킵니다!", "오늘도 당신은 최고의 파트너입니다!", "당신이 만드는 안심이 세상을 따뜻하게!", "포기 없이 달리는 당신, 반드시 이깁니다!", "오늘도 당신의 노력이 고객을 행복하게!", "당신의 열정이 팀 전체의 자부심입니다!", "고객을 향한 당신의 진심, 오늘도 빛납니다!", "오늘도 최선을 다하는 당신이 멋집니다!", "당신의 상담 하나가 평생의 감사가 됩니다!", "힘내세요, 당신은 오늘도 해낼 수 있습니다!", "당신의 열정이 불가능을 가능으로 만듭니다!", "오늘도 고객과 함께 성장하는 당신입니다!", "당신이 있어 고객이 든든합니다!", "진심 어린 노력은 반드시 빛을 발합니다!", "오늘도 당신의 빛나는 활약을 기대합니다!", "당신의 꿈을 향해 오늘도 달려가세요!", "고객의 믿음이 당신의 가장 큰 자산입니다!", "오늘도 포기하지 않는 당신을 응원합니다!", "당신의 열정이 고객의 결심을 이끕니다!", "힘든 하루도 당신에겐 값진 경험입니다!", "오늘도 최고의 하루를 만들어가는 당신!", "당신의 진심이 고객의 마음을 사로잡습니다!", "포기를 모르는 당신, 진정한 승자입니다!", "오늘도 고객을 위해 뛰는 당신, 고맙습니다!", "당신의 노력이 팀에 희망을 줍니다!", "오늘도 새로운 가능성을 열어가세요!", "당신의 상담이 고객의 인생을 바꿉니다!", "힘내세요, 오늘도 당신을 응원합니다!", "당신의 열정이 이 팀을 이끄는 힘입니다!", "오늘도 최선을 다하는 당신이 자랑스럽습니다!", "고객의 안심을 만드는 당신, 최고입니다!"];
 function getRandomCheer(){return CHEERS[Math.floor(Math.random()*CHEERS.length)];}
 const Nf=v=>Math.round(v).toLocaleString();
@@ -639,6 +641,60 @@ function checkPw(){
     setTimeout(function(){e.style.display='none';},2000);
   }
 }
+
+function g1Prize(r){if(r>=25)return{lbl:'25%↑',prize:'15만원',ok:true};if(r>=15)return{lbl:'15%↑',prize:'7만원',ok:true};if(r>=5)return{lbl:'5%↑',prize:'3만원',ok:true};return{lbl:'미달',prize:'-',ok:false};}
+function g2Prize(base,cur){const ok=base.length>0&&cur.every((c,i)=>c-base[i]>=50);return ok?{lbl:'✅전원달성',prize:'5만원',ok:true}:{lbl:'미달',prize:'-',ok:false};}
+
+function renderGrpTable(){
+  const tb=document.getElementById('grpTbody');
+  const sm=document.getElementById('grpSummary');
+  if(!tb)return;
+  let html='',sumHtml='<div class="grp-summary">';
+  const grpData=GROUPS.map((g,gi)=>{
+    const base=g.members.map(m=>m.base);
+    const cur=g.members.map(m=>{const f=D.find(d=>d[5]===m.name);return f?Math.round(f[9]/1000):m.base;});
+    const bSum=base.reduce((s,v)=>s+v,0);
+    const cSum=cur.reduce((s,v)=>s+v,0);
+    const achv=bSum>0?cSum/bSum*100:0;
+    const rate=bSum>0?(cSum-bSum)/bSum*100:0;
+    const p1=g1Prize(rate);const p2=g2Prize(base,cur);
+    const over5=g.members.filter(m=>{const f=D.find(d=>d[5]===m.name);return f&&f[11]>=50000;}).length;
+    return {g,gi,base,cur,bSum,cSum,achv,rate,p1,p2,over5};
+  }).sort((a,b)=>b.achv-a.achv);
+  grpData.forEach(({g,gi,base,cur,bSum,cSum,achv,rate,p1,p2,over5},rank)=>{
+    const rc=achv>=100?'#006030':achv>=80?'#1a6030':achv>=50?'#884400':'#880000';
+    const mStr=g.members.map(m=>m.name).join('·');
+    const rankBadge=rank===0?'<span class="rb r1">1</span>':rank===1?'<span class="rb r2">2</span>':rank===2?'<span class="rb r3">3</span>':`<span class="rb rt">${rank+1}</span>`;
+    html+=`<tr>
+      <td style="text-align:center;cursor:pointer;" onclick="openGrpDetail(${gi})">${rankBadge}<br><span style="font-size:10px;color:#334466;">${g.id}팀</span></td>
+      <td style="font-size:11px;font-weight:700;color:#0a2050;text-align:left;cursor:pointer;" onclick="openGrpDetail(${gi})">${mStr}</td>
+      <td style="text-align:right;padding-right:7px;">${bSum.toLocaleString()}</td>
+      <td style="text-align:right;padding-right:7px;font-weight:700;">${cSum.toLocaleString()}</td>
+      <td style="text-align:center;font-weight:900;color:${rc};font-size:13px;">${achv.toFixed(1)}%</td>
+      <td style="text-align:center;">${over5>0?`<span style="color:#006030;font-weight:900;">✅${over5}/${g.members.length}명</span>`:`<span style="color:#cc0000;">✗ 0/${g.members.length}명</span>`}</td>
+      <td style="text-align:center;font-size:11px;font-weight:700;color:${p1.ok?'#006030':'#888'};">${p1.lbl}</td>
+      <td style="text-align:center;font-size:14px;font-weight:900;color:${p1.ok?'#006030':'#ccc'};">${p1.prize}</td>
+      <td style="text-align:center;font-size:11px;font-weight:700;color:${p2.ok?'#884400':'#888'};">${p2.lbl}</td>
+      <td style="text-align:center;font-size:14px;font-weight:900;color:${p2.ok?'#884400':'#ccc'};">${p2.prize}</td>
+    </tr>`;
+    var gbg,gtxt,gborder,gshine,gteam,gnbadge,mStrC=g.members.map(m=>m.name).join(' · ');
+    if(achv>=95){gbg='linear-gradient(145deg,#0a2000,#1a5c00,#0a2000)';gtxt='#00ff88';gborder='#00ff88';gshine='0 0 20px rgba(0,255,136,.5),0 4px 16px rgba(0,0,0,.4)';gteam='#fff';gnbadge='#00ff88';}
+    else if(achv>=85){gbg='linear-gradient(145deg,#001040,#0a2a7a,#001040)';gtxt='#66ccff';gborder='#4a90d9';gshine='0 0 16px rgba(74,144,217,.45),0 4px 16px rgba(0,0,0,.4)';gteam='#fff';gnbadge='#88ddff';}
+    else if(achv>=70){gbg='linear-gradient(145deg,#1a1000,#4a3000,#1a1000)';gtxt='#ffd700';gborder='#cc9900';gshine='0 0 14px rgba(255,215,0,.4),0 4px 14px rgba(0,0,0,.4)';gteam='#ffe066';gnbadge='#ffd700';}
+    else if(achv>=55){gbg='linear-gradient(145deg,#150030,#2d0060,#150030)';gtxt='#cc99ff';gborder='#7744cc';gshine='0 0 12px rgba(150,80,255,.35),0 4px 12px rgba(0,0,0,.4)';gteam='#ddbbff';gnbadge='#bb88ff';}
+    else{gbg='linear-gradient(145deg,#200010,#500020,#200010)';gtxt='#ff9999';gborder='#cc4444';gshine='0 4px 12px rgba(0,0,0,.4)';gteam='#ffcccc';gnbadge='#ff8888';}
+    sumHtml+='<div class="grp-card" onclick="openGrpDetail('+gi+')" style="background:'+gbg+';border:2px solid '+gborder+';box-shadow:'+gshine+';">'
+      +'<div style="font-weight:900;font-size:18px;color:'+gteam+';margin-bottom:2px;">'+g.id+'팀</div>'
+      +'<div style="font-size:22px;font-weight:900;color:'+gtxt+';margin-bottom:4px;text-shadow:0 0 8px '+gtxt+'88;">'+achv.toFixed(1)+'%</div>'
+      +'<div style="font-size:10px;font-weight:700;color:'+gnbadge+';margin-bottom:5px;line-height:1.5;">'+mStrC+'</div>'
+      +'<div style="font-size:12px;font-weight:700;color:'+(over5>0?'#ffcc44':'#aaa')+';margin-bottom:2px;">5만↑ '+over5+'/'+g.members.length+'명</div>'
+      +'<div style="font-size:11px;font-weight:700;color:'+(p1.ok?gtxt:'#888')+'">'+(p1.ok?p1.prize+' 시상':'&nbsp;')+'</div>'
+      +'<div style="font-size:11px;font-weight:700;color:'+(p2.ok?'#ffd700':'#888')+'">'+(p2.ok?'그룹2 ✅':'&nbsp;')+'</div>'
+      +'</div>';
+  });
+  tb.innerHTML=html;sumHtml+='</div>';if(sm)sm.innerHTML=sumHtml;
+}
+function saveGroupData(){const msg=document.getElementById('grpSaveMsg');if(msg){msg.style.display='inline';setTimeout(()=>msg.style.display='none',2500);}}
 
 const VIEWS=['vperf','vrate','vamt','vipum','vgroup'];
 const NAVS=[{id:'home',icon:'🏠',label:'홈'},{id:'perf',icon:'📊',label:'실적 진도'},{id:'rate',icon:'📈',label:'신장률 TOP10'},{id:'amt',icon:'💰',label:'신장액 TOP10'},{id:'ipum',icon:'✨',label:'인품왕 TOP10'},{id:'group',icon:'🏅',label:'그룹 시상'}];
@@ -1018,7 +1074,7 @@ function renderAll(){
     :'<div style="padding:14px 0;text-align:center;color:#aaa;font-size:10px;">관리자에서 입력하세요</div>';
   renderHomeGrp();
   // KPI
-  document.getElementById('kpi-perf').innerHTML=`<div class="kpi sky"><div class="kl">총 인원</div><div class="kv">${total}명</div></div><div class="kpi g"><div class="kl">5만원↑ 순증자</div><div class="kv" style="color:#005030">${over5}명</div></div><div class="kpi gd"><div class="kl">30만원↑ 순증</div><div class="kv" style="color:#7a5000">${elig.length}명</div></div><div class="kpi"><div class="kl">평균 달성률</div><div class="kv">${avgR.toFixed(1)}%</div></div>`;
+  document.getElementById('kpi-perf').innerHTML=`<div class="kpi sky"><div class="kl">총 인원</div><div class="kv">${total}명</div></div><div class="kpi g"><div class="kl">5만원↑ 순증</div><div class="kv" style="color:#005030">${over5}명</div></div><div class="kpi gd"><div class="kl">30만원↑ 순증</div><div class="kv" style="color:#7a5000">${elig.length}명</div></div><div class="kpi"><div class="kl">평균 달성률</div><div class="kv">${avgR.toFixed(1)}%</div></div>`;
   // 실적 테이블
   document.getElementById('mainTbody').innerHTML=[...byAmt].map(({i,d},rank)=>{
     const nc=d[10]>=120?'c-over':d[10]>=100?'c-good':d[10]>=80?'c-mid':'c-low';
@@ -1034,14 +1090,14 @@ function renderAll(){
   const ratePrizeFn=(k,d)=>{if(d[11]<300000)return'기준미충족';const ek=rEffMap[d[3]];return ek!==undefined?rPrize(ek):'기준미충족';};
   const rAwardCell=d=>{if(d[11]<300000)return'<span class="bdg b-ms">기준미충족</span>';const ek=rEffMap[d[3]];if(ek===undefined)return'<span class="bdg b-ms">기준미충족</span>';return`<span class="bdg b-g">${rPrize(ek)}</span>`;};
   // 신장률 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
-  if(rFinalList.length>=1)document.getElementById('ratePodium').innerHTML=makePod(rFinalList.slice(0,3),d=>((d[11]/d[8])*100).toFixed(1)+'%',d=>'순증 +'+Nf(d[11])+'원',ratePrizeFn);
-  document.getElementById('rateRest').innerHTML=rFinalList.slice(3,10).map(({d},k)=>`<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td class="td-r net-p">+${Nf(d[11])}</td><td class="c-over">${(d[11]/d[8]*100).toFixed(1)}%</td><td>${rAwardCell(d)}</td></tr>`).join('');
+  if(rFinalList.length>=1)document.getElementById('ratePodium').innerHTML=makePod(rFinalList.slice(0,3),d=>((d[11]/d[8])*100).toFixed(1)+'%',d=>'',ratePrizeFn);
+  document.getElementById('rateRest').innerHTML=rFinalList.slice(3,10).map(({d},k)=>`<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td class="c-over">${(d[11]/d[8]*100).toFixed(1)}%</td><td>${rAwardCell(d)}</td></tr>`).join('');
   // 신장액 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
-  if(byAmt.length>=1)document.getElementById('amtPodium').innerHTML=makePod(byAmt.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>((d[11]/d[8])*100).toFixed(1)+'% 신장',(k,d)=>d[11]<300000?'기준미달성':aPrize(k));
+  if(byAmt.length>=1)document.getElementById('amtPodium').innerHTML=makePod(byAmt.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>'',(k,d)=>d[11]<300000?'기준미달성':aPrize(k));
   document.getElementById('amtRest').innerHTML=byAmt.slice(3,10).map(function(x,k){
     var d=x.d;
     var badge=d[11]>=300000?'<span class="bdg b-g">'+aPrize(k+3)+'</span>':'<span class="bdg b-ms">기준미달성</span>';
-    return '<tr><td>'+RB(k+4)+'</td><td>'+d[2]+'</td><td class="td-name">'+d[5]+'</td><td class="td-r">'+Nf(d[8])+'</td><td class="td-r net-p">+'+Nf(d[11])+'</td><td class="c-over">'+(d[11]/d[8]*100).toFixed(1)+'%</td><td>'+badge+'</td></tr>';
+    return '<tr><td>'+RB(k+4)+'</td><td>'+d[2]+'</td><td class="td-name">'+d[5]+'</td><td class="td-r">'+Nf(d[8])+'</td><td class="td-r net-p">+'+Nf(d[11])+'</td><td>'+badge+'</td></tr>';
   }).join('');
   // 인품왕
   document.getElementById('ipumPodium').innerHTML=ipumTop.slice(0,3).map(({d},k)=>{const cls=['ip1','ip2','ip3'][k];const medals=['🌟','⭐','✨'][k];const ranks=['인품의 황제','인품의 제왕','인품의 왕'][k];return`<div class="ip ${cls}"><div class="ipmed">${medals}</div><div class="iprk">${ranks}</div><div class="ipname">${d[5]}</div><div class="ipbr">${d[2]}</div><div class="ipval">${Nf(d[13])}원</div><div class="ipsub">${d[12]}건</div></div>`;}).join('')||'<div style="padding:16px;text-align:center;color:#aaa;">관리자에서 입력하세요</div>';
@@ -1117,7 +1173,7 @@ function renderAll(){
     :'<div style="padding:14px 0;text-align:center;color:#aaa;font-size:10px;">관리자에서 입력하세요</div>';
   renderHomeGrp();
   // KPI
-  document.getElementById('kpi-perf').innerHTML=`<div class="kpi sky"><div class="kl">총 인원</div><div class="kv">${total}명</div></div><div class="kpi g"><div class="kl">5만원↑ 순증자</div><div class="kv" style="color:#005030">${over5}명</div></div><div class="kpi gd"><div class="kl">30만원↑ 순증</div><div class="kv" style="color:#7a5000">${elig.length}명</div></div><div class="kpi"><div class="kl">평균 달성률</div><div class="kv">${avgR.toFixed(1)}%</div></div>`;
+  document.getElementById('kpi-perf').innerHTML=`<div class="kpi sky"><div class="kl">총 인원</div><div class="kv">${total}명</div></div><div class="kpi g"><div class="kl">5만원↑ 순증</div><div class="kv" style="color:#005030">${over5}명</div></div><div class="kpi gd"><div class="kl">30만원↑ 순증</div><div class="kv" style="color:#7a5000">${elig.length}명</div></div><div class="kpi"><div class="kl">평균 달성률</div><div class="kv">${avgR.toFixed(1)}%</div></div>`;
   // 실적 테이블
   document.getElementById('mainTbody').innerHTML=[...byAmt].map(({i,d},rank)=>{
     const nc=d[10]>=120?'c-over':d[10]>=100?'c-good':d[10]>=80?'c-mid':'c-low';
@@ -1133,14 +1189,14 @@ function renderAll(){
   const ratePrizeFn=(k,d)=>{if(d[11]<300000)return'기준미충족';const ek=rEffMap[d[3]];return ek!==undefined?rPrize(ek):'기준미충족';};
   const rAwardCell=d=>{if(d[11]<300000)return'<span class="bdg b-ms">기준미충족</span>';const ek=rEffMap[d[3]];if(ek===undefined)return'<span class="bdg b-ms">기준미충족</span>';return`<span class="bdg b-g">${rPrize(ek)}</span>`;};
   // 신장률 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
-  if(rFinalList.length>=1)document.getElementById('ratePodium').innerHTML=makePod(rFinalList.slice(0,3),d=>((d[11]/d[8])*100).toFixed(1)+'%',d=>'순증 +'+Nf(d[11])+'원',ratePrizeFn);
-  document.getElementById('rateRest').innerHTML=rFinalList.slice(3,10).map(({d},k)=>`<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td class="td-r net-p">+${Nf(d[11])}</td><td class="c-over">${(d[11]/d[8]*100).toFixed(1)}%</td><td>${rAwardCell(d)}</td></tr>`).join('');
+  if(rFinalList.length>=1)document.getElementById('ratePodium').innerHTML=makePod(rFinalList.slice(0,3),d=>((d[11]/d[8])*100).toFixed(1)+'%',d=>'',ratePrizeFn);
+  document.getElementById('rateRest').innerHTML=rFinalList.slice(3,10).map(({d},k)=>`<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td class="c-over">${(d[11]/d[8]*100).toFixed(1)}%</td><td>${rAwardCell(d)}</td></tr>`).join('');
   // 신장액 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
-  if(byAmt.length>=1)document.getElementById('amtPodium').innerHTML=makePod(byAmt.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>((d[11]/d[8])*100).toFixed(1)+'% 신장',(k,d)=>d[11]<300000?'기준미달성':aPrize(k));
+  if(byAmt.length>=1)document.getElementById('amtPodium').innerHTML=makePod(byAmt.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>'',(k,d)=>d[11]<300000?'기준미달성':aPrize(k));
   document.getElementById('amtRest').innerHTML=byAmt.slice(3,10).map(function(x,k){
     var d=x.d;
     var badge=d[11]>=300000?'<span class="bdg b-g">'+aPrize(k+3)+'</span>':'<span class="bdg b-ms">기준미달성</span>';
-    return '<tr><td>'+RB(k+4)+'</td><td>'+d[2]+'</td><td class="td-name">'+d[5]+'</td><td class="td-r">'+Nf(d[8])+'</td><td class="td-r net-p">+'+Nf(d[11])+'</td><td class="c-over">'+(d[11]/d[8]*100).toFixed(1)+'%</td><td>'+badge+'</td></tr>';
+    return '<tr><td>'+RB(k+4)+'</td><td>'+d[2]+'</td><td class="td-name">'+d[5]+'</td><td class="td-r">'+Nf(d[8])+'</td><td class="td-r net-p">+'+Nf(d[11])+'</td><td>'+badge+'</td></tr>';
   }).join('');
   // 인품왕
   document.getElementById('ipumPodium').innerHTML=ipumTop.slice(0,3).map(({d},k)=>{const cls=['ip1','ip2','ip3'][k];const medals=['🌟','⭐','✨'][k];const ranks=['인품의 황제','인품의 제왕','인품의 왕'][k];return`<div class="ip ${cls}"><div class="ipmed">${medals}</div><div class="iprk">${ranks}</div><div class="ipname">${d[5]}</div><div class="ipbr">${d[2]}</div><div class="ipval">${Nf(d[13])}원</div><div class="ipsub">${d[12]}건</div></div>`;}).join('')||'<div style="padding:16px;text-align:center;color:#aaa;">관리자에서 입력하세요</div>';
@@ -1408,7 +1464,7 @@ function renderAll(){
     :'<div style="padding:14px 0;text-align:center;color:#aaa;font-size:10px;">관리자에서 입력하세요</div>';
   renderHomeGrp();
   // KPI
-  document.getElementById('kpi-perf').innerHTML=`<div class="kpi sky"><div class="kl">총 인원</div><div class="kv">${total}명</div></div><div class="kpi g"><div class="kl">5만원↑ 순증자</div><div class="kv" style="color:#005030">${over5}명</div></div><div class="kpi gd"><div class="kl">30만원↑ 순증</div><div class="kv" style="color:#7a5000">${elig.length}명</div></div><div class="kpi"><div class="kl">평균 달성률</div><div class="kv">${avgR.toFixed(1)}%</div></div>`;
+  document.getElementById('kpi-perf').innerHTML=`<div class="kpi sky"><div class="kl">총 인원</div><div class="kv">${total}명</div></div><div class="kpi g"><div class="kl">5만원↑ 순증</div><div class="kv" style="color:#005030">${over5}명</div></div><div class="kpi gd"><div class="kl">30만원↑ 순증</div><div class="kv" style="color:#7a5000">${elig.length}명</div></div><div class="kpi"><div class="kl">평균 달성률</div><div class="kv">${avgR.toFixed(1)}%</div></div>`;
   // 실적 테이블
   document.getElementById('mainTbody').innerHTML=[...byAmt].map(({i,d},rank)=>{
     const nc=d[10]>=120?'c-over':d[10]>=100?'c-good':d[10]>=80?'c-mid':'c-low';
@@ -1424,14 +1480,14 @@ function renderAll(){
   const ratePrizeFn=(k,d)=>{if(d[11]<300000)return'기준미충족';const ek=rEffMap[d[3]];return ek!==undefined?rPrize(ek):'기준미충족';};
   const rAwardCell=d=>{if(d[11]<300000)return'<span class="bdg b-ms">기준미충족</span>';const ek=rEffMap[d[3]];if(ek===undefined)return'<span class="bdg b-ms">기준미충족</span>';return`<span class="bdg b-g">${rPrize(ek)}</span>`;};
   // 신장률 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
-  if(rFinalList.length>=1)document.getElementById('ratePodium').innerHTML=makePod(rFinalList.slice(0,3),d=>((d[11]/d[8])*100).toFixed(1)+'%',d=>'순증 +'+Nf(d[11])+'원',ratePrizeFn);
-  document.getElementById('rateRest').innerHTML=rFinalList.slice(3,10).map(({d},k)=>`<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td class="td-r net-p">+${Nf(d[11])}</td><td class="c-over">${(d[11]/d[8]*100).toFixed(1)}%</td><td>${rAwardCell(d)}</td></tr>`).join('');
+  if(rFinalList.length>=1)document.getElementById('ratePodium').innerHTML=makePod(rFinalList.slice(0,3),d=>((d[11]/d[8])*100).toFixed(1)+'%',d=>'',ratePrizeFn);
+  document.getElementById('rateRest').innerHTML=rFinalList.slice(3,10).map(({d},k)=>`<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td class="c-over">${(d[11]/d[8]*100).toFixed(1)}%</td><td>${rAwardCell(d)}</td></tr>`).join('');
   // 신장액 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
-  if(byAmt.length>=1)document.getElementById('amtPodium').innerHTML=makePod(byAmt.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>((d[11]/d[8])*100).toFixed(1)+'% 신장',(k,d)=>d[11]<300000?'기준미달성':aPrize(k));
+  if(byAmt.length>=1)document.getElementById('amtPodium').innerHTML=makePod(byAmt.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>'',(k,d)=>d[11]<300000?'기준미달성':aPrize(k));
   document.getElementById('amtRest').innerHTML=byAmt.slice(3,10).map(function(x,k){
     var d=x.d;
     var badge=d[11]>=300000?'<span class="bdg b-g">'+aPrize(k+3)+'</span>':'<span class="bdg b-ms">기준미달성</span>';
-    return '<tr><td>'+RB(k+4)+'</td><td>'+d[2]+'</td><td class="td-name">'+d[5]+'</td><td class="td-r">'+Nf(d[8])+'</td><td class="td-r net-p">+'+Nf(d[11])+'</td><td class="c-over">'+(d[11]/d[8]*100).toFixed(1)+'%</td><td>'+badge+'</td></tr>';
+    return '<tr><td>'+RB(k+4)+'</td><td>'+d[2]+'</td><td class="td-name">'+d[5]+'</td><td class="td-r">'+Nf(d[8])+'</td><td class="td-r net-p">+'+Nf(d[11])+'</td><td>'+badge+'</td></tr>';
   }).join('');
   // 인품왕
   document.getElementById('ipumPodium').innerHTML=ipumTop.slice(0,3).map(({d},k)=>{const cls=['ip1','ip2','ip3'][k];const medals=['🌟','⭐','✨'][k];const ranks=['인품의 황제','인품의 제왕','인품의 왕'][k];return`<div class="ip ${cls}"><div class="ipmed">${medals}</div><div class="iprk">${ranks}</div><div class="ipname">${d[5]}</div><div class="ipbr">${d[2]}</div><div class="ipval">${Nf(d[13])}원</div><div class="ipsub">${d[12]}건</div></div>`;}).join('')||'<div style="padding:16px;text-align:center;color:#aaa;">관리자에서 입력하세요</div>';
