@@ -96,7 +96,7 @@ html{background:linear-gradient(160deg,#0d2554,#1a6090,#0d2554) fixed;}
 .stitle{font-size:13px;font-weight:700;color:#0a2050;padding-bottom:8px;border-bottom:2px solid #b8d4ee;margin-bottom:10px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
 .ssub{font-size:10px;font-weight:400;color:var(--muted);}
 .sbtn{margin-left:auto;padding:3px 9px;background:#ddeeff;border:1px solid #99aacc;border-radius:9px;font-size:10px;font-weight:700;color:#0a2050;cursor:pointer;font-family:inherit;}
-.crit{background:#fff0f0;border:2px solid #cc0000;border-radius:7px;padding:5px 10px;margin-bottom:8px;font-size:10px;font-weight:700;color:#cc0000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.crit{background:#fff0f0;border:2px solid #cc0000;border-radius:7px;padding:5px 10px;margin-bottom:8px;font-size:10px;font-weight:700;color:#cc0000;}
 /* 시상바 */
 .abar{display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap;}
 .ab{flex:1;min-width:70px;border-radius:9px;padding:9px 7px;text-align:center;border:2px solid transparent;display:flex;flex-direction:column;align-items:center;gap:2px;}
@@ -167,14 +167,14 @@ td{padding:6px 5px;text-align:center;white-space:nowrap;}
 /* 그룹 */
 .gg{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
 .gc{background:#fff;border-radius:9px;border:1px solid var(--border);overflow:hidden;display:flex;flex-direction:column;}
-.gch{padding:12px 14px;font-size:16px;font-weight:900;color:#fff;text-align:center;}
+.gch{padding:9px 12px;font-size:13px;font-weight:900;color:#fff;text-align:center;}
 .gc-gn{background:linear-gradient(135deg,#1e7e3a,#27ae60);}
 .gc-or{background:linear-gradient(135deg,#c05e00,#cc5500);}
 .gcb{padding:14px 16px;}
-.gcr{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #e8eef8;font-size:15px;}
+.gcr{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #e8eef8;font-size:11px;}
 .gcr:last-child{border:none;}
-.gcl{color:#1a3a6b;font-weight:700;font-size:15px;}.gcv{font-weight:900;color:var(--navy);font-size:15px;}
-.gcv.big{font-size:20px;color:var(--green);font-weight:900;}
+.gcl{color:#1a3a6b;font-weight:700;font-size:11px;white-space:nowrap;}.gcv{font-weight:900;color:var(--navy);font-size:11px;white-space:nowrap;}
+.gcv.big{font-size:14px;color:var(--green);font-weight:900;white-space:nowrap;}
 /* 인품 */
 .ig{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;}
 .ip{border-radius:10px;padding:13px;text-align:center;border:2px solid transparent;}
@@ -621,7 +621,6 @@ const Nf=v=>Math.round(v).toLocaleString();
 const RB=r=>{if(!r)return'<span style="color:#ccc;font-size:9px;">-</span>';const c=r===1?'r1':r===2?'r2':r===3?'r3':'rt';return`<span class="rb ${c}">${r}</span>`;};
 const mc=k=>k===0?'m1':k===1?'m2':k===2?'m3':'';
 
-// ── 비밀번호 ──
 function checkPw(){
   var v=document.getElementById('pwInput').value;
   if(v==='2080'){
@@ -641,16 +640,12 @@ function checkPw(){
   }
 }
 
-// ── 탭/뷰 ──
 const VIEWS=['vperf','vrate','vamt','vipum','vgroup'];
 const NAVS=[{id:'home',icon:'🏠',label:'홈'},{id:'perf',icon:'📊',label:'실적 진도'},{id:'rate',icon:'📈',label:'신장률 TOP10'},{id:'amt',icon:'💰',label:'신장액 TOP10'},{id:'ipum',icon:'✨',label:'인품왕 TOP10'},{id:'group',icon:'🏅',label:'그룹 시상'}];
 let curView='home';
 
 function goTab(tab,btn){
-  if(tab==='admin'){
-    document.getElementById('pwScreen').style.display='flex';
-    return;
-  }
+  if(tab==='admin'){document.getElementById('pwScreen').style.display='flex';return;}
   document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');
   ['pg-home','pg-detail','pg-admin'].forEach(id=>{document.getElementById(id).style.display='none';});
   document.getElementById('pg-home').style.display='block';
@@ -681,63 +676,62 @@ function closeMenu(){document.getElementById('snav').classList.remove('on');docu
 let extraOn=true;
 function toggleExtra(){extraOn=!extraOn;document.querySelectorAll('.col-extra').forEach(e=>e.classList.toggle('hidden',!extraOn));document.getElementById('extraBtn').textContent=extraOn?'시상·순위 숨기기':'시상·순위 보기';}
 
-// ── 그룹 함수 ──
 function g1Prize(r){if(r>=25)return{lbl:'25%↑',prize:'15만원',ok:true};if(r>=15)return{lbl:'15%↑',prize:'7만원',ok:true};if(r>=5)return{lbl:'5%↑',prize:'3만원',ok:true};return{lbl:'미달',prize:'-',ok:false};}
 function g2Prize(base,cur){const ok=base.length>0&&cur.every((c,i)=>c-base[i]>=50);return ok?{lbl:'✅전원달성',prize:'5만원',ok:true}:{lbl:'미달',prize:'-',ok:false};}
 
-function renderGrpTable(){
-  const tb=document.getElementById('grpTbody');
-  const sm=document.getElementById('grpSummary');
-  if(!tb)return;
-  let html='',sumHtml='<div class="grp-summary">';
-  const grpData=GROUPS.map((g,gi)=>{
-    const base=g.members.map(m=>m.base);
-    const cur=g.members.map(m=>{const f=D.find(d=>d[5]===m.name);return f?Math.round(f[9]/1000):m.base;});
-    const bSum=base.reduce((s,v)=>s+v,0);
-    const cSum=cur.reduce((s,v)=>s+v,0);
-    const achv=bSum>0?cSum/bSum*100:0;
-    const rate=bSum>0?(cSum-bSum)/bSum*100:0;
-    const p1=g1Prize(rate);const p2=g2Prize(base,cur);
-    const over5=g.members.filter(m=>{const f=D.find(d=>d[5]===m.name);return f&&f[11]>=50000;}).length;
-    return {g,gi,base,cur,bSum,cSum,achv,rate,p1,p2,over5};
-  }).sort((a,b)=>b.achv-a.achv);
-  grpData.forEach(({g,gi,base,cur,bSum,cSum,achv,rate,p1,p2,over5},rank)=>{
-    const rc=achv>=100?'#006030':achv>=80?'#1a6030':achv>=50?'#884400':'#880000';
-    const mStr=g.members.map(m=>m.name).join('·');
-    const rankBadge=rank===0?'<span class="rb r1">1</span>':rank===1?'<span class="rb r2">2</span>':rank===2?'<span class="rb r3">3</span>':`<span class="rb rt">${rank+1}</span>`;
-    html+=`<tr>
-      <td style="text-align:center;cursor:pointer;" onclick="openGrpDetail(${gi})">${rankBadge}<br><span style="font-size:10px;color:#334466;">${g.id}팀</span></td>
-      <td style="font-size:11px;font-weight:700;color:#0a2050;text-align:left;cursor:pointer;" onclick="openGrpDetail(${gi})">${mStr}</td>
-      <td style="text-align:right;padding-right:7px;">${bSum.toLocaleString()}</td>
-      <td style="text-align:right;padding-right:7px;font-weight:700;">${cSum.toLocaleString()}</td>
-      <td style="text-align:center;font-weight:900;color:${rc};font-size:13px;">${achv.toFixed(1)}%</td>
-      <td style="text-align:center;">${over5>0?`<span style="color:#006030;font-weight:900;">✅${over5}/${g.members.length}명</span>`:`<span style="color:#cc0000;">✗ 0/${g.members.length}명</span>`}</td>
-      <td style="text-align:center;font-size:11px;font-weight:700;color:${p1.ok?'#006030':'#888'};">${p1.lbl}</td>
-      <td style="text-align:center;font-size:14px;font-weight:900;color:${p1.ok?'#006030':'#ccc'};">${p1.prize}</td>
-      <td style="text-align:center;font-size:11px;font-weight:700;color:${p2.ok?'#884400':'#888'};">${p2.lbl}</td>
-      <td style="text-align:center;font-size:14px;font-weight:900;color:${p2.ok?'#884400':'#ccc'};">${p2.prize}</td>
-    </tr>`;
-    var gbg,gtxt,gborder,gshine,gteam,gnbadge;
-    var mStrC=g.members.map(m=>m.name).join(' · ');
-    if(achv>=95){gbg='linear-gradient(145deg,#0a2000,#1a5c00,#0a2000)';gtxt='#00ff88';gborder='#00ff88';gshine='0 0 20px rgba(0,255,136,.5),0 4px 16px rgba(0,0,0,.4)';gteam='#fff';gnbadge='#00ff88';}
-    else if(achv>=85){gbg='linear-gradient(145deg,#001040,#0a2a7a,#001040)';gtxt='#66ccff';gborder='#4a90d9';gshine='0 0 16px rgba(74,144,217,.45),0 4px 16px rgba(0,0,0,.4)';gteam='#fff';gnbadge='#88ddff';}
-    else if(achv>=70){gbg='linear-gradient(145deg,#1a1000,#4a3000,#1a1000)';gtxt='#ffd700';gborder='#cc9900';gshine='0 0 14px rgba(255,215,0,.4),0 4px 14px rgba(0,0,0,.4)';gteam='#ffe066';gnbadge='#ffd700';}
-    else if(achv>=55){gbg='linear-gradient(145deg,#150030,#2d0060,#150030)';gtxt='#cc99ff';gborder='#7744cc';gshine='0 0 12px rgba(150,80,255,.35),0 4px 12px rgba(0,0,0,.4)';gteam='#ddbbff';gnbadge='#bb88ff';}
-    else{gbg='linear-gradient(145deg,#200010,#500020,#200010)';gtxt='#ff9999';gborder='#cc4444';gshine='0 4px 12px rgba(0,0,0,.4)';gteam='#ffcccc';gnbadge='#ff8888';}
-    sumHtml+='<div class="grp-card" onclick="openGrpDetail('+gi+')" style="background:'+gbg+';border:2px solid '+gborder+';box-shadow:'+gshine+';">'
-      +'<div style="font-weight:900;font-size:18px;color:'+gteam+';margin-bottom:2px;">'+g.id+'팀</div>'
-      +'<div style="font-size:22px;font-weight:900;color:'+gtxt+';margin-bottom:4px;text-shadow:0 0 8px '+gtxt+'88;">'+achv.toFixed(1)+'%</div>'
-      +'<div style="font-size:10px;font-weight:700;color:'+gnbadge+';margin-bottom:5px;line-height:1.5;">'+mStrC+'</div>'
-      +'<div style="font-size:12px;font-weight:700;color:'+(over5>0?'#ffcc44':'#aaa')+';margin-bottom:2px;">5만↑ '+over5+'/'+g.members.length+'명</div>'
-      +'<div style="font-size:11px;font-weight:700;color:'+(p1.ok?gtxt:'#888')+'">'+(p1.ok?p1.prize+' 시상':'&nbsp;')+'</div>'
-      +'<div style="font-size:11px;font-weight:700;color:'+(p2.ok?'#ffd700':'#888')+'">'+(p2.ok?'그룹2 ✅':'&nbsp;')+'</div>'
-      +'</div>';
-  });
-  tb.innerHTML=html;
-  sumHtml+='</div>';
-  if(sm)sm.innerHTML=sumHtml;
+function printSection(viewId){
+  var titles={vperf:'실적 진도 현황',vrate:'최고 신장률 TOP10',vamt:'최고 신장액 TOP10',vipum:'인품왕 TOP10',vgroup:'조별 시상 현황'};
+  var title=titles[viewId]||viewId;
+  var el=document.getElementById(viewId);
+  if(!el){alert(title+' 화면을 먼저 탭에서 열어주세요.');return;}
+  var wasHidden=(el.style.display==='none'||el.style.display==='');
+  if(wasHidden)el.style.display='block';
+  var styleText='';try{styleText=document.querySelector('style').innerHTML;}catch(e){}
+  var w=window.open('','_blank','width=1000,height=750');
+  if(!w){alert('팝업 차단을 해제한 후 다시 시도해주세요.');if(wasHidden)el.style.display='none';return;}
+  w.document.open();
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+title+'</title>');
+  w.document.write('<style>'+styleText+'body{background:#fff!important;padding:16px;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;}');
+  w.document.write('.print-btn,.sbtn,.sbtn2,.back-btn,.abar,.snav,.overlay,.mtoggle,.stitle button{display:none!important;}');
+  w.document.write('table{width:100%;border-collapse:collapse;font-size:11px;}th,td{padding:5px 7px;border:1px solid #ccc;}');
+  w.document.write('.sec{background:#fff!important;box-shadow:none!important;border:1px solid #ddd!important;}');
+  w.document.write('@media print{@page{size:A4 landscape;}body{padding:8px;}}</style></head><body>');
+  w.document.write('<div style="background:#0a2050;color:#fff;padding:10px 14px;border-radius:8px;margin-bottom:14px;"><div style="font-size:13px;font-weight:700;">고객컨설팅 Master I 과정</div><div style="font-size:17px;font-weight:900;margin-top:2px;">'+title+'</div></div>');
+  w.document.write(el.innerHTML);
+  w.document.write('</body></html>');
+  w.document.close();
+  if(wasHidden)el.style.display='none';
+  setTimeout(function(){try{w.focus();w.print();}catch(e){}},900);
 }
-function saveGroupData(){const msg=document.getElementById('grpSaveMsg');if(msg){msg.style.display='inline';setTimeout(()=>msg.style.display='none',2500);}}
+
+function printAll(){
+  var views=['vperf','vrate','vamt','vipum','vgroup'];
+  var titles={vperf:'실적 진도 현황',vrate:'최고 신장률 TOP10',vamt:'최고 신장액 TOP10',vipum:'인품왕 TOP10',vgroup:'조별 시상 현황'};
+  var hidden=[];
+  views.forEach(function(v){var el=document.getElementById(v);if(el&&(el.style.display==='none'||el.style.display==='')){el.style.display='block';hidden.push(v);}});
+  var styleText='';try{styleText=document.querySelector('style').innerHTML;}catch(e){}
+  var w=window.open('','_blank','width=1000,height=750');
+  if(!w){alert('팝업 차단을 해제한 후 다시 시도해주세요.');hidden.forEach(function(v){document.getElementById(v).style.display='none';});return;}
+  w.document.open();
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>전체 현황</title>');
+  w.document.write('<style>'+styleText+'body{background:#fff!important;padding:16px;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;}');
+  w.document.write('.print-btn,.sbtn,.sbtn2,.back-btn,.abar,.snav,.overlay,.mtoggle,.stitle button{display:none!important;}');
+  w.document.write('table{width:100%;border-collapse:collapse;font-size:10px;}th,td{padding:4px 6px;border:1px solid #ccc;}');
+  w.document.write('.sec{background:#fff!important;box-shadow:none!important;border:1px solid #ddd!important;}');
+  w.document.write('.section-wrap{page-break-before:always;margin-top:20px;}.section-wrap:first-child{page-break-before:auto;}');
+  w.document.write('@media print{@page{size:A4 landscape;}body{padding:6px;}}</style></head><body>');
+  w.document.write('<div style="background:#0a2050;color:#fff;padding:10px 14px;border-radius:8px;margin-bottom:16px;"><div style="font-size:13px;font-weight:700;">고객컨설팅 Master I 과정</div><div style="font-size:17px;font-weight:900;margin-top:2px;">전체 현황 보고서</div></div>');
+  views.forEach(function(v){
+    var el=document.getElementById(v);if(!el)return;
+    w.document.write('<div class="section-wrap"><div style="background:#1a3a6b;color:#fff;padding:7px 12px;border-radius:6px;margin-bottom:10px;font-size:14px;font-weight:900;">'+titles[v]+'</div>');
+    w.document.write(el.innerHTML+'</div>');
+  });
+  w.document.write('</body></html>');
+  w.document.close();
+  hidden.forEach(function(v){document.getElementById(v).style.display='none';});
+  setTimeout(function(){try{w.focus();w.print();}catch(e){}},1200);
+}
+
 
 function openGrpDetail(gi){
   var g=GROUPS[gi];
@@ -859,6 +853,30 @@ function renderHomeGrp(){
   }).join('');
   hgrp.innerHTML=lbl+rows;
 }
+function renderHomeGrp(){
+  var hgrp=document.getElementById('home-grp');
+  if(!hgrp)return;
+  var ranked=GROUPS.map(function(g,gi){
+    var base=g.members.map(function(m){return m.base;});
+    var cur=g.members.map(function(m){var f=D.find(function(d){return d[5]===m.name;});return f?Math.round(f[9]/1000):m.base;});
+    var bSum=base.reduce(function(s,v){return s+v;},0);
+    var cSum=cur.reduce(function(s,v){return s+v;},0);
+    return {id:g.id,gi:gi,achv:bSum>0?cSum/bSum*100:0,members:g.members};
+  }).sort(function(a,b){return b.achv-a.achv;});
+  var mc2=['m1','m2','m3'];
+  var cols=['#c8960c','#888','#a05020'];
+  var lbl='<div style="text-align:right;font-size:10px;font-weight:700;color:#888;padding:2px 0 4px;border-bottom:1px solid rgba(0,0,0,.08);">달성률</div>';
+  var rows=ranked.slice(0,3).map(function(r,k){
+    var mN=r.members.map(function(m){return m.name;}).join('·');
+    return '<div style="display:flex;align-items:center;gap:7px;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.05);">'
+      +'<span class="mn '+mc2[k]+'">'+(k+1)+'</span>'
+      +'<div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:900;color:#0a2050;">'+r.id+'팀</div>'
+      +'<div style="font-size:9px;color:#556688;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+mN+'</div></div>'
+      +'<span style="font-size:14px;font-weight:900;color:'+cols[k]+';">'+r.achv.toFixed(1)+'%</span>'
+      +'</div>';
+  }).join('');
+  hgrp.innerHTML=lbl+rows;
+}
 
 // ── 개인 실적 팝업 ──
 function openPerfPopup(i){
@@ -944,6 +962,105 @@ function closePerfPopup(){document.getElementById('perfPopup').style.display='no
 // ── 인쇄 ──
 
 // ── renderAll ──
+function renderAll(){
+  const total=D.length;
+  const avgR=D.reduce((s,d)=>s+d[10],0)/total;
+  const over5=D.filter(d=>d[11]>=50000).length;
+  const elig=D.filter(d=>d[11]>=300000);
+  const byRate=D.map((d,i)=>({i,d})).sort((a,b)=>(b.d[11]/b.d[8])-(a.d[11]/a.d[8]));
+  const byAmt=D.map((d,i)=>({i,d})).sort((a,b)=>b.d[11]-a.d[11]);
+  const byIpum=D.map((d,i)=>({i,d})).sort((a,b)=>b.d[13]-a.d[13]||b.d[12]-a.d[12]);
+  const rRank={},aRank={},ipRank={};
+  byRate.forEach((x,k)=>rRank[x.i]=k+1);byAmt.forEach((x,k)=>aRank[x.i]=k+1);
+  byIpum.forEach((x,k)=>{if(x.d[13]>0)ipRank[x.i]=k+1;});
+  const ipumTop=byIpum.filter(x=>x.d[13]>0);
+  // 홈 KPI
+  document.getElementById('hs-total').textContent=total+'명';
+  document.getElementById('hs-avg').textContent=avgR.toFixed(1)+'%';
+  document.getElementById('hs-over').textContent=over5+'명';
+  document.getElementById('hs-elig').textContent=elig.length+'명';
+  document.getElementById('hs-a5').textContent=D.filter(d=>d[11]>=500000).length+'명';
+  document.getElementById('hs-a4').textContent=D.filter(d=>d[11]>=300000&&d[11]<500000).length+'명';
+  // 중복시상
+  // 신장액 시상이 신장률 시상보다 큰 경우만 신장률에서 제외
+  // 신장액 1위=50만>신장률1위=30만, 신장액 2위=30만>=신장률시상
+  // → 신장액 TOP2 기준달성자(순증30만이상)를 신장률에서 제외
+  const aExcludeIds=new Set(byAmt.filter((x,k)=>k<2&&x.d[11]>=300000).map(x=>x.d[3]));
+  // 하위 호환을 위해 dualIds도 유지 (배지 표시용)
+  const rTop=new Set(byRate.slice(0,10).map(x=>x.d[3]));
+  const aTop=new Set(byAmt.slice(0,10).map(x=>x.d[3]));
+  const dualIds=new Set([...rTop].filter(id=>aTop.has(id)));
+  // 신장률 실질 순위: 신장액 TOP2 제외
+  const rFinalList=byRate.filter(x=>!aExcludeIds.has(x.d[3]));
+  const rPrize=k=>k===0?'시상30만원':k<=2?'시상20만원':'주유권5만';
+  const aPrize=k=>k===0?'시상50만원':k<=2?'시상30만원':'주유권10만';
+  let rEff=0;const rEffMap={};
+  for(let i=0;i<rFinalList.length&&rEff<10;i++){const id=rFinalList[i].d[3];if(rFinalList[i].d[11]>=300000){rEffMap[id]=rEff++;}}
+  // 홈 미니카드
+  // 홈카드: 신장액시상 적용자 제외 후 차순위, 없으면 안내 표시
+  const rHomeList=rFinalList.slice(0,3);
+  if(rHomeList.length===0){
+    document.getElementById('home-rate').innerHTML='<div style="padding:12px 0;text-align:center;color:#888;font-size:11px;">신장액시상 제외 후 신장률 시상 대상자 없음</div>';
+  } else {
+    document.getElementById('home-rate').innerHTML=rHomeList.map(({d},k)=>{
+      const gr=(d[11]/d[8]*100).toFixed(1);let aw,st;
+      if(d[11]<300000){aw='기준미충족';st='mb-r';}
+      else{const ek=rEffMap[d[3]];aw=ek!==undefined?rPrize(ek):'기준미충족';st=ek!==undefined?'mb-g':'mb-r';}
+      return `<div style="display:flex;align-items:center;gap:7px;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.06);"><span class="mn ${mc(k)}">${k+1}</span><div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:900;color:#0a2050;">${d[5]}&nbsp;<span style="font-size:12px;font-weight:700;color:#0040b0;">${gr}%</span></div><div style="margin-top:2px;"><span class="mbadge ${st}" style="font-size:10px;">${aw}</span></div></div></div>`;
+    }).join('');
+  }
+  document.getElementById('home-amt').innerHTML=byAmt.slice(0,3).map(({d},k)=>{
+    const aw=d[11]>=300000?aPrize(k):'기준미충족';const st=d[11]>=300000?'mb-g':'mb-r';
+    return `<div style="display:flex;align-items:center;gap:7px;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.06);"><span class="mn ${mc(k)}">${k+1}</span><div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:900;color:#0a2050;">${d[5]}&nbsp;<span style="font-size:12px;font-weight:700;color:#0040b0;">+${Nf(d[11])}원</span></div><div style="margin-top:2px;"><span class="mbadge ${st}" style="font-size:10px;">${aw}</span></div></div></div>`;
+  }).join('');
+  document.getElementById('home-ipum').innerHTML=ipumTop.length>0
+    ?ipumTop.slice(0,3).map(({d},k)=>{const grade=['인품의 황제','인품의 제왕','인품의 왕'][k];return `<div style="display:flex;align-items:center;gap:7px;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.06);"><span class="mn ${mc(k)}">${k+1}</span><div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:900;color:#0a2050;">${d[5]}&nbsp;<span style="font-size:11px;font-weight:600;color:#334466;">${Nf(d[13])}원</span></div><div style="margin-top:2px;"><span class="mbadge mb-p" style="font-size:10px;">${grade}</span></div></div></div>`;}).join('')
+    :'<div style="padding:14px 0;text-align:center;color:#aaa;font-size:10px;">관리자에서 입력하세요</div>';
+  renderHomeGrp();
+  // KPI
+  document.getElementById('kpi-perf').innerHTML=`<div class="kpi sky"><div class="kl">총 인원</div><div class="kv">${total}명</div></div><div class="kpi g"><div class="kl">5만원↑ 순증자</div><div class="kv" style="color:#005030">${over5}명</div></div><div class="kpi gd"><div class="kl">30만원↑ 순증</div><div class="kv" style="color:#7a5000">${elig.length}명</div></div><div class="kpi"><div class="kl">평균 달성률</div><div class="kv">${avgR.toFixed(1)}%</div></div>`;
+  // 실적 테이블
+  document.getElementById('mainTbody').innerHTML=[...byAmt].map(({i,d},rank)=>{
+    const nc=d[10]>=120?'c-over':d[10]>=100?'c-good':d[10]>=80?'c-mid':'c-low';
+    const netc=d[11]>0?'net-p':d[11]<0?'net-m':'';
+    const awd=d[11]>=500000?'<span class="bdg b-g">150%지급</span>':d[11]>=300000?'<span class="bdg b-g">120%지급</span>':d[11]>=200000?'<span class="bdg b-gr">20만원</span>':d[11]>=100000?'<span class="bdg b-gr">10만원</span>':d[11]>=50000?'<span class="bdg b-gr">5만원</span>':'<span class="b-no">-</span>';
+    const ipRk=ipRank[i]?RB(ipRank[i]):'<span style="color:#ccc;font-size:9px;">-</span>';
+    return `<tr style="cursor:pointer;" onclick="openPerfPopup(${i})"><td>${RB(rank+1)}</td><td class="td-name">${d[5]}</td><td class="td-r col-extra">${Nf(d[8])}</td><td class="td-r col-extra">${Nf(d[9])}</td><td class="${nc}">${d[10].toFixed(1)}%</td><td class="td-r ${netc}">${d[11]>=0?'+':''}${Nf(d[11])}</td><td class="col-extra">${awd}</td><td class="col-extra">${RB(rRank[i])}</td><td class="col-extra">${RB(aRank[i])}</td><td class="col-extra">${ipRk}</td></tr>`;
+  }).join('');
+  // 포디움
+  function makePod(top3,valFn,subFn,prizeFn){
+    return['p1','p2','p3'].map((cls,k)=>{if(!top3[k])return'';const d=top3[k].d;const crown=['👑','🥈','🥉'][k];const lbl=['1위','2위','3위'][k];const pr=prizeFn(k,d);const dual=pr.includes('적용');return`<div class="pc ${cls}"><div class="pcrown">${crown}</div><div class="prank">${lbl}</div><div class="pname">${d[5]}</div><div class="pbranch">${d[2]}</div><div class="pval">${valFn(d)}</div><div class="psub2">${subFn(d)}</div><div class="pprize ${dual?'dual':''}">${pr}</div><div class="pbar"></div></div>`;}).join('');
+  }
+  const ratePrizeFn=(k,d)=>{if(d[11]<300000)return'기준미충족';const ek=rEffMap[d[3]];return ek!==undefined?rPrize(ek):'기준미충족';};
+  const rAwardCell=d=>{if(d[11]<300000)return'<span class="bdg b-ms">기준미충족</span>';const ek=rEffMap[d[3]];if(ek===undefined)return'<span class="bdg b-ms">기준미충족</span>';return`<span class="bdg b-g">${rPrize(ek)}</span>`;};
+  // 신장률 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
+  if(rFinalList.length>=1)document.getElementById('ratePodium').innerHTML=makePod(rFinalList.slice(0,3),d=>((d[11]/d[8])*100).toFixed(1)+'%',d=>'순증 +'+Nf(d[11])+'원',ratePrizeFn);
+  document.getElementById('rateRest').innerHTML=rFinalList.slice(3,10).map(({d},k)=>`<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td class="td-r net-p">+${Nf(d[11])}</td><td class="c-over">${(d[11]/d[8]*100).toFixed(1)}%</td><td>${rAwardCell(d)}</td></tr>`).join('');
+  // 신장액 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
+  if(byAmt.length>=1)document.getElementById('amtPodium').innerHTML=makePod(byAmt.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>((d[11]/d[8])*100).toFixed(1)+'% 신장',(k,d)=>d[11]<300000?'기준미달성':aPrize(k));
+  document.getElementById('amtRest').innerHTML=byAmt.slice(3,10).map(function(x,k){
+    var d=x.d;
+    var badge=d[11]>=300000?'<span class="bdg b-g">'+aPrize(k+3)+'</span>':'<span class="bdg b-ms">기준미달성</span>';
+    return '<tr><td>'+RB(k+4)+'</td><td>'+d[2]+'</td><td class="td-name">'+d[5]+'</td><td class="td-r">'+Nf(d[8])+'</td><td class="td-r net-p">+'+Nf(d[11])+'</td><td class="c-over">'+(d[11]/d[8]*100).toFixed(1)+'%</td><td>'+badge+'</td></tr>';
+  }).join('');
+  // 인품왕
+  document.getElementById('ipumPodium').innerHTML=ipumTop.slice(0,3).map(({d},k)=>{const cls=['ip1','ip2','ip3'][k];const medals=['🌟','⭐','✨'][k];const ranks=['인품의 황제','인품의 제왕','인품의 왕'][k];return`<div class="ip ${cls}"><div class="ipmed">${medals}</div><div class="iprk">${ranks}</div><div class="ipname">${d[5]}</div><div class="ipbr">${d[2]}</div><div class="ipval">${Nf(d[13])}원</div><div class="ipsub">${d[12]}건</div></div>`;}).join('')||'<div style="padding:16px;text-align:center;color:#aaa;">관리자에서 입력하세요</div>';
+  document.getElementById('ipumRest').innerHTML=ipumTop.slice(3,10).map(({d},k)=>`<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r" style="font-weight:700;color:#b0006a;">${Nf(d[13])}원</td><td>${d[12]}건</td></tr>`).join('');
+  // 관리자
+  document.getElementById('adm-total').textContent=total+'명';
+  document.getElementById('adm-over').textContent=over5+'명';
+  document.getElementById('adm-good').textContent=D.filter(d=>d[10]>=80&&d[10]<100).length+'명';
+  document.getElementById('adm-mid').textContent=D.filter(d=>d[10]>=50&&d[10]<80).length+'명';
+  document.getElementById('adm-low').textContent=D.filter(d=>d[10]<50).length+'명';
+  document.getElementById('adm-avg').textContent=avgR.toFixed(1)+'%';
+  document.getElementById('adm-elig').textContent=elig.length+'명';
+  document.getElementById('adm-a5').textContent=D.filter(d=>d[11]>=500000).length+'명';
+  document.getElementById('adm-a4').textContent=D.filter(d=>d[11]>=300000&&d[11]<500000).length+'명';
+  document.getElementById('adm-a3').textContent=D.filter(d=>d[11]>=50000&&d[11]<300000).length+'명';
+  document.getElementById('adm-a0').textContent=D.filter(d=>d[11]<50000).length+'명';
+  document.getElementById('editTbody').innerHTML=D.map((d,i)=>`<tr><td>${i+1}</td><td>${d[2]}</td><td>${d[3]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td><input type="number" id="e9_${i}" value="${d[9]}" oninput="autoCalc(${i})"/></td><td><input type="number" id="e10_${i}" value="${d[10].toFixed(1)}" step="0.1" readonly/></td><td><input type="number" id="e11_${i}" value="${d[11]}" readonly/></td><td><input type="number" id="e12_${i}" value="${d[12]}" min="0"/></td><td><input type="number" id="e13_${i}" value="${d[13]}" min="0"/></td></tr>`).join('');
+  document.getElementById('ipumEditTbody').innerHTML=D.map((d,i)=>`<tr><td>${i+1}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td><input type="number" id="ip12_${i}" value="${d[12]}" min="0"/></td><td><input type="number" id="ip13_${i}" value="${d[13]}" min="0"/></td></tr>`).join('');
+}
 function renderAll(){
   const total=D.length;
   const avgR=D.reduce((s,d)=>s+d[10],0)/total;
@@ -1409,6 +1526,35 @@ function printAll(){
   setTimeout(function(){try{w.focus();w.print();}catch(e){}},1200);
 }
 // 초기화
+renderAll();renderGrpTable();
+document.getElementById('pg-home').style.display='block';
+document.getElementById('pg-detail').style.display='none';
+document.getElementById('pg-admin').style.display='none';
+document.getElementById('mtoggle').style.display='none';
+window.addEventListener('load',function(){setTimeout(initFirebase,500);});
+
+function autoCalc(i){const cur=parseFloat(document.getElementById('e9_'+i).value)||0;const base=D[i][8];document.getElementById('e10_'+i).value=(base>0?cur/base*100:0).toFixed(1);document.getElementById('e11_'+i).value=cur-base;}
+function applyPaste(){const txt=document.getElementById('pasteArea').value;let cnt=0;txt.split('\n').forEach(line=>{const parts=line.trim().split(/\s+/);if(parts.length<2)return;const name=parts[0];const val=parseInt(parts[parts.length-1].replace(/,/g,''));if(isNaN(val))return;D.forEach(d=>{if(d[5]===name){d[9]=val;d[10]=d[8]>0?parseFloat((val/d[8]*100).toFixed(1)):0;d[11]=val-d[8];cnt++;}});});const msg=document.getElementById('pasteMsg');msg.textContent='✅ '+cnt+'명 반영';msg.style.display='inline';msg.style.color='#1a8a40';setTimeout(()=>msg.style.display='none',3000);renderAll();renderGrpTable();}
+function applyIpumPaste(){const txt=document.getElementById('ipumPasteArea').value;let cnt=0;txt.split('\n').forEach(line=>{const parts=line.trim().split(/\s+/);if(parts.length<2)return;const name=parts[0];var cnt12=parseInt(parts[1].replace(/,/g,''))||0;var amt13=parts.length>=3?parseInt(parts[parts.length-1].replace(/,/g,''))||0:0;D.forEach(d=>{if(d[5]===name){d[12]=cnt12;if(amt13>0)d[13]=amt13;cnt++;}});});const msg=document.getElementById('ipumPasteMsg');msg.textContent='✅ '+cnt+'명 반영';msg.style.display='inline';msg.style.color='#1a8a40';setTimeout(()=>msg.style.display='none',3000);renderAll();}
+function saveEdits(){D.forEach((d,i)=>{const cur=parseFloat(document.getElementById('e9_'+i)?.value)||d[9];d[9]=cur;d[10]=d[8]>0?parseFloat((cur/d[8]*100).toFixed(1)):0;d[11]=cur-d[8];d[12]=parseInt(document.getElementById('e12_'+i)?.value)||0;d[13]=parseInt(document.getElementById('e13_'+i)?.value)||0;});document.getElementById('saveMsg').style.display='inline';setTimeout(()=>document.getElementById('saveMsg').style.display='none',2500);renderAll();renderGrpTable();pushToFirebase();}
+function saveIpumEdits(){D.forEach((d,i)=>{d[12]=parseInt(document.getElementById('ip12_'+i)?.value)||0;d[13]=parseInt(document.getElementById('ip13_'+i)?.value)||0;});document.getElementById('ipumSaveMsg').style.display='inline';setTimeout(()=>document.getElementById('ipumSaveMsg').style.display='none',2500);renderAll();}
+
+const FB_CFG={apiKey:"AIzaSyB1yFZ4HKLIhUihjqOJkQy2XIC-CrZqmQM",authDomain:"master-itv.firebaseapp.com",databaseURL:"https://master-itv-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"master-itv",storageBucket:"master-itv.firebasestorage.app",messagingSenderId:"95151539764",appId:"1:95151539764:web:00af682c79fc39abe9ac61"};
+let db_ref=null,fb_ready=false;
+function showSyncStatus(msg,color){var el=document.getElementById('syncStatus');if(el){el.textContent=msg;el.style.color=color;}}
+function initFirebase(){
+  if(typeof firebase==='undefined'){showSyncStatus('오프라인(인터넷 필요)','#cc4444');return;}
+  if(!firebase.apps.length)firebase.initializeApp(FB_CFG);
+  db_ref=firebase.database().ref('master_dashboard_v1');fb_ready=true;
+  showSyncStatus('연결중...','#888');
+  db_ref.on('value',function(snap){
+    var val=snap.val();if(!val){showSyncStatus('저장된 데이터 없음','#cc5500');return;}
+    if(val.D&&Array.isArray(val.D)){val.D.forEach(function(row,i){if(D[i]){D[i][9]=row[9]||D[i][9];D[i][10]=row[10]||D[i][10];D[i][11]=row[11]||D[i][11];D[i][12]=row[12]||D[i][12];D[i][13]=row[13]||D[i][13];}});renderAll();renderGrpTable();}
+    showSyncStatus('✅ 실시간 연동 '+new Date().toLocaleTimeString('ko-KR'),'#1a8a40');
+  },function(){showSyncStatus('❌ 연동 오류','#cc0000');});
+}
+function pushToFirebase(){if(!fb_ready)return;db_ref.set({D:D.map(function(row){return row.slice();}),updatedAt:new Date().toISOString()}).then(function(){showSyncStatus('☁️ 저장완료 '+new Date().toLocaleTimeString('ko-KR'),'#1a8a40');}).catch(function(){showSyncStatus('❌ 저장실패','#cc0000');});}
+
 renderAll();renderGrpTable();
 document.getElementById('pg-home').style.display='block';
 document.getElementById('pg-detail').style.display='none';
