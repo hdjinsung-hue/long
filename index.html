@@ -242,8 +242,8 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
   <div class="org">현대해상 호남 지역단</div>
   <h1><em>고객컨설팅 </em>Master Ⅰ 현황판</h1>
   <div class="hdr-sub">
-    <span>2026년 4월 17일</span><span>|</span>
-    <span><span class="dot"></span> 26.4월 전일 실적 마감 기준</span>
+    <span id="todayLabel">2026년 4월 20일</span><span>|</span>
+    <span><span class="dot"></span> 전일마감 기준</span>
   </div>
   <div class="tab-nav">
     <button class="tb on" id="tb-home" onclick="goTab('home',this)">🏠 홈 대시보드</button>
@@ -1715,6 +1715,14 @@ document.getElementById('pg-detail').style.display='none';
 document.getElementById('pg-admin').style.display='none';
 document.getElementById('mtoggle').style.display='none';
 window.addEventListener('load',function(){setTimeout(initFirebase,500);});
+
+// 오늘 날짜 자동 표시
+(function(){
+  var now=new Date();
+  var y=now.getFullYear(), m=now.getMonth()+1, d=now.getDate();
+  var el1=document.getElementById('todayLabel');
+  if(el1) el1.textContent=y+'년 '+m+'월 '+d+'일';
+})();
 
 </script>
 </body>
