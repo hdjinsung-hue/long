@@ -291,7 +291,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
       <div class="ps"><div class="psl">총 인원</div><div class="psv" id="hs-total">-</div></div>
       <div class="ps"><div class="psl">평균 달성률</div><div class="psv" id="hs-avg">-</div></div>
       <div class="ps"><div class="psl">5만원↑ 순증</div><div class="psv g" id="hs-over">-</div></div>
-      <div class="ps"><div class="psl">30만원↑ 순증</div><div class="psv gd" id="hs-elig">-</div></div>
+      <div class="ps"><div class="psl">순증 30만 이상</div><div class="psv gd" id="hs-elig">-</div></div>
       <div class="ps"><div class="psl">150% 지급</div><div class="psv g" id="hs-a5">-</div></div>
       <div class="ps"><div class="psl">120% 지급</div><div class="psv o" id="hs-a4">-</div></div>
     </div>
@@ -339,7 +339,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
     </div>
     <div class="podium" id="ratePodium"></div>
     <div class="rlbl">📋 4위 ~ 10위</div>
-    <div class="tbl" style="margin-top:6px"><table><thead><tr class="hd1"><th>순위</th><th>지점</th><th>성명</th><th>기준실적</th><th>신장률</th><th>시상</th></tr></thead><tbody id="rateRest"></tbody></table></div>
+    <div class="tbl" style="margin-top:6px"><table><thead><tr class="hd1"><th>순위</th><th>지점</th><th>성명</th><th>기준실적</th><th>순증액</th><th>신장률</th><th>시상</th></tr></thead><tbody id="rateRest"></tbody></table></div>
     </div>
   </div>
   <div id="vamt" style="display:none">
@@ -353,7 +353,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
     </div>
     <div class="podium" id="amtPodium"></div>
     <div class="rlbl">📋 4위 ~ 10위</div>
-    <div class="tbl" style="margin-top:6px"><table><thead><tr class="hd1"><th>순위</th><th>지점</th><th>성명</th><th>기준실적</th><th>신장액</th><th>시상</th></tr></thead><tbody id="amtRest"></tbody></table></div>
+    <div class="tbl" style="margin-top:6px"><table><thead><tr class="hd1"><th>순위</th><th>지점</th><th>성명</th><th>기준실적</th><th>신장액</th><th>신장률</th><th>시상</th></tr></thead><tbody id="amtRest"></tbody></table></div>
     </div>
   </div>
   <div id="vipum" style="display:none">
@@ -366,35 +366,42 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
   <div id="vgroup" style="display:none">
     <div class="sec"><div class="stitle">📋 조별 시상 현황<button class="print-btn" onclick="printSection('vgroup')" style="margin-left:8px;">🖨️ 인쇄</button></div><div id="grpSummary"></div></div>
     <div class="sec"><div class="stitle">👥 그룹 순증 시상 안내</div>
-    <div class="gg" style="grid-template-columns:1fr 1fr;align-items:stretch;">
-      <div class="gc"><div class="gch gc-gn" style="font-size:18px;text-align:center;padding:14px;">💰 그룹시상 1</div>
-        <div class="gcb" style="padding:10px 16px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #e8f0e8;">
-            <span style="font-size:16px;font-weight:700;color:#334466;">조건</span>
-            <span style="font-size:18px;font-weight:900;color:#cc5500;">5만원↑ 전원 순증</span>
+    <div style="display:flex;gap:8px;align-items:stretch;">
+
+      <!-- 그룹시상 1 -->
+      <div style="flex:1;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.1);">
+        <div style="background:#1e7e3a;color:#fff;text-align:center;padding:10px 6px;font-size:13px;font-weight:900;">💰 그룹시상 1</div>
+        <div style="background:#f6fff8;border:2px solid #1e7e3a;border-top:none;border-radius:0 0 12px 12px;padding:12px 8px;">
+          <div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #c8e8cc;">
+            <div style="font-size:11px;font-weight:700;color:#334466;margin-bottom:4px;">조건</div>
+            <div style="font-size:13px;font-weight:900;color:#cc5500;">5만원↑<br>전원 순증</div>
           </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;">
-            <span style="font-size:16px;font-weight:700;color:#334466;">시상</span>
-            <span style="font-size:24px;font-weight:900;color:#1e7e3a;">5만원<span style="font-size:14px;font-weight:600;color:#555;"> 인당</span></span>
-          </div>
-        </div>
-      </div>
-      <div class="gc"><div class="gch gc-or" style="font-size:18px;text-align:center;padding:14px;">🎯 그룹시상 2</div>
-        <div class="gcb" style="padding:6px 16px;">
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eee;">
-            <span style="font-size:15px;font-weight:700;color:#1a3a6b;">5% 이상 순증</span>
-            <span style="font-size:20px;font-weight:900;color:#1e7e3a;">3만원<span style="font-size:13px;font-weight:600;color:#555;"> 인당</span></span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eee;">
-            <span style="font-size:15px;font-weight:700;color:#1a3a6b;">15% 이상 순증</span>
-            <span style="font-size:20px;font-weight:900;color:#1a5cb0;">7만원<span style="font-size:13px;font-weight:600;color:#555;"> 인당</span></span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 0;">
-            <span style="font-size:15px;font-weight:700;color:#1a3a6b;">25% 이상 순증</span>
-            <span style="font-size:20px;font-weight:900;color:#cc5500;">15만원<span style="font-size:13px;font-weight:600;color:#555;"> 인당</span></span>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#334466;margin-bottom:4px;">시상</div>
+            <div style="font-size:20px;font-weight:900;color:#1e7e3a;line-height:1.2;">5만원<span style="font-size:11px;color:#555;font-weight:600;"> 인당</span></div>
           </div>
         </div>
       </div>
+
+      <!-- 그룹시상 2 -->
+      <div style="flex:1;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.1);">
+        <div style="background:#cc5500;color:#fff;text-align:center;padding:10px 6px;font-size:13px;font-weight:900;">🎯 그룹시상 2</div>
+        <div style="background:#fff8f0;border:2px solid #cc5500;border-top:none;border-radius:0 0 12px 12px;padding:10px 8px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #f0d8c0;">
+            <div style="font-size:11px;font-weight:700;color:#1a3a6b;">5%↑ 순증</div>
+            <div style="font-size:16px;font-weight:900;color:#1e7e3a;">3만원<span style="font-size:10px;color:#555;font-weight:600;"> 인당</span></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #f0d8c0;">
+            <div style="font-size:11px;font-weight:700;color:#1a3a6b;">15%↑ 순증</div>
+            <div style="font-size:16px;font-weight:900;color:#1a5cb0;">7만원<span style="font-size:10px;color:#555;font-weight:600;"> 인당</span></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;">
+            <div style="font-size:11px;font-weight:700;color:#1a3a6b;">25%↑ 순증</div>
+            <div style="font-size:16px;font-weight:900;color:#cc5500;">15만원<span style="font-size:10px;color:#555;font-weight:600;"> 인당</span></div>
+          </div>
+        </div>
+      </div>
+
     </div></div>
     <div class="sec">
       <div class="stitle">📊 조별 목표·현재실적·순증율 (달성률 순위)
@@ -453,7 +460,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
       <div class="ar"><span class="al">평균 달성률</span><span class="av" id="adm-avg">-</span></div>
     </div>
     <div class="ac"><h3>🏆 시상 현황</h3>
-      <div class="ar"><span class="al">30만원↑ 순증</span><span class="av gn" id="adm-elig">-</span></div>
+      <div class="ar"><span class="al">순증 30만 이상(30만↑)</span><span class="av gn" id="adm-elig">-</span></div>
       <div class="ar"><span class="al">150% 지급</span><span class="av gn" id="adm-a5">-</span></div>
       <div class="ar"><span class="al">120% 지급</span><span class="av gn" id="adm-a4">-</span></div>
       <div class="ar"><span class="al">현금 시상</span><span class="av or" id="adm-a3">-</span></div>
@@ -462,6 +469,25 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
   </div>
   <div class="sec">
     <div class="stitle">✏️ 실적 데이터 편집</div>
+
+    <div style="background:#f0f0ff;border:2px solid #4a90d9;border-radius:10px;padding:12px;margin-bottom:10px;">
+      <div style="font-size:12px;font-weight:900;color:#0a2050;margin-bottom:8px;">📷 사진으로 실적 입력 (AI 자동 인식)</div>
+      <div style="font-size:10px;color:#556688;margin-bottom:8px;">실적표 사진을 업로드하면 AI가 이름과 실적을 자동으로 읽어옵니다</div>
+      <input type="file" id="photoInput" accept="image/*" style="display:none;" onchange="handlePhotoUpload(event)">
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <button onclick="document.getElementById('photoInput').click()" style="padding:8px 16px;background:#4a90d9;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">📷 사진 선택</button>
+        <span id="photoFileName" style="font-size:11px;color:#556688;"></span>
+      </div>
+      <div id="photoPreviewWrap" style="display:none;margin-top:8px;">
+        <img id="photoPreview" style="max-width:100%;max-height:200px;border-radius:6px;border:1px solid #ccc;" />
+      </div>
+      <div id="photoStatus" style="margin-top:8px;font-size:11px;font-weight:700;color:#1a8a40;display:none;"></div>
+      <div id="photoResult" style="margin-top:8px;display:none;">
+        <div style="font-size:11px;color:#334466;margin-bottom:4px;">AI 인식 결과 (수정 가능):</div>
+        <textarea id="photoResultArea" rows="5" style="width:100%;padding:7px;font-size:11px;border:1px solid #99aacc;border-radius:5px;font-family:inherit;resize:vertical;"></textarea>
+        <button onclick="applyPhotoResult()" style="margin-top:6px;padding:7px 16px;background:#1e7e3a;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">✅ 실적 반영</button>
+      </div>
+    </div>
     <div style="background:#f0f5fc;border:1px solid #99aacc;border-radius:7px;padding:10px;margin-bottom:10px;">
       <div style="font-size:11px;font-weight:700;color:#0a2050;margin-bottom:5px;">📋 일괄 붙여넣기 — 이름 현재실적</div>
       <textarea id="pasteArea" rows="5" style="width:100%;padding:7px;font-size:11px;border:1px solid #99aacc;border-radius:5px;font-family:inherit;resize:vertical;" placeholder="정경화  2193493"></textarea>
@@ -518,19 +544,19 @@ let D = [
   ["호남지역단","동광주비전센터","상무중앙지점","144470",    "",              "김인자",140,"SM",        327153,  100810, 30.8, -226343, 1,  63490],
   ["호남지역단","동광주비전센터","상무중앙지점","154822",    "",              "송정량",165,"",          307398,  262240, 85.3,  -45158, 0,      0],
   ["호남지역단","동광주비전센터","상무중앙지점","949966",    "양산총괄",      "조은아",296,"",         1634200, 1891750,115.8,  257550, 0,      200000],
-  ["호남지역단","동광주비전센터","상무중앙지점","965034",    "새름",          "유해순",218,"코칭리더",  604360,  593930, 98.3,  -10430, 3, 422730],
+  ["호남지역단","동광주비전센터","상무중앙지점","965034",    "새름",          "유혜순",218,"코칭리더",  604360,  593930, 98.3,  -10430, 3, 422730],
   ["호남지역단","동광주비전센터","상무중앙지점","984627",    "무건길",        "박점희",351,"영업팀장",  782148,  397140, 50.8, -385008, 0,      0],
   ["호남지역단","동광주비전센터","상무제일지점","190467",    "",              "송지연",121,"영업팀장",  391835,   108230, 27.6, -283605, 1,      58230],
   ["호남지역단","동광주비전센터","상무제일지점","1A0856",    "",              "강성원", 90,"영업팀장",  491378,  321290, 65.4, -170088, 2, 321290],
   ["호남지역단","동광주비전센터","상무제일지점","1D0562",    "",              "이종열", 15,"SM팀장",    365128,  327230, 89.6,  -37898, 1, 327230],
   ["호남지역단","동광주비전센터","광주TC지점",  "129731",    "",              "서혜경",205,"",          672583,  546450, 81.2, -126133, 2, 307400],
-  ["호남지역단","동광주비전센터","광주TC지점",  "1A2040",    "",              "정명순", 87,"",          345248,  504060,146.0,  158813, 3, 373280],
-  ["호남지역단","동광주비전센터","광주TC지점",  "1B8497",    "",              "류민희", 43,"SM",        354203,  391360,110.5,   37158, 1, 205190],
+  ["호남지역단","동광주비전센터","동광주TC지점","1A2040",    "",              "정명순", 87,"",          345248,  504060,146.0,  158813, 3, 373280],
+  ["호남지역단","동광주비전센터","동광주TC지점","1B8497",    "",              "류민희", 43,"SM",        354203,  391360,110.5,   37158, 1, 205190],
   ["호남지역단","동광주비전센터","광주TC지점",  "9A0450",    "재명",          "감재명",227,"",          564070,  334570, 59.3, -229500, 1, 209230],
-  ["호남지역단","광주비전센터",  "광주지점",    "153239",    "",              "서영란",168,"SM팀장",    819623,  726990, 88.7,  -92633, 2, 324980],
-  ["호남지역단","광주비전센터",  "광주지점",    "1A1080",    "",              "모상민", 89,"영업팀장", 1021960,  868460, 85.0, -153500, 1, 387380],
+  ["호남지역단","광주비전센터",  "광주지점",    "153239",    "",              "서영린",168,"SM팀장",    819623,  726990, 88.7,  -92633, 2, 324980],
+  ["호남지역단","광주비전센터",  "광주지점",    "1A1080",    "",              "모성민", 89,"영업팀장", 1021960,  868460, 85.0, -153500, 1, 387380],
   ["호남지역단","광주비전센터",  "광주지점",    "1B0395",    "",              "이두성", 64,"영업팀장",  700950,  419090, 59.8, -281860, 2, 336290],
-  ["호남지역단","광주비전센터",  "광주지점",    "1C3909",    "",              "허용순", 30,"SM",        675153,  123050, 18.2, -552103, 0,      0],
+  ["호남지역단","광주비전센터",  "광주지점",    "1C3909",    "",              "하용순", 30,"SM",        675153,  123050, 18.2, -552103, 0,      0],
   ["호남지역단","광주비전센터",  "광주지점",    "1C8703",    "",              "심은영", 19,"",          498788,  547950, 109.9,  49163, 3, 301200],
   ["호남지역단","광주비전센터",  "광주미래지점","967424",    "최미선",        "최미선",284,"",          796578,  501640, 63.0, -294938, 2, 310870],
   ["호남지역단","광주비전센터",  "광주직할지점","158408",    "",              "이진혁",157,"",         1989960,  805130, 40.5,-1184830, 1,  77650],
@@ -663,11 +689,14 @@ function renderGrpTable(){
   }).sort((a,b)=>b.achv-a.achv);
   grpData.forEach(({g,gi,base,cur,bSum,cSum,achv,rate,p1,p2,over5},rank)=>{
     const rc=achv>=100?'#006030':achv>=80?'#1a6030':achv>=50?'#884400':'#880000';
-    const mStr=g.members.map(m=>m.name).join('·');
+    const names=g.members.map(m=>m.name);
+    const mStr=names.length>4
+      ?names.slice(0,4).join('·')+'<br>'+names.slice(4).join('·')
+      :names.join('·');
     const rankBadge=rank===0?'<span class="rb r1">1</span>':rank===1?'<span class="rb r2">2</span>':rank===2?'<span class="rb r3">3</span>':`<span class="rb rt">${rank+1}</span>`;
     html+=`<tr>
       <td style="text-align:center;cursor:pointer;" onclick="openGrpDetail(${gi})">${rankBadge}<br><span style="font-size:10px;color:#334466;">${g.id}팀</span></td>
-      <td style="font-size:11px;font-weight:700;color:#0a2050;text-align:left;cursor:pointer;" onclick="openGrpDetail(${gi})">${mStr}</td>
+      <td style="font-size:11px;font-weight:700;color:#0a2050;text-align:left;cursor:pointer;line-height:1.7;" onclick="openGrpDetail(${gi})">`+mStr+`</td>
       <td style="text-align:right;padding-right:7px;">${bSum.toLocaleString()}</td>
       <td style="text-align:right;padding-right:7px;font-weight:700;">${cSum.toLocaleString()}</td>
       <td style="text-align:center;font-weight:900;color:${rc};font-size:13px;">${achv.toFixed(1)}%</td>
@@ -686,7 +715,7 @@ function renderGrpTable(){
     sumHtml+='<div class="grp-card" onclick="openGrpDetail('+gi+')" style="background:'+gbg+';border:2px solid '+gborder+';box-shadow:'+gshine+';">'
       +'<div style="font-weight:900;font-size:18px;color:'+gteam+';margin-bottom:2px;">'+g.id+'팀</div>'
       +'<div style="font-size:22px;font-weight:900;color:'+gtxt+';margin-bottom:4px;text-shadow:0 0 8px '+gtxt+'88;">'+achv.toFixed(1)+'%</div>'
-      +'<div style="font-size:10px;font-weight:700;color:'+gnbadge+';margin-bottom:5px;line-height:1.5;">'+mStrC+'</div>'
+      +'<div style="font-size:10px;font-weight:700;color:'+gnbadge+';margin-bottom:5px;line-height:1.7;">'+mStrC+'</div>'
       +'<div style="font-size:12px;font-weight:700;color:'+(over5>0?'#ffcc44':'#aaa')+';margin-bottom:2px;">5만↑ '+over5+'/'+g.members.length+'명</div>'
       +'<div style="font-size:11px;font-weight:700;color:'+(p1.ok?gtxt:'#888')+'">'+(p1.ok?p1.prize+' 시상':'&nbsp;')+'</div>'
       +'<div style="font-size:11px;font-weight:700;color:'+(p2.ok?'#ffd700':'#888')+'">'+(p2.ok?'그룹2 ✅':'&nbsp;')+'</div>'
@@ -1090,14 +1119,14 @@ function renderAll(){
   const ratePrizeFn=(k,d)=>{if(d[11]<300000)return'기준미충족';const ek=rEffMap[d[3]];return ek!==undefined?rPrize(ek):'기준미충족';};
   const rAwardCell=d=>{if(d[11]<300000)return'<span class="bdg b-ms">기준미충족</span>';const ek=rEffMap[d[3]];if(ek===undefined)return'<span class="bdg b-ms">기준미충족</span>';return`<span class="bdg b-g">${rPrize(ek)}</span>`;};
   // 신장률 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
-  if(rFinalList.length>=1)document.getElementById('ratePodium').innerHTML=makePod(rFinalList.slice(0,3),d=>((d[11]/d[8])*100).toFixed(1)+'%',d=>'',ratePrizeFn);
-  document.getElementById('rateRest').innerHTML=rFinalList.slice(3,10).map(({d},k)=>`<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td class="c-over">${(d[11]/d[8]*100).toFixed(1)}%</td><td>${rAwardCell(d)}</td></tr>`).join('');
+  if(rFinalList.length>=1)document.getElementById('ratePodium').innerHTML=makePod(rFinalList.slice(0,3),d=>((d[11]/d[8])*100).toFixed(1)+'%',d=>'순증 +'+Nf(d[11])+'원',ratePrizeFn);
+  document.getElementById('rateRest').innerHTML=rFinalList.slice(3,10).map(({d},k)=>`<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td class="td-r net-p">+${Nf(d[11])}</td><td class="c-over">${(d[11]/d[8]*100).toFixed(1)}%</td><td>${rAwardCell(d)}</td></tr>`).join('');
   // 신장액 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
-  if(byAmt.length>=1)document.getElementById('amtPodium').innerHTML=makePod(byAmt.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>'',(k,d)=>d[11]<300000?'기준미달성':aPrize(k));
+  if(byAmt.length>=1)document.getElementById('amtPodium').innerHTML=makePod(byAmt.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>((d[11]/d[8])*100).toFixed(1)+'% 신장',(k,d)=>d[11]<300000?'기준미달성':aPrize(k));
   document.getElementById('amtRest').innerHTML=byAmt.slice(3,10).map(function(x,k){
     var d=x.d;
     var badge=d[11]>=300000?'<span class="bdg b-g">'+aPrize(k+3)+'</span>':'<span class="bdg b-ms">기준미달성</span>';
-    return '<tr><td>'+RB(k+4)+'</td><td>'+d[2]+'</td><td class="td-name">'+d[5]+'</td><td class="td-r">'+Nf(d[8])+'</td><td class="td-r net-p">+'+Nf(d[11])+'</td><td>'+badge+'</td></tr>';
+    return '<tr><td>'+RB(k+4)+'</td><td>'+d[2]+'</td><td class="td-name">'+d[5]+'</td><td class="td-r">'+Nf(d[8])+'</td><td class="td-r net-p">+'+Nf(d[11])+'</td><td class="c-over">'+(d[11]/d[8]*100).toFixed(1)+'%</td><td>'+badge+'</td></tr>';
   }).join('');
   // 인품왕
   document.getElementById('ipumPodium').innerHTML=ipumTop.slice(0,3).map(({d},k)=>{const cls=['ip1','ip2','ip3'][k];const medals=['🌟','⭐','✨'][k];const ranks=['인품의 황제','인품의 제왕','인품의 왕'][k];return`<div class="ip ${cls}"><div class="ipmed">${medals}</div><div class="iprk">${ranks}</div><div class="ipname">${d[5]}</div><div class="ipbr">${d[2]}</div><div class="ipval">${Nf(d[13])}원</div><div class="ipsub">${d[12]}건</div></div>`;}).join('')||'<div style="padding:16px;text-align:center;color:#aaa;">관리자에서 입력하세요</div>';
@@ -1189,14 +1218,14 @@ function renderAll(){
   const ratePrizeFn=(k,d)=>{if(d[11]<300000)return'기준미충족';const ek=rEffMap[d[3]];return ek!==undefined?rPrize(ek):'기준미충족';};
   const rAwardCell=d=>{if(d[11]<300000)return'<span class="bdg b-ms">기준미충족</span>';const ek=rEffMap[d[3]];if(ek===undefined)return'<span class="bdg b-ms">기준미충족</span>';return`<span class="bdg b-g">${rPrize(ek)}</span>`;};
   // 신장률 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
-  if(rFinalList.length>=1)document.getElementById('ratePodium').innerHTML=makePod(rFinalList.slice(0,3),d=>((d[11]/d[8])*100).toFixed(1)+'%',d=>'',ratePrizeFn);
-  document.getElementById('rateRest').innerHTML=rFinalList.slice(3,10).map(({d},k)=>`<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td class="c-over">${(d[11]/d[8]*100).toFixed(1)}%</td><td>${rAwardCell(d)}</td></tr>`).join('');
+  if(rFinalList.length>=1)document.getElementById('ratePodium').innerHTML=makePod(rFinalList.slice(0,3),d=>((d[11]/d[8])*100).toFixed(1)+'%',d=>'순증 +'+Nf(d[11])+'원',ratePrizeFn);
+  document.getElementById('rateRest').innerHTML=rFinalList.slice(3,10).map(({d},k)=>`<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td class="td-r net-p">+${Nf(d[11])}</td><td class="c-over">${(d[11]/d[8]*100).toFixed(1)}%</td><td>${rAwardCell(d)}</td></tr>`).join('');
   // 신장액 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
-  if(byAmt.length>=1)document.getElementById('amtPodium').innerHTML=makePod(byAmt.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>'',(k,d)=>d[11]<300000?'기준미달성':aPrize(k));
+  if(byAmt.length>=1)document.getElementById('amtPodium').innerHTML=makePod(byAmt.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>((d[11]/d[8])*100).toFixed(1)+'% 신장',(k,d)=>d[11]<300000?'기준미달성':aPrize(k));
   document.getElementById('amtRest').innerHTML=byAmt.slice(3,10).map(function(x,k){
     var d=x.d;
     var badge=d[11]>=300000?'<span class="bdg b-g">'+aPrize(k+3)+'</span>':'<span class="bdg b-ms">기준미달성</span>';
-    return '<tr><td>'+RB(k+4)+'</td><td>'+d[2]+'</td><td class="td-name">'+d[5]+'</td><td class="td-r">'+Nf(d[8])+'</td><td class="td-r net-p">+'+Nf(d[11])+'</td><td>'+badge+'</td></tr>';
+    return '<tr><td>'+RB(k+4)+'</td><td>'+d[2]+'</td><td class="td-name">'+d[5]+'</td><td class="td-r">'+Nf(d[8])+'</td><td class="td-r net-p">+'+Nf(d[11])+'</td><td class="c-over">'+(d[11]/d[8]*100).toFixed(1)+'%</td><td>'+badge+'</td></tr>';
   }).join('');
   // 인품왕
   document.getElementById('ipumPodium').innerHTML=ipumTop.slice(0,3).map(({d},k)=>{const cls=['ip1','ip2','ip3'][k];const medals=['🌟','⭐','✨'][k];const ranks=['인품의 황제','인품의 제왕','인품의 왕'][k];return`<div class="ip ${cls}"><div class="ipmed">${medals}</div><div class="iprk">${ranks}</div><div class="ipname">${d[5]}</div><div class="ipbr">${d[2]}</div><div class="ipval">${Nf(d[13])}원</div><div class="ipsub">${d[12]}건</div></div>`;}).join('')||'<div style="padding:16px;text-align:center;color:#aaa;">관리자에서 입력하세요</div>';
@@ -1480,14 +1509,14 @@ function renderAll(){
   const ratePrizeFn=(k,d)=>{if(d[11]<300000)return'기준미충족';const ek=rEffMap[d[3]];return ek!==undefined?rPrize(ek):'기준미충족';};
   const rAwardCell=d=>{if(d[11]<300000)return'<span class="bdg b-ms">기준미충족</span>';const ek=rEffMap[d[3]];if(ek===undefined)return'<span class="bdg b-ms">기준미충족</span>';return`<span class="bdg b-g">${rPrize(ek)}</span>`;};
   // 신장률 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
-  if(rFinalList.length>=1)document.getElementById('ratePodium').innerHTML=makePod(rFinalList.slice(0,3),d=>((d[11]/d[8])*100).toFixed(1)+'%',d=>'',ratePrizeFn);
-  document.getElementById('rateRest').innerHTML=rFinalList.slice(3,10).map(({d},k)=>`<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td class="c-over">${(d[11]/d[8]*100).toFixed(1)}%</td><td>${rAwardCell(d)}</td></tr>`).join('');
+  if(rFinalList.length>=1)document.getElementById('ratePodium').innerHTML=makePod(rFinalList.slice(0,3),d=>((d[11]/d[8])*100).toFixed(1)+'%',d=>'순증 +'+Nf(d[11])+'원',ratePrizeFn);
+  document.getElementById('rateRest').innerHTML=rFinalList.slice(3,10).map(({d},k)=>`<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td class="td-r net-p">+${Nf(d[11])}</td><td class="c-over">${(d[11]/d[8]*100).toFixed(1)}%</td><td>${rAwardCell(d)}</td></tr>`).join('');
   // 신장액 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
-  if(byAmt.length>=1)document.getElementById('amtPodium').innerHTML=makePod(byAmt.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>'',(k,d)=>d[11]<300000?'기준미달성':aPrize(k));
+  if(byAmt.length>=1)document.getElementById('amtPodium').innerHTML=makePod(byAmt.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>((d[11]/d[8])*100).toFixed(1)+'% 신장',(k,d)=>d[11]<300000?'기준미달성':aPrize(k));
   document.getElementById('amtRest').innerHTML=byAmt.slice(3,10).map(function(x,k){
     var d=x.d;
     var badge=d[11]>=300000?'<span class="bdg b-g">'+aPrize(k+3)+'</span>':'<span class="bdg b-ms">기준미달성</span>';
-    return '<tr><td>'+RB(k+4)+'</td><td>'+d[2]+'</td><td class="td-name">'+d[5]+'</td><td class="td-r">'+Nf(d[8])+'</td><td class="td-r net-p">+'+Nf(d[11])+'</td><td>'+badge+'</td></tr>';
+    return '<tr><td>'+RB(k+4)+'</td><td>'+d[2]+'</td><td class="td-name">'+d[5]+'</td><td class="td-r">'+Nf(d[8])+'</td><td class="td-r net-p">+'+Nf(d[11])+'</td><td class="c-over">'+(d[11]/d[8]*100).toFixed(1)+'%</td><td>'+badge+'</td></tr>';
   }).join('');
   // 인품왕
   document.getElementById('ipumPodium').innerHTML=ipumTop.slice(0,3).map(({d},k)=>{const cls=['ip1','ip2','ip3'][k];const medals=['🌟','⭐','✨'][k];const ranks=['인품의 황제','인품의 제왕','인품의 왕'][k];return`<div class="ip ${cls}"><div class="ipmed">${medals}</div><div class="iprk">${ranks}</div><div class="ipname">${d[5]}</div><div class="ipbr">${d[2]}</div><div class="ipval">${Nf(d[13])}원</div><div class="ipsub">${d[12]}건</div></div>`;}).join('')||'<div style="padding:16px;text-align:center;color:#aaa;">관리자에서 입력하세요</div>';
@@ -1588,6 +1617,71 @@ document.getElementById('pg-detail').style.display='none';
 document.getElementById('pg-admin').style.display='none';
 document.getElementById('mtoggle').style.display='none';
 window.addEventListener('load',function(){setTimeout(initFirebase,500);});
+
+
+function handlePhotoUpload(event){
+  var file=event.target.files[0];
+  if(!file)return;
+  document.getElementById('photoFileName').textContent=file.name;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    document.getElementById('photoPreview').src=e.target.result;
+    document.getElementById('photoPreviewWrap').style.display='block';
+    analyzePhotoWithAI(e.target.result,file.type);
+  };
+  reader.readAsDataURL(file);
+}
+
+function analyzePhotoWithAI(dataUrl,mimeType){
+  var status=document.getElementById('photoStatus');
+  var resultDiv=document.getElementById('photoResult');
+  status.style.display='block';status.style.color='#1a5cb0';
+  status.textContent='\uD83E\uDD16 AI\uAC00 \uC2E4\uC801\uC744 \uBD84\uC11D\uC911\uC785\uB2C8\uB2E4...';
+  resultDiv.style.display='none';
+  var base64=dataUrl.split(',')[1];
+  var imgType=mimeType||'image/jpeg';
+  var names=D.map(function(d){return d[5];}).join(', ');
+  var prompt='\uC774 \uC0AC\uC9C4\uC740 \uBCF4\uD5D8 \uC601\uC5C5 \uC2E4\uC801\uD45C\uC785\uB2C8\uB2E4. '
+    +'\uB2E4\uC74C \uC218\uAC15\uC0DD \uBA85\uB2E8\uC5D0 \uC788\uB294 \uC0AC\uB78C\uB4E4\uC758 \uC774\uB984\uACFC \uD604\uC7AC\uC2E4\uC801(\uC6D4\uB0A9 \uC6D0\uB2E8\uC704 \uC22B\uC790)\uC744 \uCC3E\uC544\uC11C '
+    +'"\uC774\uB984 \uC22B\uC790" \uD615\uC2DD\uC73C\uB85C \uD55C \uC904\uC529 \uCD9C\uB825\uD574\uC8FC\uC138\uC694. '
+    +'\uC22B\uC790\uB9CC \uCD9C\uB825\uD558\uACE0 \uCF64\uB9C8 \uC5C6\uC774 \uCD9C\uB825\uD558\uC138\uC694. '
+    +'\uC218\uAC15\uC0DD \uBA85\uB2E8: '+names+'\n\n'
+    +'\uC608\uC2DC \uCD9C\uB825:\n\uC815\uACBD\uD654 2193493\n\uC724\uC9C4\uD76C 1572910\n\n'
+    +'\uC2E4\uC801\uD45C\uC5D0\uC11C \uCC3E\uC744 \uC218 \uC5C6\uB294 \uC0AC\uB78C\uC740 \uCD9C\uB825\uD558\uC9C0 \uB9C8\uC138\uC694. '
+    +'\uB2E4\uB978 \uC124\uBA85 \uC5C6\uC774 "\uC774\uB984 \uC22B\uC790" \uD615\uC2DD\uB9CC \uCD9C\uB825\uD558\uC138\uC694.';
+  fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      model:'claude-sonnet-4-20250514',
+      max_tokens:1000,
+      messages:[{role:'user',content:[
+        {type:'image',source:{type:'base64',media_type:imgType,data:base64}},
+        {type:'text',text:prompt}
+      ]}]
+    })
+  })
+  .then(function(r){return r.json();})
+  .then(function(data){
+    var text='';
+    if(data.content&&data.content[0]&&data.content[0].text){text=data.content[0].text.trim();}
+    else if(data.error){status.style.color='#cc0000';status.textContent='\u274C AI \uC624\uB958: '+data.error.message;return;}
+    document.getElementById('photoResultArea').value=text;
+    resultDiv.style.display='block';
+    status.style.color='#1a8a40';
+    status.textContent='\u2705 AI \uBD84\uC11D \uC644\uB8CC! \uACB0\uACFC\uB97C \uD655\uC778\uD558\uACE0 \uBC18\uC601 \uBC84\uD2BC\uC744 \uB20C\uB7EC\uC8FC\uC138\uC694.';
+  })
+  .catch(function(err){status.style.color='#cc0000';status.textContent='\u274C \uC624\uB958: '+err.message;});
+}
+
+function applyPhotoResult(){
+  var txt=document.getElementById('photoResultArea').value;
+  if(!txt.trim()){alert('\uC778\uC2DD\uB41C \uC2E4\uC801\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.');return;}
+  document.getElementById('pasteArea').value=txt;
+  applyPaste();
+  document.getElementById('photoStatus').textContent='\u2705 \uC2E4\uC801\uC774 \uBC18\uC601\uB418\uC5C8\uC2B5\uB2C8\uB2E4!';
+  pushToFirebase();
+}
 
 function autoCalc(i){const cur=parseFloat(document.getElementById('e9_'+i).value)||0;const base=D[i][8];document.getElementById('e10_'+i).value=(base>0?cur/base*100:0).toFixed(1);document.getElementById('e11_'+i).value=cur-base;}
 function applyPaste(){const txt=document.getElementById('pasteArea').value;let cnt=0;txt.split('\n').forEach(line=>{const parts=line.trim().split(/\s+/);if(parts.length<2)return;const name=parts[0];const val=parseInt(parts[parts.length-1].replace(/,/g,''));if(isNaN(val))return;D.forEach(d=>{if(d[5]===name){d[9]=val;d[10]=d[8]>0?parseFloat((val/d[8]*100).toFixed(1)):0;d[11]=val-d[8];cnt++;}});});const msg=document.getElementById('pasteMsg');msg.textContent='✅ '+cnt+'명 반영';msg.style.display='inline';msg.style.color='#1a8a40';setTimeout(()=>msg.style.display='none',3000);renderAll();renderGrpTable();}
