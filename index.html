@@ -1824,8 +1824,10 @@ function saveMeta(){
   }
 }
 function loadMeta(){
-  if(!fb_ready||typeof firebase==='undefined')return;
-  firebase.database().ref('master_meta').once('value',function(snap){
+  if(_metaLoaded)return;
+  if(!fb_ready||typeof firebase==='undefined'){setTimeout(loadMeta,500);return;}
+  _metaLoaded=true;
+  firebase.database().ref('master_meta').on('value',function(snap){
     var v=snap.val();if(!v)return;
     if(v.title){
       var t=document.getElementById('meta-title');if(t)t.value=v.title;
@@ -1837,8 +1839,8 @@ function loadMeta(){
     }
   });
 }
-// Firebase 연결 후 메타 로드 (1.5초 후)
-setTimeout(loadMeta,1500);
+var _metaLoaded=false;
+setTimeout(loadMeta,800);
 
 // ── 본인 실적 확인 ──
 function fmtWon(n){if(!n&&n!==0)return '-';var v=Math.round(n);if(Math.abs(v)>=10000){var man=Math.floor(Math.abs(v)/10000);var rest=Math.abs(v)%10000;var s=man+'만';if(rest>=1000)s+=(Math.floor(rest/1000))+'천';return (v<0?'-':'')+s+'원';}return v.toLocaleString()+'원';}
