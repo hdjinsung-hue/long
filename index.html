@@ -199,6 +199,19 @@ td{padding:6px 5px;text-align:center;white-space:nowrap;}
 .av.gn{color:var(--green);}.av.rd{color:var(--red);}.av.or{color:var(--orange,#cc5500);}
 .sbtn2{padding:7px 14px;background:var(--navy2);color:#fff;border:none;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;}
 .sbtn2:hover{background:var(--navy3);}
+/* 관리자 메뉴 버튼 */
+.adm-menu{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:12px 0;}
+.adm-btn{background:#fff;border:2px solid #b8cce0;border-radius:10px;padding:11px 12px;cursor:pointer;text-align:left;font-family:inherit;transition:all .15s;display:flex;align-items:center;gap:10px;}
+.adm-btn:hover{background:#f0f7ff;border-color:#4a90d9;}
+.adm-btn.active{background:linear-gradient(135deg,#1a5cb0,#0d2554);border-color:#0d2554;color:#fff;}
+.adm-btn.active .ab-title{color:#fff;}
+.adm-btn.active .ab-sub{color:#cde;}
+.ab-icon{font-size:22px;flex-shrink:0;}
+.ab-tx{flex:1;min-width:0;}
+.ab-title{font-size:13px;font-weight:900;color:#0a2050;}
+.ab-sub{font-size:10px;color:#556688;margin-top:1px;}
+.ab-arr{font-size:16px;color:#aab;flex-shrink:0;}
+.adm-btn.active .ab-arr{color:#cde;transform:rotate(90deg);}
 .smsg{font-size:10px;color:var(--green);margin-left:7px;display:none;}
 input[type=number]{width:85px;padding:3px 5px;border:1px solid var(--border);border-radius:4px;font-size:11px;text-align:right;font-family:inherit;}
 input[type=number][readonly]{color:#556688;background:#f8f8f8;}
@@ -239,8 +252,8 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
 </div>
 
 <div class="hdr">
-  <div class="org">현대해상 호남 지역단</div>
-  <h1><em>고객컨설팅 </em>Master Ⅰ 현황판</h1>
+  <div class="org" id="hdr-org">현대해상 호남 지역단</div>
+  <h1 id="hdr-title"><em>고객컨설팅 </em>Master Ⅰ 현황판</h1>
   <div class="hdr-sub">
     <span id="todayLabel">2026년 4월 20일</span><span>|</span>
     <span><span class="dot"></span> 전일마감 기준</span>
@@ -279,22 +292,25 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
     <span class="an an-warn">※ 신장률·신장액 TOP10 중복시상 없음 — 두 항목 모두 해당 시 높은 금액 1회 지급</span>
     <span class="an an-red">※ 환산실적 80만원 미만 시상제외 | 합산 하이캡 배수 15 미만시 50% 지급</span>
   </div>
+  <!-- 본인 실적 확인 (버튼) -->
+  <div class="card" style="border-color:#5a20c0;margin-bottom:10px;cursor:pointer;" onclick="goView('self')">
+    <div class="card-hdr">
+      <div class="cicon ci-purp">👤</div>
+      <div class="ctxt"><div class="ctitle">본인 실적 확인</div><div class="csub">이름 검색 · 예상실적 시뮬레이션</div></div>
+      <div class="carr">›</div>
+    </div>
+  </div>
   <div style="text-align:right;margin-bottom:8px;">
   <button onclick="printAll()" style="padding:8px 18px;background:linear-gradient(135deg,#0d2554,#1a3a6b);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">🖨️ 전체 출력</button>
 </div>
-<div class="card" style="border-color:#4a90d9;margin-bottom:10px;">
-    <div class="card-hdr" onclick="goView('perf')">
+<div class="card" style="border-color:#4a90d9;margin-bottom:10px;cursor:pointer;" onclick="goView('perf')">
+    <div class="card-hdr">
       <div class="cicon ci-blue">📊</div>
       <div class="ctxt"><div class="ctitle">실적 진도 현황</div><div class="csub">개인별 기준실적 대비 순증</div></div>
       <div class="carr">›</div>
     </div>
-    <div class="perf-stats">
-      <div class="ps"><div class="psl">총 인원</div><div class="psv" id="hs-total">-</div></div>
-      <div class="ps"><div class="psl">평균 달성률</div><div class="psv" id="hs-avg">-</div></div>
-      <div class="ps"><div class="psl">5만원↑ 순증</div><div class="psv g" id="hs-over">-</div></div>
-      <div class="ps"><div class="psl">순증 30만 이상</div><div class="psv gd" id="hs-elig">-</div></div>
-      <div class="ps"><div class="psl">150% 지급</div><div class="psv g" id="hs-a5">-</div></div>
-      <div class="ps"><div class="psl">120% 지급</div><div class="psv o" id="hs-a4">-</div></div>
+    <div style="display:none;">
+      <span id="hs-total"></span><span id="hs-avg"></span><span id="hs-over"></span><span id="hs-elig"></span><span id="hs-a5"></span><span id="hs-a4"></span>
     </div>
   </div>
   <div class="g2">
@@ -321,6 +337,21 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
 <div id="pg-detail" class="pg">
 <div class="wrap">
   <button class="back-btn" onclick="goView('home')">‹ 홈으로</button>
+  <div id="vself" style="display:none">
+    <div class="sec">
+      <div class="stitle">👤 본인 실적 확인 <span class="ssub">이름 검색 · 예상실적 시뮬레이션</span></div>
+      <div style="padding:4px 2px 6px;">
+        <div style="display:flex;gap:6px;margin-bottom:10px;">
+          <input type="text" id="myName" list="myNameList" placeholder="본인 성명 입력 (예: 윤정화)" style="flex:1;padding:9px 11px;font-size:13px;border:1.5px solid #b0a0d8;border-radius:8px;font-family:inherit;outline:none;" oninput="findMe()" autocomplete="off">
+          <datalist id="myNameList"></datalist>
+          <button onclick="findMe()" style="padding:9px 16px;background:#5a20c0;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">🔍 찾기</button>
+          <button onclick="clearMe()" style="padding:9px 11px;background:#aaa;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">✕</button>
+        </div>
+        <div id="myResult" style="display:none;"></div>
+        <div id="myEmpty" style="text-align:center;color:#888;font-size:11px;padding:12px 0;">이름을 입력하면 본인 실적이 표시됩니다</div>
+      </div>
+    </div>
+  </div>
   <div id="vperf" style="display:none">
     <div class="kpi-row" id="kpi-perf"></div>
     <div class="sec"><div class="stitle">📊 개인별 실적 진도<span class="ssub">신장금액 내림차순</span><button class="sbtn" id="extraBtn" onclick="toggleExtra()">시상·순위 숨기기</button><button class="print-btn" onclick="printSection('vperf')">🖨️ 인쇄</button></div>
@@ -370,17 +401,18 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
     <div style="display:flex;gap:8px;align-items:stretch;">
 
       <!-- 그룹시상 1 -->
-      <div style="flex:1;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.1);">
+      <div style="flex:1;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.1);display:flex;flex-direction:column;">
         <div style="background:#1e7e3a;color:#fff;text-align:center;padding:10px 6px;font-size:13px;font-weight:900;">💰 그룹시상 1</div>
-        <div style="background:#f6fff8;border:2px solid #1e7e3a;border-top:none;border-radius:0 0 12px 12px;padding:12px 8px;">
-          <div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #c8e8cc;">
-            <div style="font-size:11px;font-weight:700;color:#334466;margin-bottom:4px;">조건</div>
-            <div style="font-size:13px;font-weight:900;color:#cc5500;">5만원↑<br>전원 순증</div>
+        <div style="background:#f6fff8;border:2px solid #1e7e3a;border-top:none;border-radius:0 0 12px 12px;padding:10px 8px;flex:1;display:flex;flex-direction:column;justify-content:center;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #c8e8cc;">
+            <div style="font-size:11px;font-weight:700;color:#1a3a6b;">조건</div>
+            <div style="font-size:14px;font-weight:900;color:#cc5500;">5만원 순증</div>
           </div>
-          <div>
-            <div style="font-size:11px;font-weight:700;color:#334466;margin-bottom:4px;">시상</div>
-            <div style="font-size:20px;font-weight:900;color:#1e7e3a;line-height:1.2;">5만원<span style="font-size:11px;color:#555;font-weight:600;"> 인당</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;">
+            <div style="font-size:11px;font-weight:700;color:#1a3a6b;">시상</div>
+            <div style="font-size:18px;font-weight:900;color:#1e7e3a;">5만원</div>
           </div>
+          <div style="text-align:center;font-size:10px;font-weight:600;color:#556688;padding-top:6px;border-top:1px dashed #c8e8cc;margin-top:2px;">(전원 참여시 전원 지급)</div>
         </div>
       </div>
 
@@ -447,10 +479,10 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
 <div id="pg-admin" class="pg">
 <div class="wrap">
   <div class="ag">
-    <div class="ac"><h3>📌 과정 기본 정보</h3>
-      <div class="ar"><span class="al">과정명</span><span class="av">고객컨설팅 Master Ⅰ</span></div>
-      <div class="ar"><span class="al">지역단</span><span class="av">현대해상 호남 지역단</span></div>
-      <div class="ar"><span class="al">기준일</span><span class="av">2026.4.17</span></div>
+    <div class="ac"><h3>📌 과정 기본 정보 <button class="sbtn" onclick="saveMeta()" style="background:#1a5cb0;color:#fff;border-color:#1a5cb0;">💾 저장</button><span id="metaMsg" style="font-size:9px;color:#1a8a40;display:none;margin-left:4px;">✅ 저장완료</span></h3>
+      <div class="ar"><span class="al">과정명</span><input type="text" id="meta-title" class="av" value="고객컨설팅 Master Ⅰ" style="width:60%;padding:3px 6px;font-size:11px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;text-align:right;"></div>
+      <div class="ar"><span class="al">지역단</span><input type="text" id="meta-org" class="av" value="현대해상 호남 지역단" style="width:60%;padding:3px 6px;font-size:11px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;text-align:right;"></div>
+      <div class="ar"><span class="al">기준일</span><span class="av" id="meta-date">-</span></div>
       <div class="ar"><span class="al">총 인원</span><span class="av" id="adm-total">-</span></div>
     </div>
     <div class="ac"><h3>📊 달성 현황</h3>
@@ -468,7 +500,15 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
       <div class="ar"><span class="al">시상 제외</span><span class="av rd" id="adm-a0">-</span></div>
     </div>
   </div>
-  <div class="sec">
+  <!-- 관리자 메뉴 버튼 -->
+  <div class="adm-menu">
+    <button class="adm-btn" id="btn-sec-edit" onclick="adminShow('sec-edit',this)"><span class="ab-icon">✏️</span><div class="ab-tx"><div class="ab-title">실적 데이터 편집</div><div class="ab-sub">붙여넣기·사진입력·개별편집</div></div><span class="ab-arr">›</span></button>
+    <button class="adm-btn" id="btn-sec-ipum" onclick="adminShow('sec-ipum',this)"><span class="ab-icon">✨</span><div class="ab-tx"><div class="ab-title">인품 데이터 편집</div><div class="ab-sub">신상품 계약건·실적</div></div><span class="ab-arr">›</span></button>
+    <button class="adm-btn" id="btn-sec-history" onclick="adminShow('sec-history',this);loadViewHistory();"><span class="ab-icon">🕐</span><div class="ab-tx"><div class="ab-title">조회이력</div><div class="ab-sub">사용자 조회 로그 (최근 50건)</div></div><span class="ab-arr">›</span></button>
+    <button class="adm-btn" id="btn-sec-roster" onclick="adminShow('sec-roster',this)"><span class="ab-icon">📋</span><div class="ab-tx"><div class="ab-title">개별 명단 관리</div><div class="ab-sub">일괄 내보내기·입력 (사번 매칭)</div></div><span class="ab-arr">›</span></button>
+    <button class="adm-btn" id="btn-sec-groups" onclick="adminShow('sec-groups',this)"><span class="ab-icon">🏅</span><div class="ab-tx"><div class="ab-title">조별 명단 관리</div><div class="ab-sub">조 구성 일괄 교체</div></div><span class="ab-arr">›</span></button>
+  </div>
+  <div class="sec" id="sec-edit" style="display:none;">
     <div class="stitle">✏️ 실적 데이터 편집</div>
 
     <div style="background:#f0f0ff;border:2px solid #4a90d9;border-radius:10px;padding:12px;margin-bottom:10px;">
@@ -501,7 +541,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
     <div class="tbl"><table><thead><tr class="hd1"><th>No</th><th>지점</th><th>사번</th><th>성명</th><th>기준실적</th><th>현재실적</th><th>달성률%</th><th>순증(원)</th><th>인품건</th><th>인품실적</th></tr></thead><tbody id="editTbody"></tbody></table></div>
     <div style="margin-top:9px"><button class="sbtn2" onclick="saveEdits()">💾 저장 및 반영</button><span class="smsg" id="saveMsg">✅ 저장 완료</span></div>
   </div>
-  <div class="sec">
+  <div class="sec" id="sec-ipum" style="display:none;">
     <div class="stitle">✨ 인품 데이터 편집</div>
     <div style="background:#f8f0ff;border:1px solid #b090e0;border-radius:7px;padding:10px;margin-bottom:10px;">
       <div style="font-size:10px;color:#5a20c0;margin-bottom:5px;font-weight:700;">📋 인품 붙여넣기 — 이름 계약건수</div>
@@ -514,6 +554,44 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
     </div>
     <div class="tbl"><table><thead><tr class="hd1"><th>No</th><th>지점</th><th>성명</th><th>신상품 계약건</th><th>신상품 실적(원)</th></tr></thead><tbody id="ipumEditTbody"></tbody></table></div>
     <div style="margin-top:9px"><button class="sbtn2" onclick="saveIpumEdits()" style="background:#5a20c0;">💾 인품 저장</button><span class="smsg" id="ipumSaveMsg">✅ 저장 완료</span></div>
+  </div>
+  <!-- 조회이력 -->
+  <div class="sec" id="sec-history" style="display:none;">
+    <div class="stitle">🕐 조회이력 <span style="font-size:10px;font-weight:600;color:#888;">(최근 50건)</span>
+      <button class="sbtn" onclick="loadViewHistory()" style="background:#1a5cb0;color:#fff;border-color:#1a5cb0;">🔄 새로고침</button>
+      <button class="sbtn" onclick="clearViewHistory()" style="background:#cc0000;color:#fff;border-color:#cc0000;margin-left:4px;">🗑 전체삭제</button>
+    </div>
+    <div id="viewHistoryBody" style="max-height:320px;overflow-y:auto;border:1px solid #d8d8d8;border-radius:6px;padding:6px;background:#fafbfc;font-size:11px;">
+      <div style="text-align:center;color:#888;padding:12px;">새로고침 버튼을 눌러 조회이력을 불러오세요</div>
+    </div>
+  </div>
+  <!-- 개별 명단 일괄 입력 -->
+  <div class="sec" id="sec-roster" style="display:none;">
+    <div class="stitle">📋 개별 명단 일괄 입력/수정 <span style="font-size:10px;font-weight:600;color:#888;">(사번 매칭)</span></div>
+    <div style="background:#f0f5fc;border:1px solid #99aacc;border-radius:7px;padding:10px;">
+      <div style="font-size:10px;color:#1a3a6b;margin-bottom:5px;font-weight:700;">포맷: 지점⇥사번⇥성명⇥직급⇥기준실적(원) · 엑셀 복붙 가능</div>
+      <div style="display:flex;gap:5px;margin-bottom:6px;flex-wrap:wrap;">
+        <button class="sbtn2" onclick="exportRoster()" style="background:#1a5cb0;">📤 현재 명단 내보내기</button>
+        <button class="sbtn2" onclick="applyRoster()" style="background:#1e7e3a;">📥 적용(D 갱신)</button>
+        <button class="sbtn2" onclick="document.getElementById('rosterArea').value=''" style="background:#888;">🗑 초기화</button>
+        <span id="rosterMsg" style="font-size:10px;display:none;font-weight:700;align-self:center;"></span>
+      </div>
+      <textarea id="rosterArea" rows="10" style="width:100%;padding:7px;font-size:11px;border:1px solid #99aacc;border-radius:5px;font-family:'Courier New',monospace;resize:vertical;" placeholder="광주제일지점&#9;1B1312&#9;윤정화&#9;영업팀장&#9;622738"></textarea>
+    </div>
+  </div>
+  <!-- 조별 명단 일괄 입력 -->
+  <div class="sec" id="sec-groups" style="display:none;">
+    <div class="stitle">🏅 조별 명단 일괄 입력/수정 <span style="font-size:10px;font-weight:600;color:#888;">(전체 교체)</span></div>
+    <div style="background:#f8f0ff;border:1px solid #b090e0;border-radius:7px;padding:10px;">
+      <div style="font-size:10px;color:#5a20c0;margin-bottom:5px;font-weight:700;">포맷: 조번호⇥센터⇥지점⇥성명⇥기준실적(만원)</div>
+      <div style="display:flex;gap:5px;margin-bottom:6px;flex-wrap:wrap;">
+        <button class="sbtn2" onclick="exportGroups()" style="background:#5a20c0;">📤 현재 조별명단 내보내기</button>
+        <button class="sbtn2" onclick="applyGroups()" style="background:#1e7e3a;">📥 적용(GROUPS 교체)</button>
+        <button class="sbtn2" onclick="document.getElementById('groupsArea').value=''" style="background:#888;">🗑 초기화</button>
+        <span id="groupsMsg" style="font-size:10px;display:none;font-weight:700;align-self:center;"></span>
+      </div>
+      <textarea id="groupsArea" rows="10" style="width:100%;padding:7px;font-size:11px;border:1px solid #b090e0;border-radius:5px;font-family:'Courier New',monospace;resize:vertical;" placeholder="1&#9;광주비전센터&#9;광주TC지점&#9;문채원&#9;1318"></textarea>
+    </div>
   </div>
 </div></div>
 </div>
@@ -730,7 +808,7 @@ function renderGrpTable(){
 }
 function saveGroupData(){const msg=document.getElementById('grpSaveMsg');if(msg){msg.style.display='inline';setTimeout(()=>msg.style.display='none',2500);}}
 
-const VIEWS=['vperf','vrate','vamt','vipum','vgroup'];
+const VIEWS=['vself','vperf','vrate','vamt','vipum','vgroup'];
 const NAVS=[{id:'home',icon:'🏠',label:'홈'},{id:'perf',icon:'📊',label:'실적 진도'},{id:'rate',icon:'📈',label:'신장률 TOP10'},{id:'amt',icon:'💰',label:'신장액 TOP10'},{id:'ipum',icon:'✨',label:'인품왕 TOP10'},{id:'group',icon:'🏅',label:'그룹 시상'}];
 let curView='home';
 
@@ -1723,7 +1801,324 @@ window.addEventListener('load',function(){setTimeout(initFirebase,500);});
   var y=now.getFullYear(), m=now.getMonth()+1, d=now.getDate();
   var el1=document.getElementById('todayLabel');
   if(el1) el1.textContent=y+'년 '+m+'월 '+d+'일';
+  var el2=document.getElementById('meta-date');
+  if(el2) el2.textContent=y+'.'+m+'.'+d;
 })();
+
+// ── 과정 기본 정보 저장/로드 ──
+function saveMeta(){
+  var title=document.getElementById('meta-title').value.trim();
+  var org=document.getElementById('meta-org').value.trim();
+  // 헤더 즉시 업데이트
+  var h=document.getElementById('hdr-title');if(h)h.innerHTML='<em>'+title.replace(/Master.*/i,'')+'</em>'+(title.match(/Master.*/i)||[''])[0]+' 현황판';
+  var o=document.getElementById('hdr-org');if(o)o.textContent=org;
+  // Firebase에 저장
+  if(fb_ready&&typeof firebase!=='undefined'){
+    firebase.database().ref('master_meta').set({title:title,org:org,t:Date.now()},function(err){
+      var msg=document.getElementById('metaMsg');if(!msg)return;
+      msg.textContent=err?'❌ 저장실패':'✅ 저장완료';msg.style.color=err?'#cc0000':'#1a8a40';msg.style.display='inline';
+      setTimeout(function(){msg.style.display='none';},2500);
+    });
+  } else {
+    var msg=document.getElementById('metaMsg');if(msg){msg.textContent='⚠ 로컬만 저장 (Firebase 미연결)';msg.style.color='#cc5500';msg.style.display='inline';setTimeout(function(){msg.style.display='none';},2500);}
+  }
+}
+function loadMeta(){
+  if(!fb_ready||typeof firebase==='undefined')return;
+  firebase.database().ref('master_meta').once('value',function(snap){
+    var v=snap.val();if(!v)return;
+    if(v.title){
+      var t=document.getElementById('meta-title');if(t)t.value=v.title;
+      var h=document.getElementById('hdr-title');if(h)h.innerHTML='<em>'+v.title.replace(/Master.*/i,'')+'</em>'+(v.title.match(/Master.*/i)||[''])[0]+' 현황판';
+    }
+    if(v.org){
+      var o=document.getElementById('meta-org');if(o)o.value=v.org;
+      var h2=document.getElementById('hdr-org');if(h2)h2.textContent=v.org;
+    }
+  });
+}
+// Firebase 연결 후 메타 로드 (1.5초 후)
+setTimeout(loadMeta,1500);
+
+// ── 본인 실적 확인 ──
+function fmtWon(n){if(!n&&n!==0)return '-';var v=Math.round(n);if(Math.abs(v)>=10000){var man=Math.floor(Math.abs(v)/10000);var rest=Math.abs(v)%10000;var s=man+'만';if(rest>=1000)s+=(Math.floor(rest/1000))+'천';return (v<0?'-':'')+s+'원';}return v.toLocaleString()+'원';}
+function prizeOf(sunjeung){
+  if(sunjeung>=500000)return{txt:'150% 지급',lv:5,color:'#1e7e3a'};
+  if(sunjeung>=300000)return{txt:'120% 지급',lv:4,color:'#1e7e3a'};
+  if(sunjeung>=200000)return{txt:'20만원',lv:3,color:'#1a5cb0'};
+  if(sunjeung>=100000)return{txt:'10만원',lv:2,color:'#1a5cb0'};
+  if(sunjeung>=50000)return{txt:'5만원',lv:1,color:'#cc5500'};
+  return{txt:'시상 없음',lv:0,color:'#888'};
+}
+function fillNameList(){
+  var dl=document.getElementById('myNameList');if(!dl)return;
+  var seen={},html='';
+  D.forEach(function(d){var n=d[5];if(n&&!seen[n]){seen[n]=1;html+='<option value="'+n+'">';}});
+  dl.innerHTML=html;
+}
+// 인보험 가상 순위 (by='rate' 신장률 / 'amt' 신장액)
+function rankIns(name,sun,base,by){
+  var list=D.map(function(r){
+    if(r[5]===name)return{name:r[5],sun:sun,base:base};
+    return{name:r[5],sun:r[11],base:r[8]};
+  });
+  if(by==='rate')list.sort(function(a,b){return (b.base>0?b.sun/b.base:-9999)-(a.base>0?a.sun/a.base:-9999);});
+  else list.sort(function(a,b){return b.sun-a.sun;});
+  for(var i=0;i<list.length;i++){if(list[i].name===name)return i+1;}
+  return '-';
+}
+// 인품 가상 순위 (val>0 인 사람만 랭킹)
+function rankIpum(name,val,cnt){
+  if(!val||val<=0)return '-';
+  var list=D.map(function(r){
+    if(r[5]===name)return{name:r[5],val:val,cnt:cnt};
+    return{name:r[5],val:r[13],cnt:r[12]};
+  }).filter(function(x){return x.val>0;});
+  list.sort(function(a,b){return b.val-a.val||b.cnt-a.cnt;});
+  for(var i=0;i<list.length;i++){if(list[i].name===name)return i+1;}
+  return '-';
+}
+function findMe(){
+  var inp=document.getElementById('myName');if(!inp)return;
+  var name=inp.value.trim();
+  var empty=document.getElementById('myEmpty');
+  var res=document.getElementById('myResult');
+  if(!name){res.style.display='none';empty.style.display='block';empty.textContent='이름을 입력하면 본인 실적이 표시됩니다';return;}
+  var d=D.find(function(r){return r[5]===name;});
+  if(!d){res.style.display='none';empty.style.display='block';empty.style.color='#cc0000';empty.textContent='❌ "'+name+'" 님을 명단에서 찾을 수 없습니다';return;}
+  empty.style.display='none';
+  res.style.display='block';
+  logViewHistory(name,d[2]||'');
+  var base=d[8],cur=d[9],rate=d[10],sun=d[11],ipum=d[13]||0,ipumCnt=d[12]||0;
+  var cp=prizeOf(sun);
+  var curRateRk=rankIns(name,sun,base,'rate');
+  var curAmtRk=rankIns(name,sun,base,'amt');
+  var curIpRk=rankIpum(name,ipum,ipumCnt);
+  // 현재 정보
+  var html='<div style="background:#f8f4ff;border:1.5px solid #b090e0;border-radius:10px;padding:10px 12px;margin-bottom:10px;">';
+  html+='<div style="font-size:13px;font-weight:900;color:#3a1a70;margin-bottom:8px;">📌 '+d[5]+' · '+d[2]+(d[7]?' · '+d[7]:'')+'</div>';
+  html+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:8px;">';
+  html+='<div style="background:#fff;padding:6px 4px;border-radius:6px;text-align:center;border:1px solid #d8c8ee;"><div style="font-size:9px;color:#556688;font-weight:600;">기준실적</div><div style="font-size:12px;font-weight:900;color:#0a2050;margin-top:2px;">'+fmtWon(base)+'</div></div>';
+  html+='<div style="background:#fff;padding:6px 4px;border-radius:6px;text-align:center;border:1px solid #d8c8ee;"><div style="font-size:9px;color:#556688;font-weight:600;">현재실적</div><div style="font-size:12px;font-weight:900;color:#0a2050;margin-top:2px;">'+fmtWon(cur)+'</div></div>';
+  html+='<div style="background:#fff;padding:6px 4px;border-radius:6px;text-align:center;border:1px solid #d8c8ee;"><div style="font-size:9px;color:#556688;font-weight:600;">달성률</div><div style="font-size:12px;font-weight:900;color:'+(rate>=100?'#1e7e3a':rate>=80?'#cc5500':'#cc0000')+';margin-top:2px;">'+rate.toFixed(1)+'%</div></div>';
+  html+='<div style="background:#fff;padding:6px 4px;border-radius:6px;text-align:center;border:1px solid #d8c8ee;"><div style="font-size:9px;color:#556688;font-weight:600;">순증</div><div style="font-size:12px;font-weight:900;color:'+(sun>=0?'#1e7e3a':'#cc0000')+';margin-top:2px;">'+(sun>=0?'+':'')+fmtWon(sun)+'</div></div>';
+  html+='</div>';
+  html+='<div style="text-align:center;background:#fff;border:1.5px solid '+cp.color+';border-radius:8px;padding:7px;margin-bottom:6px;"><span style="font-size:10px;color:#556688;">🏆 현재 시상</span> <span style="font-size:14px;font-weight:900;color:'+cp.color+';margin-left:6px;">'+cp.txt+'</span></div>';
+  html+='<div style="text-align:center;background:#fff;border:1px solid #d8c8ee;border-radius:8px;padding:6px;font-size:10px;color:#334466;"><span style="font-weight:700;">📊 현재 순위</span> &nbsp; 신장률 <b style="color:#0040b0;">'+curRateRk+'위</b> · 신장액 <b style="color:#cc5500;">'+curAmtRk+'위</b> · 인품 <b style="color:#b0006a;">'+curIpRk+'위</b></div>';
+  html+='</div>';
+  // 예상 시뮬레이션 (2개 입력)
+  html+='<div style="background:#fff8e8;border:1.5px solid #e0b848;border-radius:10px;padding:10px 12px;">';
+  html+='<div style="font-size:12px;font-weight:900;color:#7a5000;margin-bottom:8px;">🔮 예상실적 시뮬레이션 <span style="font-size:10px;font-weight:600;color:#996600;">(오늘 추가분 입력 · 인품은 인보험 내 포함)</span></div>';
+  // 인보험 입력
+  html+='<div style="background:#fff;border:1.5px solid #8cc5ff;border-radius:8px;padding:9px 10px;margin-bottom:8px;">';
+  html+='<div style="font-size:11px;font-weight:900;color:#0040b0;margin-bottom:6px;">🛡️ 인보험 오늘 추가실적 <span style="font-size:9px;font-weight:600;color:#556688;">(전체, 인품 포함)</span></div>';
+  html+='<div style="display:flex;gap:5px;align-items:center;">';
+  html+='<input type="number" id="projIns" placeholder="0" value="0" oninput="calcProject()" style="flex:1;padding:7px 10px;font-size:13px;border:1.5px solid #8cc5ff;border-radius:6px;font-family:inherit;outline:none;text-align:right;">';
+  html+='<span style="font-size:11px;font-weight:700;color:#0040b0;">원</span>';
+  html+='</div>';
+  html+='<div id="insProjResult" style="margin-top:8px;"></div>';
+  html+='</div>';
+  // 인품 입력
+  html+='<div style="background:#fff;border:1.5px solid #e8b0d8;border-radius:8px;padding:9px 10px;">';
+  html+='<div style="font-size:11px;font-weight:900;color:#b0006a;margin-bottom:3px;">✨ 인생의 품격실적(인품) 오늘 추가</div>';
+  html+='<div style="font-size:9px;color:#996688;margin-bottom:6px;background:#fdf5fa;padding:4px 6px;border-radius:4px;">※ 위 인보험 추가실적 안에 포함된 인품 해당분 (중복 아님, 순위만 계산)</div>';
+  html+='<div style="display:flex;gap:5px;align-items:center;">';
+  html+='<input type="number" id="projIpum" placeholder="0" value="0" oninput="calcProject()" style="flex:1;padding:7px 10px;font-size:13px;border:1.5px solid #e8b0d8;border-radius:6px;font-family:inherit;outline:none;text-align:right;">';
+  html+='<span style="font-size:11px;font-weight:700;color:#b0006a;">원</span>';
+  html+='<input type="number" id="projIpumCnt" placeholder="0" value="0" oninput="calcProject()" style="width:70px;padding:7px 8px;font-size:13px;border:1.5px solid #e8b0d8;border-radius:6px;font-family:inherit;outline:none;text-align:right;">';
+  html+='<span style="font-size:11px;font-weight:700;color:#b0006a;">건</span>';
+  html+='</div>';
+  html+='<div id="ipumProjResult" style="margin-top:8px;"></div>';
+  html+='</div>';
+  html+='</div>';
+  res.innerHTML=html;
+  calcProject();
+}
+function calcProject(){
+  var myName=document.getElementById('myName');if(!myName)return;
+  var name=myName.value.trim();
+  var d=D.find(function(r){return r[5]===name;});if(!d)return;
+  var base=d[8],curIns=d[9],sunNow=d[11],curRate=d[10];
+  var curIpum=d[13]||0,curIpumCnt=d[12]||0;
+  // 인보험
+  var addIns=parseFloat(document.getElementById('projIns').value)||0;
+  var newIns=curIns+addIns;
+  var newSun=newIns-base;
+  var newRate=base>0?(newIns/base*100):0;
+  var pp=prizeOf(newSun),cp=prizeOf(sunNow);
+  var arr='= 동일',arrC='#888';
+  if(pp.lv>cp.lv){arr='⬆️ 상승';arrC='#1e7e3a';}
+  else if(pp.lv<cp.lv){arr='⬇️ 하락';arrC='#cc0000';}
+  var pRateRk=rankIns(name,newSun,base,'rate');
+  var pAmtRk=rankIns(name,newSun,base,'amt');
+  var rateDiff=newRate-curRate;
+  var sunDiff=newSun-sunNow;
+  var insHtml='';
+  insHtml+='<div style="font-size:10px;color:#334466;margin-bottom:6px;line-height:1.5;">현재 <b>'+fmtWon(curIns)+'</b> + 오늘 <b style="color:#0040b0;">'+fmtWon(addIns)+'</b> = 반영 후 <b style="color:#1e7e3a;">'+fmtWon(newIns)+'</b></div>';
+  insHtml+='<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:4px;margin-bottom:6px;">';
+  insHtml+='<div style="background:#f5faff;padding:5px 4px;border-radius:5px;text-align:center;border:1px solid #d0e0f5;"><div style="font-size:9px;color:#556688;font-weight:600;">예상 달성률</div><div style="font-size:12px;font-weight:900;color:'+(newRate>=100?'#1e7e3a':newRate>=80?'#cc5500':'#cc0000')+';margin-top:1px;">'+newRate.toFixed(1)+'%'+(addIns!==0?' <span style="font-size:9px;color:#888;">('+(rateDiff>=0?'↑':'↓')+Math.abs(rateDiff).toFixed(1)+'%p)</span>':'')+'</div></div>';
+  insHtml+='<div style="background:#f5faff;padding:5px 4px;border-radius:5px;text-align:center;border:1px solid #d0e0f5;"><div style="font-size:9px;color:#556688;font-weight:600;">예상 순증</div><div style="font-size:12px;font-weight:900;color:'+(newSun>=0?'#1e7e3a':'#cc0000')+';margin-top:1px;">'+(newSun>=0?'+':'')+fmtWon(newSun)+(addIns!==0?' <span style="font-size:9px;color:#888;">('+(sunDiff>=0?'↑':'↓')+fmtWon(Math.abs(sunDiff))+')</span>':'')+'</div></div>';
+  insHtml+='</div>';
+  insHtml+='<div style="text-align:center;background:#fff;border:2px solid '+pp.color+';border-radius:7px;padding:6px;margin-bottom:5px;"><span style="font-size:10px;color:#556688;">🎯 예상 시상</span> <span style="font-size:14px;font-weight:900;color:'+pp.color+';margin-left:5px;">'+pp.txt+'</span> <span style="font-size:10px;font-weight:700;color:'+arrC+';margin-left:6px;">'+arr+'</span></div>';
+  insHtml+='<div style="text-align:center;background:#f8fbff;border:1px solid #c8d8ee;border-radius:6px;padding:5px;font-size:10px;color:#334466;">📊 예상 순위 &nbsp; 신장률 <b style="color:#0040b0;">'+pRateRk+'위</b> · 신장액 <b style="color:#cc5500;">'+pAmtRk+'위</b></div>';
+  document.getElementById('insProjResult').innerHTML=insHtml;
+  // 인품
+  var addIp=parseFloat(document.getElementById('projIpum').value)||0;
+  var addIpCnt=parseInt(document.getElementById('projIpumCnt').value)||0;
+  var newIpum=curIpum+addIp;
+  var newIpumCnt=curIpumCnt+addIpCnt;
+  var pIpRk=rankIpum(name,newIpum,newIpumCnt);
+  var curIpRk=rankIpum(name,curIpum,curIpumCnt);
+  var rkArr='=',rkArrC='#888';
+  if(typeof pIpRk==='number'&&typeof curIpRk==='number'){if(pIpRk<curIpRk){rkArr='⬆️ 상승';rkArrC='#1e7e3a';}else if(pIpRk>curIpRk){rkArr='⬇️ 하락';rkArrC='#cc0000';}}
+  else if(typeof pIpRk==='number'&&curIpRk==='-'){rkArr='⬆️ 진입';rkArrC='#1e7e3a';}
+  var ipumHtml='';
+  ipumHtml+='<div style="font-size:10px;color:#334466;margin-bottom:6px;line-height:1.5;">현재 <b>'+fmtWon(curIpum)+' / '+curIpumCnt+'건</b> + 오늘 <b style="color:#b0006a;">'+fmtWon(addIp)+' / '+addIpCnt+'건</b> = 반영 후 <b style="color:#1e7e3a;">'+fmtWon(newIpum)+' / '+newIpumCnt+'건</b></div>';
+  ipumHtml+='<div style="text-align:center;background:#fdf5fa;border:1.5px solid #e8b0d8;border-radius:7px;padding:6px;font-size:11px;color:#334466;">📊 예상 인품 순위 <b style="color:#b0006a;font-size:13px;margin-left:4px;">'+pIpRk+'위</b> <span style="font-size:10px;font-weight:700;color:'+rkArrC+';margin-left:6px;">'+rkArr+'</span></div>';
+  document.getElementById('ipumProjResult').innerHTML=ipumHtml;
+}
+function clearMe(){
+  var inp=document.getElementById('myName');if(inp)inp.value='';
+  document.getElementById('myResult').style.display='none';
+  var empty=document.getElementById('myEmpty');
+  empty.style.display='block';empty.style.color='#888';
+  empty.textContent='이름을 입력하면 본인 실적이 표시됩니다';
+}
+fillNameList();
+
+// ── 관리자 섹션 토글 ──
+function adminShow(id,btn){
+  var ids=['sec-edit','sec-ipum','sec-history','sec-roster','sec-groups'];
+  var target=document.getElementById(id);
+  if(!target)return;
+  var wasOpen=target.style.display!=='none';
+  // 전체 닫기
+  ids.forEach(function(s){var el=document.getElementById(s);if(el)el.style.display='none';});
+  document.querySelectorAll('.adm-btn').forEach(function(b){b.classList.remove('active');});
+  // 닫혀있었으면 열기
+  if(!wasOpen){
+    target.style.display='block';
+    if(btn)btn.classList.add('active');
+    setTimeout(function(){target.scrollIntoView({behavior:'smooth',block:'start'});},50);
+  }
+}
+
+// ── 조회이력 ──
+var _vhLastKey='';
+function logViewHistory(name,branch){
+  try{
+    if(!fb_ready||typeof firebase==='undefined')return;
+    // 2초 내 중복 방지
+    var k=name+'|'+Math.floor(Date.now()/2000);
+    if(k===_vhLastKey)return;_vhLastKey=k;
+    var ref=firebase.database().ref('master_view_history');
+    ref.push({n:name,b:branch||'',t:Date.now()});
+    // 최근 50건만 유지
+    ref.orderByChild('t').limitToLast(60).once('value',function(snap){
+      var all=[];snap.forEach(function(c){all.push({k:c.key,t:c.val().t});});
+      all.sort(function(a,b){return b.t-a.t;});
+      if(all.length>50){
+        var del={};for(var i=50;i<all.length;i++)del[all[i].k]=null;
+        ref.update(del);
+      }
+    });
+  }catch(e){}
+}
+function loadViewHistory(){
+  var body=document.getElementById('viewHistoryBody');
+  if(!fb_ready||typeof firebase==='undefined'){body.innerHTML='<div style="text-align:center;color:#cc0000;padding:12px;">⚠️ Firebase 연결 필요</div>';return;}
+  body.innerHTML='<div style="text-align:center;color:#888;padding:12px;">로딩 중...</div>';
+  firebase.database().ref('master_view_history').orderByChild('t').limitToLast(50).once('value',function(snap){
+    var arr=[];snap.forEach(function(c){var v=c.val();arr.push({n:v.n,b:v.b,t:v.t});});
+    arr.sort(function(a,b){return b.t-a.t;});
+    if(arr.length===0){body.innerHTML='<div style="text-align:center;color:#888;padding:12px;">조회이력 없음</div>';return;}
+    var html='<table style="width:100%;border-collapse:collapse;font-size:11px;"><thead><tr style="background:#e8eef6;"><th style="padding:5px 7px;border:1px solid #d0d8e0;text-align:left;">#</th><th style="padding:5px 7px;border:1px solid #d0d8e0;text-align:left;">시각</th><th style="padding:5px 7px;border:1px solid #d0d8e0;text-align:left;">이름</th><th style="padding:5px 7px;border:1px solid #d0d8e0;text-align:left;">지점</th></tr></thead><tbody>';
+    // 이름별 집계
+    var cnt={};arr.forEach(function(x){cnt[x.n]=(cnt[x.n]||0)+1;});
+    arr.forEach(function(x,i){
+      var d=new Date(x.t);
+      var mm=String(d.getMonth()+1).padStart(2,'0');var dd=String(d.getDate()).padStart(2,'0');
+      var hh=String(d.getHours()).padStart(2,'0');var mi=String(d.getMinutes()).padStart(2,'0');
+      var cBadge=cnt[x.n]>1?' <span style="background:#ffe0a0;color:#7a5000;font-size:9px;font-weight:700;padding:1px 5px;border-radius:7px;margin-left:3px;">×'+cnt[x.n]+'</span>':'';
+      html+='<tr style="background:'+(i%2?'#fff':'#fafbfc')+';"><td style="padding:4px 7px;border:1px solid #e0e4e8;color:#888;">'+(i+1)+'</td><td style="padding:4px 7px;border:1px solid #e0e4e8;color:#556688;">'+mm+'/'+dd+' '+hh+':'+mi+'</td><td style="padding:4px 7px;border:1px solid #e0e4e8;font-weight:700;color:#0a2050;">'+x.n+cBadge+'</td><td style="padding:4px 7px;border:1px solid #e0e4e8;color:#334466;">'+(x.b||'-')+'</td></tr>';
+    });
+    html+='</tbody></table>';
+    // 상단 요약
+    var unique=Object.keys(cnt).length;
+    html='<div style="padding:6px 8px;margin-bottom:6px;background:#e8f4ff;border-radius:5px;font-size:11px;color:#0040b0;"><b>총 '+arr.length+'건</b> · 고유 이름 <b>'+unique+'명</b></div>'+html;
+    body.innerHTML=html;
+  },function(){body.innerHTML='<div style="text-align:center;color:#cc0000;padding:12px;">❌ 조회이력 읽기 실패</div>';});
+}
+function clearViewHistory(){
+  if(!confirm('조회이력 전체를 삭제하시겠습니까?'))return;
+  if(!fb_ready||typeof firebase==='undefined'){alert('Firebase 연결 필요');return;}
+  firebase.database().ref('master_view_history').set(null,function(){loadViewHistory();});
+}
+
+// ── 개별 명단 내보내기/적용 ──
+function exportRoster(){
+  var lines=D.map(function(d){return [d[2]||'',d[3]||'',d[5]||'',d[7]||'',d[8]||0].join('\t');});
+  document.getElementById('rosterArea').value=lines.join('\n');
+  var msg=document.getElementById('rosterMsg');msg.textContent='✅ '+D.length+'명 내보냄';msg.style.display='inline';msg.style.color='#1a5cb0';setTimeout(function(){msg.style.display='none';},2500);
+}
+function applyRoster(){
+  var txt=document.getElementById('rosterArea').value.trim();
+  if(!txt){alert('텍스트가 비어있습니다');return;}
+  var lines=txt.split('\n').filter(function(l){return l.trim();});
+  var parsed=[];
+  for(var i=0;i<lines.length;i++){
+    var p=lines[i].split('\t');
+    if(p.length<5){var p2=lines[i].split(/\s+/);if(p2.length>=5)p=p2;else continue;}
+    var base=parseInt((p[4]||'').replace(/[,\s]/g,''))||0;
+    parsed.push({branch:p[0].trim(),sabun:p[1].trim(),name:p[2].trim(),rank:p[3].trim(),base:base});
+  }
+  if(parsed.length===0){alert('파싱 가능한 데이터가 없습니다');return;}
+  if(!confirm('현재 '+D.length+'명 → '+parsed.length+'명으로 교체합니다.\n기존 실적(현재실적·인품)은 사번 매칭 시 유지됩니다.\n계속하시겠습니까?'))return;
+  var newD=parsed.map(function(p){
+    var exist=D.find(function(d){return d[3]===p.sabun;});
+    if(exist){
+      return ['호남지역단',exist[1]||'',p.branch,p.sabun,exist[4]||'',p.name,exist[6]||0,p.rank,p.base,exist[9]||0,exist[10]||0,exist[11]||0,exist[12]||0,exist[13]||0];
+    }
+    return ['호남지역단','',p.branch,p.sabun,'',p.name,0,p.rank,p.base,0,0,-p.base,0,0];
+  });
+  D.length=0;newD.forEach(function(r){D.push(r);});
+  try{renderAll();renderGrpTable();fillNameList();pushToFirebase();}catch(e){}
+  var msg=document.getElementById('rosterMsg');msg.textContent='✅ '+parsed.length+'명 적용완료';msg.style.display='inline';msg.style.color='#1e7e3a';setTimeout(function(){msg.style.display='none';},3500);
+}
+
+// ── 조별 명단 내보내기/적용 ──
+function exportGroups(){
+  var lines=[];
+  GROUPS.forEach(function(g){
+    g.members.forEach(function(m){
+      lines.push([g.id,g.center,m.branch,m.name,m.base].join('\t'));
+    });
+  });
+  document.getElementById('groupsArea').value=lines.join('\n');
+  var msg=document.getElementById('groupsMsg');msg.textContent='✅ '+GROUPS.length+'조 '+lines.length+'명 내보냄';msg.style.display='inline';msg.style.color='#5a20c0';setTimeout(function(){msg.style.display='none';},2500);
+}
+function applyGroups(){
+  var txt=document.getElementById('groupsArea').value.trim();
+  if(!txt){alert('텍스트가 비어있습니다');return;}
+  var lines=txt.split('\n').filter(function(l){return l.trim();});
+  var gMap={};
+  for(var i=0;i<lines.length;i++){
+    var p=lines[i].split('\t');
+    if(p.length<5){var p2=lines[i].split(/\s+/);if(p2.length>=5)p=p2;else continue;}
+    var gid=parseInt(p[0])||0;
+    if(!gid)continue;
+    var base=parseInt((p[4]||'').replace(/[,\s]/g,''))||0;
+    if(!gMap[gid])gMap[gid]={id:gid,center:p[1].trim(),members:[]};
+    gMap[gid].members.push({name:p[3].trim(),branch:p[2].trim(),base:base});
+  }
+  var newGroups=Object.keys(gMap).map(function(k){return gMap[k];}).sort(function(a,b){return a.id-b.id;});
+  if(newGroups.length===0){alert('파싱 가능한 데이터가 없습니다');return;}
+  var totalMembers=newGroups.reduce(function(s,g){return s+g.members.length;},0);
+  if(!confirm('현재 '+GROUPS.length+'조 → '+newGroups.length+'조 ('+totalMembers+'명)로 교체합니다.\n계속하시겠습니까?'))return;
+  GROUPS.length=0;newGroups.forEach(function(g){GROUPS.push(g);});
+  try{renderAll();renderGrpTable();renderHomeGrp&&renderHomeGrp();}catch(e){}
+  var msg=document.getElementById('groupsMsg');msg.textContent='✅ '+newGroups.length+'조 '+totalMembers+'명 적용완료';msg.style.display='inline';msg.style.color='#1e7e3a';setTimeout(function(){msg.style.display='none';},3500);
+}
 
 </script>
 </body>
