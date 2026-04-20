@@ -513,8 +513,8 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
     <div class="stitle">✏️ 실적 데이터 편집</div>
 
     <div style="background:#f0f0ff;border:2px solid #4a90d9;border-radius:10px;padding:12px;margin-bottom:10px;">
-      <div style="font-size:12px;font-weight:900;color:#0a2050;margin-bottom:8px;">📷 사진으로 실적 입력 (AI 자동 인식)</div>
-      <div style="font-size:10px;color:#556688;margin-bottom:8px;">실적표 사진을 업로드하면 AI가 이름과 실적을 자동으로 읽어옵니다</div>
+      <div style="font-size:12px;font-weight:900;color:#0a2050;margin-bottom:8px;">📷 사진으로 실적 입력 (OCR 자동 인식)</div>
+      <div style="font-size:10px;color:#556688;margin-bottom:8px;">실적표 사진을 업로드하면 OCR이 이름과 실적을 자동으로 읽어옵니다<br>※ 한/영 지원 · 첫 사용 시 엔진 로딩 시간 필요 (약 5~10초)</div>
       <input type="file" id="photoInput" accept="image/*" style="display:none;" onchange="handlePhotoUpload(event)">
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
         <button onclick="document.getElementById('photoInput').click()" style="padding:8px 16px;background:#4a90d9;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">📷 사진 선택</button>
@@ -652,6 +652,8 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<!-- Tesseract.js OCR (브라우저 내장 한글/영문 OCR) -->
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script>
 
 let D = [
@@ -1752,59 +1754,82 @@ function handlePhotoUpload(event){
   reader.onload=function(e){
     document.getElementById('photoPreview').src=e.target.result;
     document.getElementById('photoPreviewWrap').style.display='block';
-    analyzePhotoWithAI(e.target.result,file.type);
+    analyzePhotoWithOCR(e.target.result);
   };
   reader.readAsDataURL(file);
 }
 
-function analyzePhotoWithAI(dataUrl,mimeType){
+function analyzePhotoWithOCR(dataUrl){
   var status=document.getElementById('photoStatus');
   var resultDiv=document.getElementById('photoResult');
   status.style.display='block';status.style.color='#1a5cb0';
-  status.textContent='\uD83E\uDD16 AI\uAC00 \uC2E4\uC801\uC744 \uBD84\uC11D\uC911\uC785\uB2C8\uB2E4...';
+  status.textContent='🔍 OCR 엔진 준비 중...';
   resultDiv.style.display='none';
-  var base64=dataUrl.split(',')[1];
-  var imgType=mimeType||'image/jpeg';
-  var names=D.map(function(d){return d[5];}).join(', ');
-  var prompt='\uC774 \uC0AC\uC9C4\uC740 \uBCF4\uD5D8 \uC601\uC5C5 \uC2E4\uC801\uD45C\uC785\uB2C8\uB2E4. '
-    +'\uB2E4\uC74C \uC218\uAC15\uC0DD \uBA85\uB2E8\uC5D0 \uC788\uB294 \uC0AC\uB78C\uB4E4\uC758 \uC774\uB984\uACFC \uD604\uC7AC\uC2E4\uC801(\uC6D4\uB0A9 \uC6D0\uB2E8\uC704 \uC22B\uC790)\uC744 \uCC3E\uC544\uC11C '
-    +'"\uC774\uB984 \uC22B\uC790" \uD615\uC2DD\uC73C\uB85C \uD55C \uC904\uC529 \uCD9C\uB825\uD574\uC8FC\uC138\uC694. '
-    +'\uC22B\uC790\uB9CC \uCD9C\uB825\uD558\uACE0 \uCF64\uB9C8 \uC5C6\uC774 \uCD9C\uB825\uD558\uC138\uC694. '
-    +'\uC218\uAC15\uC0DD \uBA85\uB2E8: '+names+'\n\n'
-    +'\uC608\uC2DC \uCD9C\uB825:\n\uC815\uACBD\uD654 2193493\n\uC724\uC9C4\uD76C 1572910\n\n'
-    +'\uC2E4\uC801\uD45C\uC5D0\uC11C \uCC3E\uC744 \uC218 \uC5C6\uB294 \uC0AC\uB78C\uC740 \uCD9C\uB825\uD558\uC9C0 \uB9C8\uC138\uC694. '
-    +'\uB2E4\uB978 \uC124\uBA85 \uC5C6\uC774 "\uC774\uB984 \uC22B\uC790" \uD615\uC2DD\uB9CC \uCD9C\uB825\uD558\uC138\uC694.';
-  fetch('https://api.anthropic.com/v1/messages',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({
-      model:'claude-sonnet-4-20250514',
-      max_tokens:1000,
-      messages:[{role:'user',content:[
-        {type:'image',source:{type:'base64',media_type:imgType,data:base64}},
-        {type:'text',text:prompt}
-      ]}]
-    })
-  })
-  .then(function(r){return r.json();})
-  .then(function(data){
-    var text='';
-    if(data.content&&data.content[0]&&data.content[0].text){text=data.content[0].text.trim();}
-    else if(data.error){status.style.color='#cc0000';status.textContent='\u274C AI \uC624\uB958: '+data.error.message;return;}
-    document.getElementById('photoResultArea').value=text;
+  if(typeof Tesseract==='undefined'){
+    status.style.color='#cc0000';
+    status.textContent='❌ OCR 라이브러리 로드 실패 — 인터넷 연결 또는 CDN 차단 여부 확인';
+    return;
+  }
+  Tesseract.recognize(dataUrl,'kor+eng',{
+    logger:function(m){
+      if(!m||!m.status)return;
+      var s=m.status;
+      if(s==='loading tesseract core')status.textContent='📦 엔진 다운로드 중...';
+      else if(s==='initializing tesseract')status.textContent='🚀 엔진 초기화 중...';
+      else if(s==='loading language traineddata')status.textContent='🇰🇷 한글 데이터 로딩 중...';
+      else if(s==='initializing api')status.textContent='⚙️ API 초기화 중...';
+      else if(s==='recognizing text'){var pct=Math.round((m.progress||0)*100);status.textContent='🔍 텍스트 인식 중... '+pct+'%';}
+    }
+  }).then(function(result){
+    var rawText=(result&&result.data&&result.data.text)||'';
+    var extracted=extractNamesAndNumbers(rawText);
+    var output=extracted;
+    if(!extracted.trim()){
+      // 자동 매칭 실패 시 원본 텍스트 그대로 제공 (사용자 수동 편집)
+      output='※ 자동 매칭 실패 — 원본 OCR 결과입니다. 직접 편집해주세요:\n\n'+rawText;
+    }
+    document.getElementById('photoResultArea').value=output;
     resultDiv.style.display='block';
     status.style.color='#1a8a40';
-    status.textContent='\u2705 AI \uBD84\uC11D \uC644\uB8CC! \uACB0\uACFC\uB97C \uD655\uC778\uD558\uACE0 \uBC18\uC601 \uBC84\uD2BC\uC744 \uB20C\uB7EC\uC8FC\uC138\uC694.';
-  })
-  .catch(function(err){status.style.color='#cc0000';status.textContent='\u274C \uC624\uB958: '+err.message;});
+    var lineCnt=extracted.trim()?extracted.split('\n').length:0;
+    status.textContent=lineCnt>0?'✅ OCR 완료! '+lineCnt+'명 자동 매칭됨 — 검토 후 반영 버튼을 눌러주세요.':'⚠️ OCR 완료 (자동 매칭 실패) — 결과를 직접 수정해주세요.';
+  }).catch(function(err){
+    status.style.color='#cc0000';
+    status.textContent='❌ OCR 오류: '+(err&&err.message?err.message:err);
+  });
+}
+
+// OCR 결과에서 D 배열 이름과 매칭되는 줄을 찾아 "이름 숫자" 형식으로 변환
+function extractNamesAndNumbers(rawText){
+  if(!rawText)return '';
+  var lines=rawText.split(/\r?\n/);
+  var dNames=D.map(function(d){return d[5];});
+  var results=[];
+  var matched={};
+  lines.forEach(function(line){
+    var trimmed=line.trim();if(!trimmed)return;
+    var matchedName=null;
+    for(var i=0;i<dNames.length;i++){
+      if(dNames[i]&&trimmed.indexOf(dNames[i])!==-1){matchedName=dNames[i];break;}
+    }
+    if(!matchedName||matched[matchedName])return;
+    var nums=trimmed.match(/[\d,]+/g);
+    if(!nums)return;
+    var largestNum=0;
+    nums.forEach(function(n){var v=parseInt(n.replace(/,/g,''))||0;if(v>largestNum)largestNum=v;});
+    if(largestNum>10000){results.push(matchedName+' '+largestNum);matched[matchedName]=1;}
+  });
+  return results.join('\n');
 }
 
 function applyPhotoResult(){
   var txt=document.getElementById('photoResultArea').value;
-  if(!txt.trim()){alert('\uC778\uC2DD\uB41C \uC2E4\uC801\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.');return;}
+  if(!txt.trim()){alert('인식된 실적이 없습니다.');return;}
+  // 안내 헤더 줄 제거
+  txt=txt.replace(/^※[^\n]*\n?/gm,'').trim();
   document.getElementById('pasteArea').value=txt;
   applyPaste();
-  document.getElementById('photoStatus').textContent='\u2705 \uC2E4\uC801\uC774 \uBC18\uC601\uB418\uC5C8\uC2B5\uB2C8\uB2E4!';
+  document.getElementById('photoStatus').textContent='✅ 실적이 반영되었습니다!';
   pushToFirebase();
 }
 
