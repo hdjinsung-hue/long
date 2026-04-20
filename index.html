@@ -1763,60 +1763,138 @@ function analyzePhotoWithOCR(dataUrl){
   var status=document.getElementById('photoStatus');
   var resultDiv=document.getElementById('photoResult');
   status.style.display='block';status.style.color='#1a5cb0';
-  status.textContent='🔍 OCR 엔진 준비 중...';
+  status.textContent='🖼️ 이미지 전처리 중 (선명도 향상)...';
   resultDiv.style.display='none';
   if(typeof Tesseract==='undefined'){
     status.style.color='#cc0000';
     status.textContent='❌ OCR 라이브러리 로드 실패 — 인터넷 연결 또는 CDN 차단 여부 확인';
     return;
   }
-  Tesseract.recognize(dataUrl,'kor+eng',{
-    logger:function(m){
-      if(!m||!m.status)return;
-      var s=m.status;
-      if(s==='loading tesseract core')status.textContent='📦 엔진 다운로드 중...';
-      else if(s==='initializing tesseract')status.textContent='🚀 엔진 초기화 중...';
-      else if(s==='loading language traineddata')status.textContent='🇰🇷 한글 데이터 로딩 중...';
-      else if(s==='initializing api')status.textContent='⚙️ API 초기화 중...';
-      else if(s==='recognizing text'){var pct=Math.round((m.progress||0)*100);status.textContent='🔍 텍스트 인식 중... '+pct+'%';}
-    }
+  preprocessImage(dataUrl).then(function(prepared){
+    status.textContent='🔍 OCR 엔진 준비 중...';
+    return Tesseract.createWorker('kor+eng',1,{
+      logger:function(m){
+        if(!m||!m.status)return;
+        var s=m.status;
+        if(s==='loading tesseract core')status.textContent='📦 엔진 다운로드 중...';
+        else if(s==='initializing tesseract')status.textContent='🚀 엔진 초기화 중...';
+        else if(s==='loading language traineddata')status.textContent='🇰🇷 한글 데이터 로딩 중...';
+        else if(s==='recognizing text'){var pct=Math.round((m.progress||0)*100);status.textContent='🔍 텍스트 인식 중... '+pct+'%';}
+      }
+    }).then(function(worker){
+      return worker.setParameters({
+        tessedit_pageseg_mode:'6',
+        preserve_interword_spaces:'1'
+      }).then(function(){return worker.recognize(prepared);})
+        .then(function(ret){return worker.terminate().then(function(){return ret;});});
+    });
   }).then(function(result){
     var rawText=(result&&result.data&&result.data.text)||'';
     var extracted=extractNamesAndNumbers(rawText);
-    var output=extracted;
+    var output;
     if(!extracted.trim()){
-      // 자동 매칭 실패 시 원본 텍스트 그대로 제공 (사용자 수동 편집)
       output='※ 자동 매칭 실패 — 원본 OCR 결과입니다. 직접 편집해주세요:\n\n'+rawText;
+    } else {
+      output=extracted+'\n\n──── 원본 OCR 결과 (참고용) ────\n'+rawText;
     }
     document.getElementById('photoResultArea').value=output;
     resultDiv.style.display='block';
     status.style.color='#1a8a40';
     var lineCnt=extracted.trim()?extracted.split('\n').length:0;
-    status.textContent=lineCnt>0?'✅ OCR 완료! '+lineCnt+'명 자동 매칭됨 — 검토 후 반영 버튼을 눌러주세요.':'⚠️ OCR 완료 (자동 매칭 실패) — 결과를 직접 수정해주세요.';
+    status.textContent=lineCnt>0?'✅ OCR 완료! '+lineCnt+'명 자동 매칭됨 (원본 함께 표시) — 검토 후 반영':'⚠️ OCR 완료 (자동 매칭 실패) — 원본을 직접 수정해주세요.';
   }).catch(function(err){
     status.style.color='#cc0000';
     status.textContent='❌ OCR 오류: '+(err&&err.message?err.message:err);
   });
 }
 
-// OCR 결과에서 D 배열 이름과 매칭되는 줄을 찾아 "이름 숫자" 형식으로 변환
+// 이미지 전처리: 확대 + 그레이스케일 + 대비 향상
+function preprocessImage(dataUrl){
+  return new Promise(function(resolve,reject){
+    try{
+      var img=new Image();
+      img.onload=function(){
+        var scale=img.width<1000?2:(img.width<2000?1.5:1.2);
+        var canvas=document.createElement('canvas');
+        canvas.width=Math.round(img.width*scale);
+        canvas.height=Math.round(img.height*scale);
+        var ctx=canvas.getContext('2d');
+        ctx.imageSmoothingEnabled=true;
+        ctx.imageSmoothingQuality='high';
+        ctx.drawImage(img,0,0,canvas.width,canvas.height);
+        var imgData=ctx.getImageData(0,0,canvas.width,canvas.height);
+        var d=imgData.data;
+        for(var i=0;i<d.length;i+=4){
+          var gray=0.299*d[i]+0.587*d[i+1]+0.114*d[i+2];
+          // 대비 강화 (어두운 픽셀은 더 어둡게, 밝은 픽셀은 더 밝게)
+          gray=gray<128?Math.max(0,gray*0.6):Math.min(255,255-(255-gray)*0.6);
+          d[i]=d[i+1]=d[i+2]=gray;
+        }
+        ctx.putImageData(imgData,0,0);
+        resolve(canvas.toDataURL('image/png'));
+      };
+      img.onerror=function(){reject(new Error('이미지 로드 실패'));};
+      img.src=dataUrl;
+    }catch(e){reject(e);}
+  });
+}
+
+// Levenshtein 거리 (문자열 간 차이 글자 수)
+function levDist(a,b){
+  if(a===b)return 0;
+  if(!a.length)return b.length;
+  if(!b.length)return a.length;
+  var m=a.length,n=b.length;
+  var dp=new Array(n+1);
+  for(var j=0;j<=n;j++)dp[j]=j;
+  for(var i=1;i<=m;i++){
+    var prev=dp[0];dp[0]=i;
+    for(var k=1;k<=n;k++){
+      var temp=dp[k];
+      if(a.charAt(i-1)===b.charAt(k-1))dp[k]=prev;
+      else dp[k]=1+Math.min(prev,dp[k-1],dp[k]);
+      prev=temp;
+    }
+  }
+  return dp[n];
+}
+
+// OCR 결과에서 이름+숫자 추출 (fuzzy 매칭 적용)
 function extractNamesAndNumbers(rawText){
   if(!rawText)return '';
   var lines=rawText.split(/\r?\n/);
-  var dNames=D.map(function(d){return d[5];});
+  var dNames=D.map(function(d){return d[5];}).filter(Boolean);
   var results=[];
   var matched={};
   lines.forEach(function(line){
-    var trimmed=line.trim();if(!trimmed)return;
+    var trimmed=line.trim();if(!trimmed||trimmed.length<2)return;
     var matchedName=null;
+    // 1단계: 정확 매칭
     for(var i=0;i<dNames.length;i++){
-      if(dNames[i]&&trimmed.indexOf(dNames[i])!==-1){matchedName=dNames[i];break;}
+      if(!matched[dNames[i]]&&trimmed.indexOf(dNames[i])!==-1){matchedName=dNames[i];break;}
+    }
+    // 2단계: Fuzzy 매칭 (3자 이상 이름은 1자 차이 허용)
+    if(!matchedName){
+      var bestDist=99,bestName=null;
+      for(var i=0;i<dNames.length;i++){
+        var name=dNames[i];
+        if(matched[name]||!name||name.length<2)continue;
+        for(var j=0;j<=trimmed.length-name.length;j++){
+          var win=trimmed.substring(j,j+name.length);
+          var dist=levDist(win,name);
+          // 3자+이름은 dist<=1, 2자 이름은 정확 매칭만
+          if(name.length>=3&&dist<=1&&dist<bestDist){bestDist=dist;bestName=name;}
+        }
+      }
+      if(bestName)matchedName=bestName;
     }
     if(!matchedName||matched[matchedName])return;
-    var nums=trimmed.match(/[\d,]+/g);
-    if(!nums)return;
+    // 숫자 추출 (5자리 이상 = 10,000원 이상)
+    var cleanLine=trimmed.replace(/,/g,'');
+    var nums=cleanLine.match(/\d{5,}/g);
+    if(!nums||!nums.length)return;
     var largestNum=0;
-    nums.forEach(function(n){var v=parseInt(n.replace(/,/g,''))||0;if(v>largestNum)largestNum=v;});
+    nums.forEach(function(n){var v=parseInt(n)||0;if(v>largestNum)largestNum=v;});
     if(largestNum>10000){results.push(matchedName+' '+largestNum);matched[matchedName]=1;}
   });
   return results.join('\n');
