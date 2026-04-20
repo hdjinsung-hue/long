@@ -278,19 +278,19 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
 <div id="pg-home" class="pg on">
 <div class="wrap">
   <div class="award-box">
-    <h3>📋 2026년 고객마스터과정 활성화 시상안</h3>
+    <h3 id="aw-title">📋 2026년 고객마스터과정 활성화 시상안</h3>
     <div class="tier-row">
-      <div class="tier"><div class="tc">순증 5만원↑</div><div class="tn">5만원 지급</div></div>
-      <div class="tier"><div class="tc">순증 10만원↑</div><div class="tn">10만원 지급</div></div>
-      <div class="tier"><div class="tc">순증 20만원↑</div><div class="tn">20만원 지급</div></div>
-      <div class="tier"><div class="tc">순증 30만원↑</div><div class="tn">120% 지급</div></div>
-      <div class="tier"><div class="tc">순증 50만원↑</div><div class="tn">150% 지급</div></div>
+      <div class="tier"><div class="tc" id="aw-t1-cond">순증 5만원↑</div><div class="tn" id="aw-t1-prize">5만원 지급</div></div>
+      <div class="tier"><div class="tc" id="aw-t2-cond">순증 10만원↑</div><div class="tn" id="aw-t2-prize">10만원 지급</div></div>
+      <div class="tier"><div class="tc" id="aw-t3-cond">순증 20만원↑</div><div class="tn" id="aw-t3-prize">20만원 지급</div></div>
+      <div class="tier"><div class="tc" id="aw-t4-cond">순증 30만원↑</div><div class="tn" id="aw-t4-prize">120% 지급</div></div>
+      <div class="tier"><div class="tc" id="aw-t5-cond">순증 50만원↑</div><div class="tn" id="aw-t5-prize">150% 지급</div></div>
     </div>
-    <span class="an"><strong>📈 신장률 TOP10:</strong> 1위 30만원 / 2~3위 20만원 / 4~10위 주유권 5만원</span>
-    <span class="an"><strong>💰 신장액 TOP10:</strong> 1위 50만원 / 2~3위 30만원 / 4~10위 주유권 10만원</span>
-    <span class="an-crit">⚠️ 개인 시상 기준조건 : 기준 인보험 실적 대비 <strong>순증 30만원 이상</strong> 달성자에 한함</span>
-    <span class="an an-warn">※ 신장률·신장액 TOP10 중복시상 없음 — 두 항목 모두 해당 시 높은 금액 1회 지급</span>
-    <span class="an an-red">※ 환산실적 80만원 미만 시상제외 | 합산 하이캡 배수 15 미만시 50% 지급</span>
+    <span class="an" id="aw-rate"><strong>📈 신장률 TOP10:</strong> 1위 30만원 / 2~3위 20만원 / 4~10위 주유권 5만원</span>
+    <span class="an" id="aw-amt"><strong>💰 신장액 TOP10:</strong> 1위 50만원 / 2~3위 30만원 / 4~10위 주유권 10만원</span>
+    <span class="an-crit" id="aw-crit">⚠️ 개인 시상 기준조건 : 기준 인보험 실적 대비 <strong>순증 30만원 이상</strong> 달성자에 한함</span>
+    <span class="an an-warn" id="aw-dup">※ 신장률·신장액 TOP10 중복시상 없음 — 두 항목 모두 해당 시 높은 금액 1회 지급</span>
+    <span class="an an-red" id="aw-exc">※ 환산실적 80만원 미만 시상제외 | 합산 하이캡 배수 15 미만시 50% 지급</span>
   </div>
   <!-- 본인 실적 확인 (버튼) -->
   <div class="card" style="border-color:#5a20c0;margin-bottom:10px;cursor:pointer;" onclick="goView('self')">
@@ -493,7 +493,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
       <div class="ar"><span class="al">평균 달성률</span><span class="av" id="adm-avg">-</span></div>
     </div>
     <div class="ac"><h3>🏆 시상 현황</h3>
-      <div class="ar"><span class="al">순증 30만 이상(30만↑)</span><span class="av gn" id="adm-elig">-</span></div>
+      <div class="ar"><span class="al">순증 30만 이상</span><span class="av gn" id="adm-elig">-</span></div>
       <div class="ar"><span class="al">150% 지급</span><span class="av gn" id="adm-a5">-</span></div>
       <div class="ar"><span class="al">120% 지급</span><span class="av gn" id="adm-a4">-</span></div>
       <div class="ar"><span class="al">현금 시상</span><span class="av or" id="adm-a3">-</span></div>
@@ -504,6 +504,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
   <div class="adm-menu">
     <button class="adm-btn" id="btn-sec-edit" onclick="adminShow('sec-edit',this)"><span class="ab-icon">✏️</span><div class="ab-tx"><div class="ab-title">실적 데이터 편집</div><div class="ab-sub">붙여넣기·사진입력·개별편집</div></div><span class="ab-arr">›</span></button>
     <button class="adm-btn" id="btn-sec-ipum" onclick="adminShow('sec-ipum',this)"><span class="ab-icon">✨</span><div class="ab-tx"><div class="ab-title">인품 데이터 편집</div><div class="ab-sub">신상품 계약건·실적</div></div><span class="ab-arr">›</span></button>
+    <button class="adm-btn" id="btn-sec-award" onclick="adminShow('sec-award',this)"><span class="ab-icon">🏆</span><div class="ab-tx"><div class="ab-title">시상안 편집</div><div class="ab-sub">Tier·TOP10·기준조건 문구</div></div><span class="ab-arr">›</span></button>
     <button class="adm-btn" id="btn-sec-history" onclick="adminShow('sec-history',this);loadViewHistory();"><span class="ab-icon">🕐</span><div class="ab-tx"><div class="ab-title">조회이력</div><div class="ab-sub">사용자 조회 로그 (최근 50건)</div></div><span class="ab-arr">›</span></button>
     <button class="adm-btn" id="btn-sec-roster" onclick="adminShow('sec-roster',this)"><span class="ab-icon">📋</span><div class="ab-tx"><div class="ab-title">개별 명단 관리</div><div class="ab-sub">일괄 내보내기·입력 (사번 매칭)</div></div><span class="ab-arr">›</span></button>
     <button class="adm-btn" id="btn-sec-groups" onclick="adminShow('sec-groups',this)"><span class="ab-icon">🏅</span><div class="ab-tx"><div class="ab-title">조별 명단 관리</div><div class="ab-sub">조 구성 일괄 교체</div></div><span class="ab-arr">›</span></button>
@@ -554,6 +555,47 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
     </div>
     <div class="tbl"><table><thead><tr class="hd1"><th>No</th><th>지점</th><th>성명</th><th>신상품 계약건</th><th>신상품 실적(원)</th></tr></thead><tbody id="ipumEditTbody"></tbody></table></div>
     <div style="margin-top:9px"><button class="sbtn2" onclick="saveIpumEdits()" style="background:#5a20c0;">💾 인품 저장</button><span class="smsg" id="ipumSaveMsg">✅ 저장 완료</span></div>
+  </div>
+  <!-- 시상안 편집 -->
+  <div class="sec" id="sec-award" style="display:none;">
+    <div class="stitle">🏆 시상안 편집 <span style="font-size:10px;font-weight:600;color:#888;">(홈 시상안 박스 실시간 반영)</span>
+      <button class="sbtn" onclick="saveAward()" style="background:#1a5cb0;color:#fff;border-color:#1a5cb0;">💾 저장</button>
+      <button class="sbtn" onclick="resetAward()" style="background:#888;color:#fff;border-color:#888;margin-left:4px;">↺ 기본값</button>
+      <span id="awardMsg" style="font-size:10px;color:#1a8a40;display:none;margin-left:6px;">✅ 저장완료</span>
+    </div>
+    <div style="background:#f8fbff;border:1px solid #b8cce0;border-radius:7px;padding:10px;">
+      <div style="font-size:11px;font-weight:700;color:#0a2050;margin-bottom:4px;">📋 시상안 제목</div>
+      <input type="text" id="inp-aw-title" style="width:100%;padding:6px 8px;font-size:11px;border:1px solid #b8cce0;border-radius:5px;font-family:inherit;margin-bottom:10px;">
+
+      <div style="font-size:11px;font-weight:700;color:#0a2050;margin-bottom:4px;">🎯 Tier 5개 (조건 | 지급)</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:10px;">
+        <input type="text" id="inp-aw-t1-cond" style="padding:5px 7px;font-size:10px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;">
+        <input type="text" id="inp-aw-t1-prize" style="padding:5px 7px;font-size:10px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;">
+        <input type="text" id="inp-aw-t2-cond" style="padding:5px 7px;font-size:10px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;">
+        <input type="text" id="inp-aw-t2-prize" style="padding:5px 7px;font-size:10px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;">
+        <input type="text" id="inp-aw-t3-cond" style="padding:5px 7px;font-size:10px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;">
+        <input type="text" id="inp-aw-t3-prize" style="padding:5px 7px;font-size:10px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;">
+        <input type="text" id="inp-aw-t4-cond" style="padding:5px 7px;font-size:10px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;">
+        <input type="text" id="inp-aw-t4-prize" style="padding:5px 7px;font-size:10px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;">
+        <input type="text" id="inp-aw-t5-cond" style="padding:5px 7px;font-size:10px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;">
+        <input type="text" id="inp-aw-t5-prize" style="padding:5px 7px;font-size:10px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;">
+      </div>
+
+      <div style="font-size:11px;font-weight:700;color:#0a2050;margin-bottom:4px;">📈 신장률 TOP10 문구</div>
+      <input type="text" id="inp-aw-rate" style="width:100%;padding:6px 8px;font-size:11px;border:1px solid #b8cce0;border-radius:5px;font-family:inherit;margin-bottom:8px;">
+
+      <div style="font-size:11px;font-weight:700;color:#0a2050;margin-bottom:4px;">💰 신장액 TOP10 문구</div>
+      <input type="text" id="inp-aw-amt" style="width:100%;padding:6px 8px;font-size:11px;border:1px solid #b8cce0;border-radius:5px;font-family:inherit;margin-bottom:8px;">
+
+      <div style="font-size:11px;font-weight:700;color:#0a2050;margin-bottom:4px;">⚠️ 기준조건 안내 <span style="font-size:9px;color:#888;">(HTML 태그 사용 가능)</span></div>
+      <textarea id="inp-aw-crit" rows="2" style="width:100%;padding:6px 8px;font-size:11px;border:1px solid #b8cce0;border-radius:5px;font-family:inherit;margin-bottom:8px;resize:vertical;"></textarea>
+
+      <div style="font-size:11px;font-weight:700;color:#0a2050;margin-bottom:4px;">※ 중복시상 안내</div>
+      <textarea id="inp-aw-dup" rows="2" style="width:100%;padding:6px 8px;font-size:11px;border:1px solid #b8cce0;border-radius:5px;font-family:inherit;margin-bottom:8px;resize:vertical;"></textarea>
+
+      <div style="font-size:11px;font-weight:700;color:#0a2050;margin-bottom:4px;">※ 환산실적/하이캡 안내</div>
+      <textarea id="inp-aw-exc" rows="2" style="width:100%;padding:6px 8px;font-size:11px;border:1px solid #b8cce0;border-radius:5px;font-family:inherit;resize:vertical;"></textarea>
+    </div>
   </div>
   <!-- 조회이력 -->
   <div class="sec" id="sec-history" style="display:none;">
@@ -1874,6 +1916,88 @@ function loadMeta(){
 var _metaLoaded=false;
 setTimeout(loadMeta,800);
 
+// ── 시상안 편집 ──
+var AWARD_DEFAULT={
+  title:'📋 2026년 고객마스터과정 활성화 시상안',
+  tiers:[
+    {cond:'순증 5만원↑',prize:'5만원 지급'},
+    {cond:'순증 10만원↑',prize:'10만원 지급'},
+    {cond:'순증 20만원↑',prize:'20만원 지급'},
+    {cond:'순증 30만원↑',prize:'120% 지급'},
+    {cond:'순증 50만원↑',prize:'150% 지급'}
+  ],
+  rate:'<strong>📈 신장률 TOP10:</strong> 1위 30만원 / 2~3위 20만원 / 4~10위 주유권 5만원',
+  amt:'<strong>💰 신장액 TOP10:</strong> 1위 50만원 / 2~3위 30만원 / 4~10위 주유권 10만원',
+  crit:'⚠️ 개인 시상 기준조건 : 기준 인보험 실적 대비 <strong>순증 30만원 이상</strong> 달성자에 한함',
+  dup:'※ 신장률·신장액 TOP10 중복시상 없음 — 두 항목 모두 해당 시 높은 금액 1회 지급',
+  exc:'※ 환산실적 80만원 미만 시상제외 | 합산 하이캡 배수 15 미만시 50% 지급'
+};
+function applyAwardToDisplay(a){
+  if(!a)return;
+  var set=function(id,val){var el=document.getElementById(id);if(el&&val!=null)el.innerHTML=val;};
+  set('aw-title',a.title);
+  if(a.tiers&&a.tiers.length){
+    for(var i=0;i<5;i++){
+      if(a.tiers[i]){set('aw-t'+(i+1)+'-cond',a.tiers[i].cond);set('aw-t'+(i+1)+'-prize',a.tiers[i].prize);}
+    }
+  }
+  set('aw-rate',a.rate);set('aw-amt',a.amt);set('aw-crit',a.crit);set('aw-dup',a.dup);set('aw-exc',a.exc);
+}
+function applyAwardToInputs(a){
+  if(!a)return;
+  var setV=function(id,val){var el=document.getElementById(id);if(el&&val!=null)el.value=val;};
+  setV('inp-aw-title',a.title);
+  if(a.tiers&&a.tiers.length){
+    for(var i=0;i<5;i++){
+      if(a.tiers[i]){setV('inp-aw-t'+(i+1)+'-cond',a.tiers[i].cond);setV('inp-aw-t'+(i+1)+'-prize',a.tiers[i].prize);}
+    }
+  }
+  setV('inp-aw-rate',a.rate);setV('inp-aw-amt',a.amt);setV('inp-aw-crit',a.crit);setV('inp-aw-dup',a.dup);setV('inp-aw-exc',a.exc);
+}
+function saveAward(){
+  var getV=function(id){var el=document.getElementById(id);return el?el.value:'';};
+  var a={
+    title:getV('inp-aw-title'),
+    tiers:[1,2,3,4,5].map(function(n){return{cond:getV('inp-aw-t'+n+'-cond'),prize:getV('inp-aw-t'+n+'-prize')};}),
+    rate:getV('inp-aw-rate'),amt:getV('inp-aw-amt'),
+    crit:getV('inp-aw-crit'),dup:getV('inp-aw-dup'),exc:getV('inp-aw-exc'),
+    t:Date.now()
+  };
+  applyAwardToDisplay(a);
+  var msg=document.getElementById('awardMsg');
+  if(fb_ready&&typeof firebase!=='undefined'){
+    firebase.database().ref('master_award').set(a,function(err){
+      if(!msg)return;
+      msg.textContent=err?'❌ 저장실패':'✅ 저장완료';msg.style.color=err?'#cc0000':'#1a8a40';msg.style.display='inline';
+      setTimeout(function(){msg.style.display='none';},2500);
+    });
+  } else {
+    if(msg){msg.textContent='⚠ 로컬만 반영 (Firebase 미연결)';msg.style.color='#cc5500';msg.style.display='inline';setTimeout(function(){msg.style.display='none';},2500);}
+  }
+}
+function resetAward(){
+  if(!confirm('시상안을 기본값으로 되돌리시겠습니까?\n(저장 버튼을 눌러야 Firebase에도 반영됩니다)'))return;
+  applyAwardToInputs(AWARD_DEFAULT);
+  applyAwardToDisplay(AWARD_DEFAULT);
+}
+var _awardLoaded=false;
+function loadAward(){
+  if(_awardLoaded)return;
+  if(!fb_ready||typeof firebase==='undefined'){setTimeout(loadAward,500);return;}
+  _awardLoaded=true;
+  firebase.database().ref('master_award').on('value',function(snap){
+    var v=snap.val();
+    if(v){
+      applyAwardToDisplay(v);
+      applyAwardToInputs(v);
+    } else {
+      // Firebase에 시상안 없으면 현재 화면 기본값을 input에만 채움
+      applyAwardToInputs(AWARD_DEFAULT);
+    }
+  });
+}
+setTimeout(loadAward,900);
+
 // ── 본인 실적 확인 ──
 function fmtWon(n){if(!n&&n!==0)return '-';var v=Math.round(n);if(Math.abs(v)>=10000){var man=Math.floor(Math.abs(v)/10000);var rest=Math.abs(v)%10000;var s=man+'만';if(rest>=1000)s+=(Math.floor(rest/1000))+'천';return (v<0?'-':'')+s+'원';}return v.toLocaleString()+'원';}
 function prizeOf(sunjeung){
@@ -2022,7 +2146,7 @@ fillNameList();
 
 // ── 관리자 섹션 토글 ──
 function adminShow(id,btn){
-  var ids=['sec-edit','sec-ipum','sec-history','sec-roster','sec-groups'];
+  var ids=['sec-edit','sec-ipum','sec-award','sec-history','sec-roster','sec-groups'];
   var target=document.getElementById(id);
   if(!target)return;
   var wasOpen=target.style.display!=='none';
