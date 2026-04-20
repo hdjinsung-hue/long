@@ -1773,18 +1773,50 @@ function saveEdits(){D.forEach((d,i)=>{const cur=parseFloat(document.getElementB
 function saveIpumEdits(){D.forEach((d,i)=>{d[12]=parseInt(document.getElementById('ip12_'+i)?.value)||0;d[13]=parseInt(document.getElementById('ip13_'+i)?.value)||0;});document.getElementById('ipumSaveMsg').style.display='inline';setTimeout(()=>document.getElementById('ipumSaveMsg').style.display='none',2500);renderAll();pushToFirebase();}
 
 const FB_CFG={apiKey:"AIzaSyB1yFZ4HKLIhUihjqOJkQy2XIC-CrZqmQM",authDomain:"master-itv.firebaseapp.com",databaseURL:"https://master-itv-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"master-itv",storageBucket:"master-itv.firebasestorage.app",messagingSenderId:"95151539764",appId:"1:95151539764:web:00af682c79fc39abe9ac61"};
-let db_ref=null,fb_ready=false;
+let db_ref=null,fb_ready=false,_fbRetries=0;
 function showSyncStatus(msg,color){var el=document.getElementById('syncStatus');if(el){el.textContent=msg;el.style.color=color;}}
+function showSyncStatusWithRetry(msg,color){
+  var el=document.getElementById('syncStatus');if(!el)return;
+  el.innerHTML=msg+' <button onclick="retryFirebase()" style="margin-left:6px;padding:2px 8px;background:#fff;color:#0a2050;border:1px solid #b8cce0;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;">🔄 재시도</button>';
+  el.style.color=color;
+}
+function retryFirebase(){
+  _fbRetries=0;
+  console.log('[Firebase] 수동 재시도');
+  showSyncStatus('재연결 시도중...','#888');
+  setTimeout(initFirebase,100);
+}
 function initFirebase(){
-  if(typeof firebase==='undefined'){showSyncStatus('오프라인(인터넷 필요)','#cc4444');return;}
+  if(typeof firebase==='undefined'){
+    if(_fbRetries<10){_fbRetries++;showSyncStatus('연결중... ('+_fbRetries+'/10)','#888');setTimeout(initFirebase,1000);return;}
+    // 10회 실패 시 원인 세분화
+    var online=(typeof navigator!=='undefined'&&navigator.onLine!==false);
+    console.log('[Firebase 진단] typeof firebase:',typeof firebase,'| navigator.onLine:',online,'| URL:',window.location.protocol,'| UA:',navigator.userAgent.substring(0,60));
+    if(!online){showSyncStatusWithRetry('📡 브라우저 오프라인','#cc4444');return;}
+    if(window.location.protocol==='file:'){showSyncStatusWithRetry('⚠️ 파일(file://) 열람 — 브라우저 보안 가능','#cc4444');return;}
+    showSyncStatusWithRetry('❌ SDK 로드 실패(광고차단/방화벽)','#cc4444');return;
+  }
   if(!firebase.apps.length)firebase.initializeApp(FB_CFG);
-  db_ref=firebase.database().ref('master_dashboard_v1');fb_ready=true;
+  try{db_ref=firebase.database().ref('master_dashboard_v1');fb_ready=true;}catch(e){console.log('[Firebase] DB 초기화 오류:',e.message);showSyncStatusWithRetry('❌ DB 초기화 실패','#cc4444');return;}
+  console.log('[Firebase] 연결 시도, FB_CFG:',FB_CFG.databaseURL);
   showSyncStatus('연결중...','#888');
   db_ref.on('value',function(snap){
-    var val=snap.val();if(!val){showSyncStatus('저장된 데이터 없음','#cc5500');return;}
+    var val=snap.val();
+    if(!val){
+      // DB 비어 있으면 로컬 D 자동 초기 업로드
+      console.log('[Firebase] DB 비어 있음 - 로컬 데이터 자동 업로드');
+      showSyncStatus('🔄 초기 데이터 업로드 중...','#888');
+      db_ref.set({D:D.map(function(row){return row.slice();}),updatedAt:new Date().toISOString()}).then(function(){
+        console.log('[Firebase] 초기 업로드 완료');
+      }).catch(function(err){
+        console.log('[Firebase] 초기 업로드 실패:',err&&err.message);
+        showSyncStatus('❌ 초기 업로드 실패(권한 확인)','#cc0000');
+      });
+      return;
+    }
     if(val.D&&Array.isArray(val.D)){val.D.forEach(function(row,i){if(D[i]){D[i][9]=row[9]||D[i][9];D[i][10]=row[10]||D[i][10];D[i][11]=row[11]||D[i][11];D[i][12]=row[12]||D[i][12];D[i][13]=row[13]||D[i][13];}});renderAll();renderGrpTable();}
     showSyncStatus('✅ 실시간 연동 '+new Date().toLocaleTimeString('ko-KR'),'#1a8a40');
-  },function(){showSyncStatus('❌ 연동 오류','#cc0000');});
+  },function(err){console.log('[Firebase] 연동 오류:',err&&err.message);showSyncStatusWithRetry('❌ 서버 연결 오류','#cc0000');});
 }
 function pushToFirebase(){if(!fb_ready)return;db_ref.set({D:D.map(function(row){return row.slice();}),updatedAt:new Date().toISOString()}).then(function(){showSyncStatus('☁️ 저장완료 '+new Date().toLocaleTimeString('ko-KR'),'#1a8a40');}).catch(function(){showSyncStatus('❌ 저장실패','#cc0000');});}
 
