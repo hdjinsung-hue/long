@@ -258,7 +258,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
     <span id="todayLabel">2026년 4월 20일</span><span>|</span>
     <span><span class="dot"></span> 전일마감 기준</span>
     <span id="syncStatus" style="font-size:10px;margin-left:6px;color:#888;">연결중...</span>
-    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v21</span>
+    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v22</span>
   </div>
   <div class="tab-nav">
     <button class="tb on" id="tb-home" onclick="goTab('home',this)">🏠 홈 대시보드</button>
@@ -506,7 +506,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
     <button class="adm-btn" id="btn-sec-edit" onclick="adminShow('sec-edit',this)"><span class="ab-icon">✏️</span><div class="ab-tx"><div class="ab-title">실적 데이터 편집</div><div class="ab-sub">붙여넣기·사진입력·개별편집</div></div><span class="ab-arr">›</span></button>
     <button class="adm-btn" id="btn-sec-ipum" onclick="adminShow('sec-ipum',this)"><span class="ab-icon">✨</span><div class="ab-tx"><div class="ab-title">인품 데이터 편집</div><div class="ab-sub">신상품 계약건·실적</div></div><span class="ab-arr">›</span></button>
     <button class="adm-btn" id="btn-sec-award" onclick="adminShow('sec-award',this)"><span class="ab-icon">🏆</span><div class="ab-tx"><div class="ab-title">시상안 편집</div><div class="ab-sub">Tier·TOP10·기준조건 문구</div></div><span class="ab-arr">›</span></button>
-    <button class="adm-btn" id="btn-sec-history" onclick="adminShow('sec-history',this);loadViewHistory();"><span class="ab-icon">🕐</span><div class="ab-tx"><div class="ab-title">조회이력</div><div class="ab-sub">사용자 조회 로그 (최근 50건)</div></div><span class="ab-arr">›</span></button>
+    <button class="adm-btn" id="btn-sec-history" onclick="adminShow('sec-history',this);loadViewHistory();"><span class="ab-icon">🕐</span><div class="ab-tx"><div class="ab-title">조회이력</div><div class="ab-sub">사용자 조회 로그 (항목별 50건)</div></div><span class="ab-arr">›</span></button>
     <button class="adm-btn" id="btn-sec-roster" onclick="adminShow('sec-roster',this)"><span class="ab-icon">📋</span><div class="ab-tx"><div class="ab-title">개별 명단 관리</div><div class="ab-sub">일괄 내보내기·입력 (사번 매칭)</div></div><span class="ab-arr">›</span></button>
     <button class="adm-btn" id="btn-sec-groups" onclick="adminShow('sec-groups',this)"><span class="ab-icon">🏅</span><div class="ab-tx"><div class="ab-title">조별 명단 관리</div><div class="ab-sub">조 구성 일괄 교체</div></div><span class="ab-arr">›</span></button>
   </div>
@@ -600,9 +600,10 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
   </div>
   <!-- 조회이력 -->
   <div class="sec" id="sec-history" style="display:none;">
-    <div class="stitle">🕐 조회이력 <span style="font-size:10px;font-weight:600;color:#888;">(최근 50건)</span>
+    <div class="stitle">🕐 조회이력 <span style="font-size:10px;font-weight:600;color:#888;">(항목별 50건)</span>
       <button class="sbtn" onclick="setHistoryView('time',this)" id="vh-time" style="background:#1a5cb0;color:#fff;border-color:#1a5cb0;">📅 시간순</button>
       <button class="sbtn" onclick="setHistoryView('name',this)" id="vh-name" style="background:#e8eef6;color:#0a2050;border-color:#b8cce0;margin-left:4px;">👤 이름별</button>
+      <button class="sbtn" onclick="setHistoryView('item',this)" id="vh-item" style="background:#e8eef6;color:#0a2050;border-color:#b8cce0;margin-left:4px;">📋 항목별</button>
       <button class="sbtn" onclick="loadViewHistory()" style="background:#1e7e3a;color:#fff;border-color:#1e7e3a;margin-left:4px;">🔄 새로고침</button>
       <button class="sbtn" onclick="clearViewHistory()" style="background:#cc0000;color:#fff;border-color:#cc0000;margin-left:4px;">🗑 전체삭제</button>
     </div>
@@ -880,6 +881,7 @@ function goView(view){
   document.getElementById('mtoggle').style.display='flex';
   document.getElementById('snavBtns').innerHTML=NAVS.map(n=>`<button class="snav-btn ${n.id===view?'on':''}" onclick="closeMenu();goView('${n.id}')"><span class="snav-ico">${n.icon}</span>${n.label}</button>`).join('');
   curView=view;
+  if(_lastMe&&ITEMS&&ITEMS[view])logViewHistory(_lastMe.name,_lastMe.branch,view);
   if(view==='group')setTimeout(renderGrpTable,50);
   window.scrollTo(0,0);
 }
@@ -2170,7 +2172,8 @@ function findMe(){
   if(!d){res.style.display='none';empty.style.display='block';empty.style.color='#cc0000';empty.textContent='❌ "'+name+'" 님을 명단에서 찾을 수 없습니다';return;}
   empty.style.display='none';
   res.style.display='block';
-  logViewHistory(name,d[2]||'');
+  logViewHistory(name,d[2]||'','self');
+  _lastMe={name:name,branch:d[2]||''};
   var base=d[8],cur=d[9],rate=d[10],sun=d[11],ipum=d[13]||0,ipumCnt=d[12]||0;
   var cp=prizeOf(sun);
   var curRateRk=rankIns(name,sun,base,'rate');
@@ -2286,16 +2289,19 @@ function adminShow(id,btn){
 }
 
 // ── 조회이력 ──
+var ITEMS={self:'👤 본인실적',perf:'📊 실적진도',rate:'📈 신장률',amt:'💰 신장액',ipum:'✨ 인품왕',group:'🏅 그룹시상'};
+var _lastMe=null;
 var _vhLastKey='';
-function logViewHistory(name,branch){
+function logViewHistory(name,branch,item){
   try{
     if(!fb_ready||typeof firebase==='undefined')return;
-    // 2초 내 중복 방지
-    var k=name+'|'+Math.floor(Date.now()/2000);
+    if(!name||!item||!ITEMS[item])return;
+    // 2초 내 동일 이름+항목 중복 방지
+    var k=name+'|'+item+'|'+Math.floor(Date.now()/2000);
     if(k===_vhLastKey)return;_vhLastKey=k;
-    var ref=firebase.database().ref('master_view_history');
+    var ref=firebase.database().ref('master_view_history/'+item);
     ref.push({n:name,b:branch||'',t:Date.now()});
-    // 최근 50건만 유지
+    // 해당 항목 최근 50건만 유지
     ref.orderByChild('t').limitToLast(60).once('value',function(snap){
       var all=[];snap.forEach(function(c){all.push({k:c.key,t:c.val().t});});
       all.sort(function(a,b){return b.t-a.t;});
@@ -2311,81 +2317,126 @@ function setHistoryView(mode,btn){
   _historyView=mode;
   var btnTime=document.getElementById('vh-time');
   var btnName=document.getElementById('vh-name');
-  if(btnTime&&btnName){
-    if(mode==='time'){
-      btnTime.style.background='#1a5cb0';btnTime.style.color='#fff';btnTime.style.borderColor='#1a5cb0';
-      btnName.style.background='#e8eef6';btnName.style.color='#0a2050';btnName.style.borderColor='#b8cce0';
-    } else {
-      btnName.style.background='#5a20c0';btnName.style.color='#fff';btnName.style.borderColor='#5a20c0';
-      btnTime.style.background='#e8eef6';btnTime.style.color='#0a2050';btnTime.style.borderColor='#b8cce0';
-    }
-  }
+  var btnItem=document.getElementById('vh-item');
+  var gray={bg:'#e8eef6',fg:'#0a2050',br:'#b8cce0'};
+  var active={time:{bg:'#1a5cb0',fg:'#fff',br:'#1a5cb0'},name:{bg:'#5a20c0',fg:'#fff',br:'#5a20c0'},item:{bg:'#cc5500',fg:'#fff',br:'#cc5500'}};
+  [['time',btnTime],['name',btnName],['item',btnItem]].forEach(function(p){
+    var b=p[1];if(!b)return;
+    var s=(mode===p[0])?active[p[0]]:gray;
+    b.style.background=s.bg;b.style.color=s.fg;b.style.borderColor=s.br;
+  });
   loadViewHistory();
 }
 function loadViewHistory(){
   var body=document.getElementById('viewHistoryBody');
   if(!fb_ready||typeof firebase==='undefined'){body.innerHTML='<div style="text-align:center;color:#cc0000;padding:12px;">⚠️ Firebase 연결 필요</div>';return;}
   body.innerHTML='<div style="text-align:center;color:#888;padding:12px;">로딩 중...</div>';
-  firebase.database().ref('master_view_history').orderByChild('t').limitToLast(50).once('value',function(snap){
-    var arr=[];snap.forEach(function(c){var v=c.val();arr.push({n:v.n,b:v.b,t:v.t});});
+  var keys=Object.keys(ITEMS);
+  var promises=keys.map(function(item){
+    return firebase.database().ref('master_view_history/'+item).orderByChild('t').limitToLast(50).once('value').then(function(snap){
+      var arr=[];snap.forEach(function(c){var v=c.val();arr.push({n:v.n,b:v.b,i:item,t:v.t});});
+      return arr;
+    }).catch(function(){return [];});
+  });
+  Promise.all(promises).then(function(results){
+    var arr=[].concat.apply([],results);
     arr.sort(function(a,b){return b.t-a.t;});
     if(arr.length===0){body.innerHTML='<div style="text-align:center;color:#888;padding:12px;">조회이력 없음</div>';return;}
-    if(_historyView==='name') renderHistoryByName(arr,body);
+    if(_historyView==='name')renderHistoryByName(arr,body);
+    else if(_historyView==='item')renderHistoryByItem(arr,body);
     else renderHistoryByTime(arr,body);
-  },function(){body.innerHTML='<div style="text-align:center;color:#cc0000;padding:12px;">❌ 조회이력 읽기 실패</div>';});
+  }).catch(function(){body.innerHTML='<div style="text-align:center;color:#cc0000;padding:12px;">❌ 조회이력 읽기 실패</div>';});
 }
 function renderHistoryByTime(arr,body){
   var cnt={};arr.forEach(function(x){cnt[x.n]=(cnt[x.n]||0)+1;});
-  var html='<table style="width:100%;border-collapse:collapse;font-size:11px;"><thead><tr style="background:#e8eef6;"><th style="padding:5px 7px;border:1px solid #d0d8e0;text-align:left;">#</th><th style="padding:5px 7px;border:1px solid #d0d8e0;text-align:left;">시각</th><th style="padding:5px 7px;border:1px solid #d0d8e0;text-align:left;">이름</th><th style="padding:5px 7px;border:1px solid #d0d8e0;text-align:left;">지점</th></tr></thead><tbody>';
+  var html='<table style="width:100%;border-collapse:collapse;font-size:11px;"><thead><tr style="background:#e8eef6;"><th style="padding:5px 7px;border:1px solid #d0d8e0;text-align:left;">#</th><th style="padding:5px 7px;border:1px solid #d0d8e0;text-align:left;">시각</th><th style="padding:5px 7px;border:1px solid #d0d8e0;text-align:left;">이름</th><th style="padding:5px 7px;border:1px solid #d0d8e0;text-align:left;">지점</th><th style="padding:5px 7px;border:1px solid #d0d8e0;text-align:left;">항목</th></tr></thead><tbody>';
   arr.forEach(function(x,i){
     var d=new Date(x.t);
     var mm=String(d.getMonth()+1).padStart(2,'0');var dd=String(d.getDate()).padStart(2,'0');
     var hh=String(d.getHours()).padStart(2,'0');var mi=String(d.getMinutes()).padStart(2,'0');
     var cBadge=cnt[x.n]>1?' <span style="background:#ffe0a0;color:#7a5000;font-size:9px;font-weight:700;padding:1px 5px;border-radius:7px;margin-left:3px;">×'+cnt[x.n]+'</span>':'';
-    html+='<tr style="background:'+(i%2?'#fff':'#fafbfc')+';"><td style="padding:4px 7px;border:1px solid #e0e4e8;color:#888;">'+(i+1)+'</td><td style="padding:4px 7px;border:1px solid #e0e4e8;color:#556688;">'+mm+'/'+dd+' '+hh+':'+mi+'</td><td style="padding:4px 7px;border:1px solid #e0e4e8;font-weight:700;color:#0a2050;">'+x.n+cBadge+'</td><td style="padding:4px 7px;border:1px solid #e0e4e8;color:#334466;">'+(x.b||'-')+'</td></tr>';
+    var itemLabel=ITEMS[x.i]||x.i;
+    html+='<tr style="background:'+(i%2?'#fff':'#fafbfc')+';"><td style="padding:4px 7px;border:1px solid #e0e4e8;color:#888;">'+(i+1)+'</td><td style="padding:4px 7px;border:1px solid #e0e4e8;color:#556688;">'+mm+'/'+dd+' '+hh+':'+mi+'</td><td style="padding:4px 7px;border:1px solid #e0e4e8;font-weight:700;color:#0a2050;">'+x.n+cBadge+'</td><td style="padding:4px 7px;border:1px solid #e0e4e8;color:#334466;">'+(x.b||'-')+'</td><td style="padding:4px 7px;border:1px solid #e0e4e8;font-weight:700;color:#0a2050;">'+itemLabel+'</td></tr>';
   });
   html+='</tbody></table>';
   var unique=Object.keys(cnt).length;
-  html='<div style="padding:6px 8px;margin-bottom:6px;background:#e8f4ff;border-radius:5px;font-size:11px;color:#0040b0;"><b>📅 시간순</b> · 총 '+arr.length+'건 · 고유 이름 <b>'+unique+'명</b></div>'+html;
+  html='<div style="padding:6px 8px;margin-bottom:6px;background:#e8f4ff;border-radius:5px;font-size:11px;color:#0040b0;"><b>📅 시간순</b> · 총 '+arr.length+'건 · 고유 이름 <b>'+unique+'명</b> · 항목별 최근 50건 유지</div>'+html;
   body.innerHTML=html;
 }
 function renderHistoryByName(arr,body){
-  // 이름별 집계
   var grp={};
   arr.forEach(function(x){
-    if(!grp[x.n]) grp[x.n]={name:x.n,branch:x.b,count:0,latest:0,times:[]};
+    if(!grp[x.n])grp[x.n]={name:x.n,branch:x.b,count:0,latest:0,items:{}};
     grp[x.n].count++;
-    grp[x.n].times.push(x.t);
-    if(x.t>grp[x.n].latest) grp[x.n].latest=x.t;
-    if(x.b && !grp[x.n].branch) grp[x.n].branch=x.b;
+    if(x.t>grp[x.n].latest)grp[x.n].latest=x.t;
+    if(x.b&&!grp[x.n].branch)grp[x.n].branch=x.b;
+    grp[x.n].items[x.i]=(grp[x.n].items[x.i]||0)+1;
   });
   var list=Object.keys(grp).map(function(k){return grp[k];});
-  list.sort(function(a,b){return b.count-a.count || b.latest-a.latest;});
+  list.sort(function(a,b){return b.count-a.count||b.latest-a.latest;});
   var maxCnt=list.length>0?list[0].count:1;
-  var html='<table style="width:100%;border-collapse:collapse;font-size:11px;"><thead><tr style="background:#f0e8ff;"><th style="padding:5px 7px;border:1px solid #d0c0e8;text-align:left;">#</th><th style="padding:5px 7px;border:1px solid #d0c0e8;text-align:left;">이름</th><th style="padding:5px 7px;border:1px solid #d0c0e8;text-align:center;">조회횟수</th><th style="padding:5px 7px;border:1px solid #d0c0e8;text-align:left;">지점</th><th style="padding:5px 7px;border:1px solid #d0c0e8;text-align:left;">최근조회</th></tr></thead><tbody>';
+  var html='<table style="width:100%;border-collapse:collapse;font-size:11px;"><thead><tr style="background:#f0e8ff;"><th style="padding:5px 7px;border:1px solid #d0c0e8;text-align:left;">#</th><th style="padding:5px 7px;border:1px solid #d0c0e8;text-align:left;">이름</th><th style="padding:5px 7px;border:1px solid #d0c0e8;text-align:center;">조회횟수</th><th style="padding:5px 7px;border:1px solid #d0c0e8;text-align:left;">지점</th><th style="padding:5px 7px;border:1px solid #d0c0e8;text-align:left;">조회한 항목</th><th style="padding:5px 7px;border:1px solid #d0c0e8;text-align:left;">최근</th></tr></thead><tbody>';
   list.forEach(function(x,i){
     var d=new Date(x.latest);
     var mm=String(d.getMonth()+1).padStart(2,'0');var dd=String(d.getDate()).padStart(2,'0');
     var hh=String(d.getHours()).padStart(2,'0');var mi=String(d.getMinutes()).padStart(2,'0');
     var barW=Math.round((x.count/maxCnt)*100);
     var barColor=x.count>=5?'#5a20c0':x.count>=3?'#1a5cb0':'#b0a0d8';
+    var itemsHtml=Object.keys(x.items).sort(function(a,b){return x.items[b]-x.items[a];}).map(function(k){
+      return '<span style="display:inline-block;background:#fff;border:1px solid #d0c0e8;border-radius:9px;padding:1px 6px;font-size:10px;font-weight:700;color:#3a1a70;margin:1px 2px 1px 0;">'+(ITEMS[k]||k)+'<span style="color:#888;font-weight:600;"> ×'+x.items[k]+'</span></span>';
+    }).join('');
     html+='<tr style="background:'+(i%2?'#fff':'#faf8ff')+';">'
-      +'<td style="padding:4px 7px;border:1px solid #e8e0f0;color:#888;">'+(i+1)+'</td>'
-      +'<td style="padding:4px 7px;border:1px solid #e8e0f0;font-weight:700;color:#3a1a70;">'+x.name+'</td>'
-      +'<td style="padding:4px 7px;border:1px solid #e8e0f0;text-align:center;">'
+      +'<td style="padding:4px 7px;border:1px solid #e8e0f0;color:#888;vertical-align:top;">'+(i+1)+'</td>'
+      +'<td style="padding:4px 7px;border:1px solid #e8e0f0;font-weight:700;color:#3a1a70;vertical-align:top;">'+x.name+'</td>'
+      +'<td style="padding:4px 7px;border:1px solid #e8e0f0;text-align:center;vertical-align:top;">'
         +'<div style="display:inline-block;min-width:26px;background:'+barColor+';color:#fff;padding:2px 8px;border-radius:10px;font-weight:900;font-size:11px;">'+x.count+'회</div>'
         +'<div style="height:3px;background:#f0e8f5;border-radius:2px;margin-top:3px;overflow:hidden;"><div style="height:100%;width:'+barW+'%;background:'+barColor+';"></div></div>'
       +'</td>'
-      +'<td style="padding:4px 7px;border:1px solid #e8e0f0;color:#334466;">'+(x.branch||'-')+'</td>'
-      +'<td style="padding:4px 7px;border:1px solid #e8e0f0;color:#556688;">'+mm+'/'+dd+' '+hh+':'+mi+'</td>'
+      +'<td style="padding:4px 7px;border:1px solid #e8e0f0;color:#334466;vertical-align:top;">'+(x.branch||'-')+'</td>'
+      +'<td style="padding:4px 7px;border:1px solid #e8e0f0;vertical-align:top;">'+itemsHtml+'</td>'
+      +'<td style="padding:4px 7px;border:1px solid #e8e0f0;color:#556688;vertical-align:top;">'+mm+'/'+dd+' '+hh+':'+mi+'</td>'
       +'</tr>';
   });
   html+='</tbody></table>';
   html='<div style="padding:6px 8px;margin-bottom:6px;background:#f0e8ff;border-radius:5px;font-size:11px;color:#5a20c0;"><b>👤 이름별</b> · 고유 이름 <b>'+list.length+'명</b> · 조회 많은 순 정렬</div>'+html;
   body.innerHTML=html;
 }
+function renderHistoryByItem(arr,body){
+  var grp={};
+  Object.keys(ITEMS).forEach(function(k){grp[k]=[];});
+  arr.forEach(function(x){if(grp[x.i])grp[x.i].push(x);});
+  var html='<div style="padding:6px 8px;margin-bottom:6px;background:#fff2e6;border-radius:5px;font-size:11px;color:#cc5500;"><b>📋 항목별</b> · 각 항목 최근 50건 유지 · 총 '+arr.length+'건</div>';
+  Object.keys(ITEMS).forEach(function(k){
+    var list=grp[k];
+    var label=ITEMS[k];
+    html+='<div style="margin-bottom:10px;">';
+    html+='<div style="font-size:12px;font-weight:900;color:#0a2050;padding:5px 8px;background:#fff2e6;border-left:3px solid #cc5500;border-radius:3px;margin-bottom:3px;">'+label+' <span style="font-size:10px;color:#666;font-weight:600;">('+list.length+'건)</span></div>';
+    if(list.length===0){
+      html+='<div style="padding:6px 10px;color:#aaa;font-size:10px;background:#fafbfc;border:1px dashed #d0d8e0;border-radius:4px;">조회 없음</div>';
+    } else {
+      // 이름별 집계
+      var cnt={};list.forEach(function(x){cnt[x.n]=(cnt[x.n]||0)+1;});
+      html+='<table style="width:100%;border-collapse:collapse;font-size:11px;"><thead><tr style="background:#f5e8d8;"><th style="padding:4px 7px;border:1px solid #e0c090;text-align:left;">#</th><th style="padding:4px 7px;border:1px solid #e0c090;text-align:left;">시각</th><th style="padding:4px 7px;border:1px solid #e0c090;text-align:left;">이름</th><th style="padding:4px 7px;border:1px solid #e0c090;text-align:left;">지점</th></tr></thead><tbody>';
+      list.forEach(function(x,i){
+        var d=new Date(x.t);
+        var mm=String(d.getMonth()+1).padStart(2,'0');var dd=String(d.getDate()).padStart(2,'0');
+        var hh=String(d.getHours()).padStart(2,'0');var mi=String(d.getMinutes()).padStart(2,'0');
+        var cBadge=cnt[x.n]>1?' <span style="background:#ffe0a0;color:#7a5000;font-size:9px;font-weight:700;padding:1px 5px;border-radius:7px;margin-left:3px;">×'+cnt[x.n]+'</span>':'';
+        html+='<tr style="background:'+(i%2?'#fff':'#fffdf8')+';">'
+          +'<td style="padding:3px 7px;border:1px solid #f0e0c8;color:#888;">'+(i+1)+'</td>'
+          +'<td style="padding:3px 7px;border:1px solid #f0e0c8;color:#556688;">'+mm+'/'+dd+' '+hh+':'+mi+'</td>'
+          +'<td style="padding:3px 7px;border:1px solid #f0e0c8;font-weight:700;color:#0a2050;">'+x.n+cBadge+'</td>'
+          +'<td style="padding:3px 7px;border:1px solid #f0e0c8;color:#334466;">'+(x.b||'-')+'</td>'
+          +'</tr>';
+      });
+      html+='</tbody></table>';
+    }
+    html+='</div>';
+  });
+  body.innerHTML=html;
+}
 function clearViewHistory(){
-  if(!confirm('조회이력 전체를 삭제하시겠습니까?'))return;
+  if(!confirm('조회이력 전체를 삭제하시겠습니까? (모든 항목)'))return;
   if(!fb_ready||typeof firebase==='undefined'){alert('Firebase 연결 필요');return;}
   firebase.database().ref('master_view_history').set(null,function(){loadViewHistory();});
 }
