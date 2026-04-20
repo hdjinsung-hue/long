@@ -258,7 +258,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
     <span id="todayLabel">2026년 4월 20일</span><span>|</span>
     <span><span class="dot"></span> 전일마감 기준</span>
     <span id="syncStatus" style="font-size:10px;margin-left:6px;color:#888;">연결중...</span>
-    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v29</span>
+    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v30</span>
   </div>
   <div class="tab-nav">
     <button class="tb on" id="tb-home" onclick="goTab('home',this)">🏠 홈 대시보드</button>
@@ -367,7 +367,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
     <div class="abar">
       <div class="ab gd"><div class="ab-rank">🥇 1위</div><div class="ab-prize">30만원</div></div>
       <div class="ab sv"><div class="ab-rank">🥈 2~3위</div><div class="ab-prize">20만원</div></div>
-      <div class="ab bz"><div class="ab-rank">4~10위</div><div class="ab-prize">시상 주유권 5만원</div></div>
+      <div class="ab bz"><div class="ab-rank">4~10위</div><div class="ab-prize">주유권 5만원</div></div>
       <div class="ab nt"><div class="ab-rank">⚠️ 중복시상</div><div class="ab-prize">높은금액 1회</div><div class="ab-note">신장액 우선</div></div>
     </div>
     <div class="podium" id="ratePodium"></div>
@@ -381,7 +381,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
     <div class="abar">
       <div class="ab gd"><div class="ab-rank">🥇 1위</div><div class="ab-prize">50만원</div></div>
       <div class="ab sv"><div class="ab-rank">🥈 2~3위</div><div class="ab-prize">30만원</div></div>
-      <div class="ab bz"><div class="ab-rank">4~10위</div><div class="ab-prize">시상 주유권 10만원</div></div>
+      <div class="ab bz"><div class="ab-rank">4~10위</div><div class="ab-prize">주유권 10만원</div></div>
       <div class="ab nt"><div class="ab-rank">⚠️ 중복시상</div><div class="ab-prize">높은금액 1회</div><div class="ab-note">신장액 우선</div></div>
     </div>
     <div class="podium" id="amtPodium"></div>
@@ -506,7 +506,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
     <button class="adm-btn" id="btn-sec-edit" onclick="adminShow('sec-edit',this)"><span class="ab-icon">✏️</span><div class="ab-tx"><div class="ab-title">실적 데이터 편집</div><div class="ab-sub">붙여넣기·사진입력·개별편집</div></div><span class="ab-arr">›</span></button>
     <button class="adm-btn" id="btn-sec-ipum" onclick="adminShow('sec-ipum',this)"><span class="ab-icon">✨</span><div class="ab-tx"><div class="ab-title">인품 데이터 편집</div><div class="ab-sub">신상품 계약건·실적</div></div><span class="ab-arr">›</span></button>
     <button class="adm-btn" id="btn-sec-award" onclick="adminShow('sec-award',this)"><span class="ab-icon">🏆</span><div class="ab-tx"><div class="ab-title">시상안 편집</div><div class="ab-sub">Tier·TOP10·기준조건 문구</div></div><span class="ab-arr">›</span></button>
-    <button class="adm-btn" id="btn-sec-history" onclick="adminShow('sec-history',this);loadViewHistory();"><span class="ab-icon">🕐</span><div class="ab-tx"><div class="ab-title">조회이력</div><div class="ab-sub">사용자 조회 로그 (항목별 50건)</div></div><span class="ab-arr">›</span></button>
+    <button class="adm-btn" id="btn-sec-history" onclick="adminShow('sec-history',this);loadViewHistory();"><span class="ab-icon">🕐</span><div class="ab-tx"><div class="ab-title">조회이력</div><div class="ab-sub">사용자 조회 로그 (항목별 100건)</div></div><span class="ab-arr">›</span></button>
     <button class="adm-btn" id="btn-sec-roster" onclick="adminShow('sec-roster',this)"><span class="ab-icon">📋</span><div class="ab-tx"><div class="ab-title">개별 명단 관리</div><div class="ab-sub">일괄 내보내기·입력 (사번 매칭)</div></div><span class="ab-arr">›</span></button>
     <button class="adm-btn" id="btn-sec-groups" onclick="adminShow('sec-groups',this)"><span class="ab-icon">🏅</span><div class="ab-tx"><div class="ab-title">조별 명단 관리</div><div class="ab-sub">조 구성 일괄 교체</div></div><span class="ab-arr">›</span></button>
     <button class="adm-btn" id="btn-sec-verify" onclick="adminShow('sec-verify',this);initVerifyExport();"><span class="ab-icon">🔎</span><div class="ab-tx"><div class="ab-title">실적 합계 검증</div><div class="ab-sub">원본 vs 현재값 비교·누락 확인</div></div><span class="ab-arr">›</span></button>
@@ -601,7 +601,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
   </div>
   <!-- 조회이력 -->
   <div class="sec" id="sec-history" style="display:none;">
-    <div class="stitle">🕐 조회이력 <span style="font-size:10px;font-weight:600;color:#888;">(항목별 50건)</span>
+    <div class="stitle">🕐 조회이력 <span style="font-size:10px;font-weight:600;color:#888;">(항목별 100건)</span>
       <button class="sbtn" onclick="setHistoryView('time',this)" id="vh-time" style="background:#1a5cb0;color:#fff;border-color:#1a5cb0;">📅 시간순</button>
       <button class="sbtn" onclick="setHistoryView('name',this)" id="vh-name" style="background:#e8eef6;color:#0a2050;border-color:#b8cce0;margin-left:4px;">👤 이름별</button>
       <button class="sbtn" onclick="setHistoryView('item',this)" id="vh-item" style="background:#e8eef6;color:#0a2050;border-color:#b8cce0;margin-left:4px;">📋 항목별</button>
@@ -1227,8 +1227,8 @@ function renderAll(){
   document.getElementById('hs-a5').textContent=D.filter(d=>d[11]>=500000).length+'명';
   document.getElementById('hs-a4').textContent=D.filter(d=>d[11]>=300000&&d[11]<500000).length+'명';
   // ── 중복시상 로직 (v28: 큰 금액 우선, 동점이면 순위 높은 쪽 우선, 기준미충족은 뒤로) ──
-  const rPrize=k=>k===0?'시상 30만원':k<=2?'시상 20만원':k<10?'시상 주유권 5만원':'-';
-  const aPrize=k=>k===0?'시상 50만원':k<=2?'시상 30만원':k<10?'시상 주유권 10만원':'-';
+  const rPrize=k=>k===0?'시상 30만원':k<=2?'시상 20만원':k<10?'주유권 5만원':'-';
+  const aPrize=k=>k===0?'시상 50만원':k<=2?'시상 30만원':k<10?'주유권 10만원':'-';
   const rAmt=k=>k===0?300000:k<=2?200000:k<10?50000:0;
   const aAmt=k=>k===0?500000:k<=2?300000:k<10?100000:0;
   // 기준달성자 먼저, 기준미충족자는 뒤로 (각 리스트 원 순서 유지)
@@ -1356,8 +1356,8 @@ function renderAll(){
   document.getElementById('hs-a5').textContent=D.filter(d=>d[11]>=500000).length+'명';
   document.getElementById('hs-a4').textContent=D.filter(d=>d[11]>=300000&&d[11]<500000).length+'명';
   // ── 중복시상 로직 (v28: 큰 금액 우선, 동점이면 순위 높은 쪽 우선, 기준미충족은 뒤로) ──
-  const rPrize=k=>k===0?'시상 30만원':k<=2?'시상 20만원':k<10?'시상 주유권 5만원':'-';
-  const aPrize=k=>k===0?'시상 50만원':k<=2?'시상 30만원':k<10?'시상 주유권 10만원':'-';
+  const rPrize=k=>k===0?'시상 30만원':k<=2?'시상 20만원':k<10?'주유권 5만원':'-';
+  const aPrize=k=>k===0?'시상 50만원':k<=2?'시상 30만원':k<10?'주유권 10만원':'-';
   const rAmt=k=>k===0?300000:k<=2?200000:k<10?50000:0;
   const aAmt=k=>k===0?500000:k<=2?300000:k<10?100000:0;
   // 기준달성자 먼저, 기준미충족자는 뒤로 (각 리스트 원 순서 유지)
@@ -1677,8 +1677,8 @@ function renderAll(){
   document.getElementById('hs-a5').textContent=D.filter(d=>d[11]>=500000).length+'명';
   document.getElementById('hs-a4').textContent=D.filter(d=>d[11]>=300000&&d[11]<500000).length+'명';
   // ── 중복시상 로직 (v28: 큰 금액 우선, 동점이면 순위 높은 쪽 우선, 기준미충족은 뒤로) ──
-  const rPrize=k=>k===0?'시상 30만원':k<=2?'시상 20만원':k<10?'시상 주유권 5만원':'-';
-  const aPrize=k=>k===0?'시상 50만원':k<=2?'시상 30만원':k<10?'시상 주유권 10만원':'-';
+  const rPrize=k=>k===0?'시상 30만원':k<=2?'시상 20만원':k<10?'주유권 5만원':'-';
+  const aPrize=k=>k===0?'시상 50만원':k<=2?'시상 30만원':k<10?'주유권 10만원':'-';
   const rAmt=k=>k===0?300000:k<=2?200000:k<10?50000:0;
   const aAmt=k=>k===0?500000:k<=2?300000:k<10?100000:0;
   // 기준달성자 먼저, 기준미충족자는 뒤로 (각 리스트 원 순서 유지)
@@ -2450,12 +2450,12 @@ function logViewHistory(name,branch,item){
     if(k===_vhLastKey)return;_vhLastKey=k;
     var ref=firebase.database().ref('master_view_history/'+item);
     ref.push({n:name,b:branch||'',t:Date.now()});
-    // 해당 항목 최근 50건만 유지
-    ref.orderByChild('t').limitToLast(60).once('value',function(snap){
+    // 해당 항목 최근 100건만 유지
+    ref.orderByChild('t').limitToLast(120).once('value',function(snap){
       var all=[];snap.forEach(function(c){all.push({k:c.key,t:c.val().t});});
       all.sort(function(a,b){return b.t-a.t;});
-      if(all.length>50){
-        var del={};for(var i=50;i<all.length;i++)del[all[i].k]=null;
+      if(all.length>100){
+        var del={};for(var i=100;i<all.length;i++)del[all[i].k]=null;
         ref.update(del);
       }
     });
@@ -2482,7 +2482,7 @@ function loadViewHistory(){
   body.innerHTML='<div style="text-align:center;color:#888;padding:12px;">로딩 중...</div>';
   var keys=Object.keys(ITEMS);
   var promises=keys.map(function(item){
-    return firebase.database().ref('master_view_history/'+item).orderByChild('t').limitToLast(50).once('value').then(function(snap){
+    return firebase.database().ref('master_view_history/'+item).orderByChild('t').limitToLast(100).once('value').then(function(snap){
       var arr=[];snap.forEach(function(c){var v=c.val();arr.push({n:v.n,b:v.b,i:item,t:v.t});});
       return arr;
     }).catch(function(){return [];});
@@ -2509,7 +2509,7 @@ function renderHistoryByTime(arr,body){
   });
   html+='</tbody></table>';
   var unique=Object.keys(cnt).length;
-  html='<div style="padding:6px 8px;margin-bottom:6px;background:#e8f4ff;border-radius:5px;font-size:11px;color:#0040b0;"><b>📅 시간순</b> · 총 '+arr.length+'건 · 고유 이름 <b>'+unique+'명</b> · 항목별 최근 50건 유지</div>'+html;
+  html='<div style="padding:6px 8px;margin-bottom:6px;background:#e8f4ff;border-radius:5px;font-size:11px;color:#0040b0;"><b>📅 시간순</b> · 총 '+arr.length+'건 · 고유 이름 <b>'+unique+'명</b> · 항목별 최근 100건 유지</div>'+html;
   body.innerHTML=html;
 }
 function renderHistoryByName(arr,body){
@@ -2554,7 +2554,7 @@ function renderHistoryByItem(arr,body){
   var grp={};
   Object.keys(ITEMS).forEach(function(k){grp[k]=[];});
   arr.forEach(function(x){if(grp[x.i])grp[x.i].push(x);});
-  var html='<div style="padding:6px 8px;margin-bottom:6px;background:#fff2e6;border-radius:5px;font-size:11px;color:#cc5500;"><b>📋 항목별</b> · 각 항목 최근 50건 유지 · 총 '+arr.length+'건</div>';
+  var html='<div style="padding:6px 8px;margin-bottom:6px;background:#fff2e6;border-radius:5px;font-size:11px;color:#cc5500;"><b>📋 항목별</b> · 각 항목 최근 100건 유지 · 총 '+arr.length+'건</div>';
   Object.keys(ITEMS).forEach(function(k){
     var list=grp[k];
     var label=ITEMS[k];
