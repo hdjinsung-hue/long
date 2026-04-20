@@ -258,7 +258,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
     <span id="todayLabel">2026년 4월 20일</span><span>|</span>
     <span><span class="dot"></span> 전일마감 기준</span>
     <span id="syncStatus" style="font-size:10px;margin-left:6px;color:#888;">연결중...</span>
-    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v24</span>
+    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v26</span>
   </div>
   <div class="tab-nav">
     <button class="tb on" id="tb-home" onclick="goTab('home',this)">🏠 홈 대시보드</button>
@@ -703,7 +703,7 @@ let D = [
   ["호남지역단","동광주비전센터","상무중앙지점","144470",    "",              "김인자",140,"SM",        327153,  100810, 30.8, -226343, 1,  63490],
   ["호남지역단","동광주비전센터","상무중앙지점","154822",    "",              "송정량",165,"",          307398,  262240, 85.3,  -45158, 0,      0],
   ["호남지역단","동광주비전센터","상무중앙지점","949966",    "양산총괄",      "조은아",296,"",         1634200, 1891750,115.8,  257550, 0,      200000],
-  ["호남지역단","동광주비전센터","상무중앙지점","965034",    "새름",          "유혜순",218,"코칭리더",  604360,  593930, 98.3,  -10430, 3, 422730],
+  ["호남지역단","동광주비전센터","상무중앙지점","965034",    "새름",          "유해순",218,"코칭리더",  604360,  593930, 98.3,  -10430, 3, 422730],
   ["호남지역단","동광주비전센터","상무중앙지점","984627",    "무건길",        "박점희",351,"영업팀장",  782148,  397140, 50.8, -385008, 0,      0],
   ["호남지역단","동광주비전센터","상무제일지점","190467",    "",              "송지연",121,"영업팀장",  391835,   108230, 27.6, -283605, 1,      58230],
   ["호남지역단","동광주비전센터","상무제일지점","1A0856",    "",              "강성원", 90,"영업팀장",  491378,  321290, 65.4, -170088, 2, 321290],
@@ -713,7 +713,7 @@ let D = [
   ["호남지역단","동광주비전센터","동광주TC지점","1B8497",    "",              "류민희", 43,"SM",        354203,  391360,110.5,   37158, 1, 205190],
   ["호남지역단","동광주비전센터","광주TC지점",  "9A0450",    "재명",          "감재명",227,"",          564070,  334570, 59.3, -229500, 1, 209230],
   ["호남지역단","광주비전센터",  "광주지점",    "153239",    "",              "서영린",168,"SM팀장",    819623,  726990, 88.7,  -92633, 2, 324980],
-  ["호남지역단","광주비전센터",  "광주지점",    "1A1080",    "",              "모성민", 89,"영업팀장", 1021960,  868460, 85.0, -153500, 1, 387380],
+  ["호남지역단","광주비전센터",  "광주지점",    "1A1080",    "",              "모상민", 89,"영업팀장", 1021960,  868460, 85.0, -153500, 1, 387380],
   ["호남지역단","광주비전센터",  "광주지점",    "1B0395",    "",              "이두성", 64,"영업팀장",  700950,  419090, 59.8, -281860, 2, 336290],
   ["호남지역단","광주비전센터",  "광주지점",    "1C3909",    "",              "하용순", 30,"SM",        675153,  123050, 18.2, -552103, 0,      0],
   ["호남지역단","광주비전센터",  "광주지점",    "1C8703",    "",              "심은영", 19,"",          498788,  547950, 109.9,  49163, 3, 301200],
@@ -1988,8 +1988,8 @@ function applyPhotoResult(){
 }
 
 function autoCalc(i){const cur=parseFloat(document.getElementById('e9_'+i).value)||0;const base=D[i][8];document.getElementById('e10_'+i).value=(base>0?cur/base*100:0).toFixed(1);document.getElementById('e11_'+i).value=cur-base;}
-function applyPaste(){const txt=document.getElementById('pasteArea').value;let cnt=0;txt.split('\n').forEach(line=>{const parts=line.trim().split(/\s+/);if(parts.length<2)return;const name=parts[0];const val=parseInt(parts[parts.length-1].replace(/,/g,''));if(isNaN(val))return;D.forEach(d=>{if(d[5]===name){d[9]=val;d[10]=d[8]>0?parseFloat((val/d[8]*100).toFixed(1)):0;d[11]=val-d[8];cnt++;}});});const msg=document.getElementById('pasteMsg');msg.textContent='✅ '+cnt+'명 반영';msg.style.display='inline';msg.style.color='#1a8a40';setTimeout(()=>msg.style.display='none',3000);renderAll();renderGrpTable();pushToFirebase();}
-function applyIpumPaste(){const txt=document.getElementById('ipumPasteArea').value;let cnt=0;txt.split('\n').forEach(line=>{const parts=line.trim().split(/\s+/);if(parts.length<2)return;const name=parts[0];var cnt12=parseInt(parts[1].replace(/,/g,''))||0;var amt13=parts.length>=3?parseInt(parts[parts.length-1].replace(/,/g,''))||0:0;D.forEach(d=>{if(d[5]===name){d[12]=cnt12;if(amt13>0)d[13]=amt13;cnt++;}});});const msg=document.getElementById('ipumPasteMsg');msg.textContent='✅ '+cnt+'명 반영';msg.style.display='inline';msg.style.color='#1a8a40';setTimeout(()=>msg.style.display='none',3000);renderAll();pushToFirebase();}
+function applyPaste(){const txt=document.getElementById('pasteArea').value;let cnt=0;txt.split('\n').forEach(line=>{const parts=line.trim().split(/\s+/);if(parts.length<2)return;let name=parts[0];if(typeof NAME_FIX!=='undefined'&&NAME_FIX[name])name=NAME_FIX[name];const val=parseInt(parts[parts.length-1].replace(/,/g,''));if(isNaN(val))return;D.forEach(d=>{if(d[5]===name){d[9]=val;d[10]=d[8]>0?parseFloat((val/d[8]*100).toFixed(1)):0;d[11]=val-d[8];cnt++;}});});const msg=document.getElementById('pasteMsg');msg.textContent='✅ '+cnt+'명 반영';msg.style.display='inline';msg.style.color='#1a8a40';setTimeout(()=>msg.style.display='none',3000);renderAll();renderGrpTable();pushToFirebase();}
+function applyIpumPaste(){const txt=document.getElementById('ipumPasteArea').value;let cnt=0;txt.split('\n').forEach(line=>{const parts=line.trim().split(/\s+/);if(parts.length<2)return;let name=parts[0];if(typeof NAME_FIX!=='undefined'&&NAME_FIX[name])name=NAME_FIX[name];var cnt12=parseInt(parts[1].replace(/,/g,''))||0;var amt13=parts.length>=3?parseInt(parts[parts.length-1].replace(/,/g,''))||0:0;D.forEach(d=>{if(d[5]===name){d[12]=cnt12;if(amt13>0)d[13]=amt13;cnt++;}});});const msg=document.getElementById('ipumPasteMsg');msg.textContent='✅ '+cnt+'명 반영';msg.style.display='inline';msg.style.color='#1a8a40';setTimeout(()=>msg.style.display='none',3000);renderAll();pushToFirebase();}
 function saveEdits(){D.forEach((d,i)=>{const cur=parseFloat(document.getElementById('e9_'+i)?.value)||d[9];d[9]=cur;d[10]=d[8]>0?parseFloat((cur/d[8]*100).toFixed(1)):0;d[11]=cur-d[8];d[12]=parseInt(document.getElementById('e12_'+i)?.value)||0;d[13]=parseInt(document.getElementById('e13_'+i)?.value)||0;});document.getElementById('saveMsg').style.display='inline';setTimeout(()=>document.getElementById('saveMsg').style.display='none',2500);renderAll();renderGrpTable();pushToFirebase();}
 function saveIpumEdits(){D.forEach((d,i)=>{d[12]=parseInt(document.getElementById('ip12_'+i)?.value)||0;d[13]=parseInt(document.getElementById('ip13_'+i)?.value)||0;});document.getElementById('ipumSaveMsg').style.display='inline';setTimeout(()=>document.getElementById('ipumSaveMsg').style.display='none',2500);renderAll();pushToFirebase();}
 
@@ -2047,6 +2047,12 @@ document.getElementById('pg-detail').style.display='none';
 document.getElementById('pg-admin').style.display='none';
 document.getElementById('mtoggle').style.display='none';
 window.addEventListener('load',function(){setTimeout(initFirebase,500);});
+
+// ── 이름 자동 교정 매핑 (잘못 입력된 옛 이름 → 올바른 이름) ──
+var NAME_FIX={'유혜순':'유해순','모성민':'모상민'};
+function fixName(n){return NAME_FIX[n]||n;}
+// 로컬 D 배열에 남아있을 수 있는 옛 이름 방어적 교정
+(function(){var c=0;D.forEach(function(d){if(NAME_FIX[d[5]]){d[5]=NAME_FIX[d[5]];c++;}});if(c>0)console.log('[이름교정] D 배열에서 '+c+'명 교정');})();
 
 // 오늘 날짜 자동 표시
 (function(){
