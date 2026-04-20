@@ -600,7 +600,9 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
   <!-- 조회이력 -->
   <div class="sec" id="sec-history" style="display:none;">
     <div class="stitle">🕐 조회이력 <span style="font-size:10px;font-weight:600;color:#888;">(최근 50건)</span>
-      <button class="sbtn" onclick="loadViewHistory()" style="background:#1a5cb0;color:#fff;border-color:#1a5cb0;">🔄 새로고침</button>
+      <button class="sbtn" onclick="setHistoryView('time',this)" id="vh-time" style="background:#1a5cb0;color:#fff;border-color:#1a5cb0;">📅 시간순</button>
+      <button class="sbtn" onclick="setHistoryView('name',this)" id="vh-name" style="background:#e8eef6;color:#0a2050;border-color:#b8cce0;margin-left:4px;">👤 이름별</button>
+      <button class="sbtn" onclick="loadViewHistory()" style="background:#1e7e3a;color:#fff;border-color:#1e7e3a;margin-left:4px;">🔄 새로고침</button>
       <button class="sbtn" onclick="clearViewHistory()" style="background:#cc0000;color:#fff;border-color:#cc0000;margin-left:4px;">🗑 전체삭제</button>
     </div>
     <div id="viewHistoryBody" style="max-height:320px;overflow-y:auto;border:1px solid #d8d8d8;border-radius:6px;padding:6px;background:#fafbfc;font-size:11px;">
@@ -810,7 +812,7 @@ function renderGrpTable(){
     const cSum=cur.reduce((s,v)=>s+v,0);
     const achv=bSum>0?cSum/bSum*100:0;
     const rate=bSum>0?(cSum-bSum)/bSum*100:0;
-    const p1=g1Prize(rate);const p2=g2Prize(base,cur);
+    const p1=g2Prize(base,cur);const p2=g1Prize(rate);
     const over5=g.members.filter(m=>{const f=D.find(d=>d[5]===m.name);return f&&f[11]>=50000;}).length;
     return {g,gi,base,cur,bSum,cSum,achv,rate,p1,p2,over5};
   }).sort((a,b)=>b.achv-a.achv);
@@ -1622,13 +1624,31 @@ function renderAll(){
   // KPI
   document.getElementById('kpi-perf').innerHTML=`<div class="kpi sky"><div class="kl">총 인원</div><div class="kv">${total}명</div></div><div class="kpi g"><div class="kl">5만원↑ 순증</div><div class="kv" style="color:#005030">${over5}명</div></div><div class="kpi gd"><div class="kl">30만원↑ 순증</div><div class="kv" style="color:#7a5000">${elig.length}명</div></div><div class="kpi"><div class="kl">평균 달성률</div><div class="kv">${avgR.toFixed(1)}%</div></div>`;
   // 실적 테이블
-  document.getElementById('mainTbody').innerHTML=[...byAmt].map(({i,d},rank)=>{
+  var mainRows=[...byAmt].map(({i,d},rank)=>{
     const nc=d[10]>=120?'c-over':d[10]>=100?'c-good':d[10]>=80?'c-mid':'c-low';
     const netc=d[11]>0?'net-p':d[11]<0?'net-m':'';
     const awd=d[11]>=500000?'<span class="bdg b-g">150%지급</span>':d[11]>=300000?'<span class="bdg b-g">120%지급</span>':d[11]>=200000?'<span class="bdg b-gr">20만원</span>':d[11]>=100000?'<span class="bdg b-gr">10만원</span>':d[11]>=50000?'<span class="bdg b-gr">5만원</span>':'<span class="b-no">-</span>';
     const ipRk=ipRank[i]?RB(ipRank[i]):'<span style="color:#ccc;font-size:9px;">-</span>';
     return `<tr style="cursor:pointer;" onclick="openPerfPopup(${i})"><td>${RB(rank+1)}</td><td class="td-name">${d[5]}</td><td class="td-r col-extra">${Nf(d[8])}</td><td class="td-r col-extra">${Nf(d[9])}</td><td class="${nc}">${d[10].toFixed(1)}%</td><td class="td-r ${netc}">${d[11]>=0?'+':''}${Nf(d[11])}</td><td class="col-extra">${awd}</td><td class="col-extra">${RB(rRank[i])}</td><td class="col-extra">${RB(aRank[i])}</td><td class="col-extra">${ipRk}</td></tr>`;
   }).join('');
+  // 합계 행
+  var sumBase=D.reduce((s,d)=>s+(d[8]||0),0);
+  var sumCur=D.reduce((s,d)=>s+(d[9]||0),0);
+  var sumNet=D.reduce((s,d)=>s+(d[11]||0),0);
+  var sumRate=sumBase>0?(sumCur/sumBase*100):0;
+  var totalRow='<tr style="background:linear-gradient(135deg,#0d2554,#1a3a6b);color:#fff;font-weight:900;border-top:2px solid #cc5500;">'
+    +'<td style="color:#ffd700;">합계</td>'
+    +'<td class="td-name" style="color:#fff;">'+D.length+'명</td>'
+    +'<td class="td-r col-extra" style="color:#fff;">'+Nf(sumBase)+'</td>'
+    +'<td class="td-r col-extra" style="color:#fff;">'+Nf(sumCur)+'</td>'
+    +'<td style="color:'+(sumRate>=100?'#7fff7f':sumRate>=80?'#ffcc66':'#ff8888')+';">'+sumRate.toFixed(1)+'%</td>'
+    +'<td class="td-r" style="color:'+(sumNet>=0?'#7fff7f':'#ff8888')+';">'+(sumNet>=0?'+':'')+Nf(sumNet)+'</td>'
+    +'<td class="col-extra" style="color:#aaa;">-</td>'
+    +'<td class="col-extra" style="color:#aaa;">-</td>'
+    +'<td class="col-extra" style="color:#aaa;">-</td>'
+    +'<td class="col-extra" style="color:#aaa;">-</td>'
+    +'</tr>';
+  document.getElementById('mainTbody').innerHTML=mainRows+totalRow;
   // 포디움
   function makePod(top3,valFn,subFn,prizeFn){
     return['p1','p2','p3'].map((cls,k)=>{if(!top3[k])return'';const d=top3[k].d;const crown=['👑','🥈','🥉'][k];const lbl=['1위','2위','3위'][k];const pr=prizeFn(k,d);const dual=pr.includes('적용');return`<div class="pc ${cls}"><div class="pcrown">${crown}</div><div class="prank">${lbl}</div><div class="pname">${d[5]}</div><div class="pbranch">${d[2]}</div><div class="pval">${valFn(d)}</div><div class="psub2">${subFn(d)}</div><div class="pprize ${dual?'dual':''}">${pr}</div><div class="pbar"></div></div>`;}).join('');
@@ -2285,6 +2305,22 @@ function logViewHistory(name,branch){
     });
   }catch(e){}
 }
+var _historyView='time';
+function setHistoryView(mode,btn){
+  _historyView=mode;
+  var btnTime=document.getElementById('vh-time');
+  var btnName=document.getElementById('vh-name');
+  if(btnTime&&btnName){
+    if(mode==='time'){
+      btnTime.style.background='#1a5cb0';btnTime.style.color='#fff';btnTime.style.borderColor='#1a5cb0';
+      btnName.style.background='#e8eef6';btnName.style.color='#0a2050';btnName.style.borderColor='#b8cce0';
+    } else {
+      btnName.style.background='#5a20c0';btnName.style.color='#fff';btnName.style.borderColor='#5a20c0';
+      btnTime.style.background='#e8eef6';btnTime.style.color='#0a2050';btnTime.style.borderColor='#b8cce0';
+    }
+  }
+  loadViewHistory();
+}
 function loadViewHistory(){
   var body=document.getElementById('viewHistoryBody');
   if(!fb_ready||typeof firebase==='undefined'){body.innerHTML='<div style="text-align:center;color:#cc0000;padding:12px;">⚠️ Firebase 연결 필요</div>';return;}
@@ -2293,22 +2329,59 @@ function loadViewHistory(){
     var arr=[];snap.forEach(function(c){var v=c.val();arr.push({n:v.n,b:v.b,t:v.t});});
     arr.sort(function(a,b){return b.t-a.t;});
     if(arr.length===0){body.innerHTML='<div style="text-align:center;color:#888;padding:12px;">조회이력 없음</div>';return;}
-    var html='<table style="width:100%;border-collapse:collapse;font-size:11px;"><thead><tr style="background:#e8eef6;"><th style="padding:5px 7px;border:1px solid #d0d8e0;text-align:left;">#</th><th style="padding:5px 7px;border:1px solid #d0d8e0;text-align:left;">시각</th><th style="padding:5px 7px;border:1px solid #d0d8e0;text-align:left;">이름</th><th style="padding:5px 7px;border:1px solid #d0d8e0;text-align:left;">지점</th></tr></thead><tbody>';
-    // 이름별 집계
-    var cnt={};arr.forEach(function(x){cnt[x.n]=(cnt[x.n]||0)+1;});
-    arr.forEach(function(x,i){
-      var d=new Date(x.t);
-      var mm=String(d.getMonth()+1).padStart(2,'0');var dd=String(d.getDate()).padStart(2,'0');
-      var hh=String(d.getHours()).padStart(2,'0');var mi=String(d.getMinutes()).padStart(2,'0');
-      var cBadge=cnt[x.n]>1?' <span style="background:#ffe0a0;color:#7a5000;font-size:9px;font-weight:700;padding:1px 5px;border-radius:7px;margin-left:3px;">×'+cnt[x.n]+'</span>':'';
-      html+='<tr style="background:'+(i%2?'#fff':'#fafbfc')+';"><td style="padding:4px 7px;border:1px solid #e0e4e8;color:#888;">'+(i+1)+'</td><td style="padding:4px 7px;border:1px solid #e0e4e8;color:#556688;">'+mm+'/'+dd+' '+hh+':'+mi+'</td><td style="padding:4px 7px;border:1px solid #e0e4e8;font-weight:700;color:#0a2050;">'+x.n+cBadge+'</td><td style="padding:4px 7px;border:1px solid #e0e4e8;color:#334466;">'+(x.b||'-')+'</td></tr>';
-    });
-    html+='</tbody></table>';
-    // 상단 요약
-    var unique=Object.keys(cnt).length;
-    html='<div style="padding:6px 8px;margin-bottom:6px;background:#e8f4ff;border-radius:5px;font-size:11px;color:#0040b0;"><b>총 '+arr.length+'건</b> · 고유 이름 <b>'+unique+'명</b></div>'+html;
-    body.innerHTML=html;
+    if(_historyView==='name') renderHistoryByName(arr,body);
+    else renderHistoryByTime(arr,body);
   },function(){body.innerHTML='<div style="text-align:center;color:#cc0000;padding:12px;">❌ 조회이력 읽기 실패</div>';});
+}
+function renderHistoryByTime(arr,body){
+  var cnt={};arr.forEach(function(x){cnt[x.n]=(cnt[x.n]||0)+1;});
+  var html='<table style="width:100%;border-collapse:collapse;font-size:11px;"><thead><tr style="background:#e8eef6;"><th style="padding:5px 7px;border:1px solid #d0d8e0;text-align:left;">#</th><th style="padding:5px 7px;border:1px solid #d0d8e0;text-align:left;">시각</th><th style="padding:5px 7px;border:1px solid #d0d8e0;text-align:left;">이름</th><th style="padding:5px 7px;border:1px solid #d0d8e0;text-align:left;">지점</th></tr></thead><tbody>';
+  arr.forEach(function(x,i){
+    var d=new Date(x.t);
+    var mm=String(d.getMonth()+1).padStart(2,'0');var dd=String(d.getDate()).padStart(2,'0');
+    var hh=String(d.getHours()).padStart(2,'0');var mi=String(d.getMinutes()).padStart(2,'0');
+    var cBadge=cnt[x.n]>1?' <span style="background:#ffe0a0;color:#7a5000;font-size:9px;font-weight:700;padding:1px 5px;border-radius:7px;margin-left:3px;">×'+cnt[x.n]+'</span>':'';
+    html+='<tr style="background:'+(i%2?'#fff':'#fafbfc')+';"><td style="padding:4px 7px;border:1px solid #e0e4e8;color:#888;">'+(i+1)+'</td><td style="padding:4px 7px;border:1px solid #e0e4e8;color:#556688;">'+mm+'/'+dd+' '+hh+':'+mi+'</td><td style="padding:4px 7px;border:1px solid #e0e4e8;font-weight:700;color:#0a2050;">'+x.n+cBadge+'</td><td style="padding:4px 7px;border:1px solid #e0e4e8;color:#334466;">'+(x.b||'-')+'</td></tr>';
+  });
+  html+='</tbody></table>';
+  var unique=Object.keys(cnt).length;
+  html='<div style="padding:6px 8px;margin-bottom:6px;background:#e8f4ff;border-radius:5px;font-size:11px;color:#0040b0;"><b>📅 시간순</b> · 총 '+arr.length+'건 · 고유 이름 <b>'+unique+'명</b></div>'+html;
+  body.innerHTML=html;
+}
+function renderHistoryByName(arr,body){
+  // 이름별 집계
+  var grp={};
+  arr.forEach(function(x){
+    if(!grp[x.n]) grp[x.n]={name:x.n,branch:x.b,count:0,latest:0,times:[]};
+    grp[x.n].count++;
+    grp[x.n].times.push(x.t);
+    if(x.t>grp[x.n].latest) grp[x.n].latest=x.t;
+    if(x.b && !grp[x.n].branch) grp[x.n].branch=x.b;
+  });
+  var list=Object.keys(grp).map(function(k){return grp[k];});
+  list.sort(function(a,b){return b.count-a.count || b.latest-a.latest;});
+  var maxCnt=list.length>0?list[0].count:1;
+  var html='<table style="width:100%;border-collapse:collapse;font-size:11px;"><thead><tr style="background:#f0e8ff;"><th style="padding:5px 7px;border:1px solid #d0c0e8;text-align:left;">#</th><th style="padding:5px 7px;border:1px solid #d0c0e8;text-align:left;">이름</th><th style="padding:5px 7px;border:1px solid #d0c0e8;text-align:center;">조회횟수</th><th style="padding:5px 7px;border:1px solid #d0c0e8;text-align:left;">지점</th><th style="padding:5px 7px;border:1px solid #d0c0e8;text-align:left;">최근조회</th></tr></thead><tbody>';
+  list.forEach(function(x,i){
+    var d=new Date(x.latest);
+    var mm=String(d.getMonth()+1).padStart(2,'0');var dd=String(d.getDate()).padStart(2,'0');
+    var hh=String(d.getHours()).padStart(2,'0');var mi=String(d.getMinutes()).padStart(2,'0');
+    var barW=Math.round((x.count/maxCnt)*100);
+    var barColor=x.count>=5?'#5a20c0':x.count>=3?'#1a5cb0':'#b0a0d8';
+    html+='<tr style="background:'+(i%2?'#fff':'#faf8ff')+';">'
+      +'<td style="padding:4px 7px;border:1px solid #e8e0f0;color:#888;">'+(i+1)+'</td>'
+      +'<td style="padding:4px 7px;border:1px solid #e8e0f0;font-weight:700;color:#3a1a70;">'+x.name+'</td>'
+      +'<td style="padding:4px 7px;border:1px solid #e8e0f0;text-align:center;">'
+        +'<div style="display:inline-block;min-width:26px;background:'+barColor+';color:#fff;padding:2px 8px;border-radius:10px;font-weight:900;font-size:11px;">'+x.count+'회</div>'
+        +'<div style="height:3px;background:#f0e8f5;border-radius:2px;margin-top:3px;overflow:hidden;"><div style="height:100%;width:'+barW+'%;background:'+barColor+';"></div></div>'
+      +'</td>'
+      +'<td style="padding:4px 7px;border:1px solid #e8e0f0;color:#334466;">'+(x.branch||'-')+'</td>'
+      +'<td style="padding:4px 7px;border:1px solid #e8e0f0;color:#556688;">'+mm+'/'+dd+' '+hh+':'+mi+'</td>'
+      +'</tr>';
+  });
+  html+='</tbody></table>';
+  html='<div style="padding:6px 8px;margin-bottom:6px;background:#f0e8ff;border-radius:5px;font-size:11px;color:#5a20c0;"><b>👤 이름별</b> · 고유 이름 <b>'+list.length+'명</b> · 조회 많은 순 정렬</div>'+html;
+  body.innerHTML=html;
 }
 function clearViewHistory(){
   if(!confirm('조회이력 전체를 삭제하시겠습니까?'))return;
