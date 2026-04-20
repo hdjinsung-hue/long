@@ -258,7 +258,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
     <span id="todayLabel">2026년 4월 20일</span><span>|</span>
     <span><span class="dot"></span> 전일마감 기준</span>
     <span id="syncStatus" style="font-size:10px;margin-left:6px;color:#888;">연결중...</span>
-    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v27</span>
+    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v29</span>
   </div>
   <div class="tab-nav">
     <button class="tb on" id="tb-home" onclick="goTab('home',this)">🏠 홈 대시보드</button>
@@ -290,7 +290,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
     <span class="an" id="aw-rate"><strong>📈 신장률 TOP10:</strong> 1위 30만원 / 2~3위 20만원 / 4~10위 주유권 5만원</span>
     <span class="an" id="aw-amt"><strong>💰 신장액 TOP10:</strong> 1위 50만원 / 2~3위 30만원 / 4~10위 주유권 10만원</span>
     <span class="an-crit" id="aw-crit">⚠️ 개인 시상 기준조건 : 기준 인보험 실적 대비 <strong>순증 30만원 이상</strong> 달성자에 한함</span>
-    <span class="an an-warn" id="aw-dup">※ 신장률·신장액 TOP10 중복시상 없음 — 두 항목 모두 해당 시 높은 금액 1회 지급</span>
+    <span class="an an-warn" id="aw-dup">※ 신장률·신장액 TOP10 중복시상 없음 — 두 항목 모두 해당 시 높은 시상금 1회 지급 (동점이면 순위 높은 곳)</span>
     <span class="an an-red" id="aw-exc">※ 환산실적 80만원 미만 시상제외 | 합산 하이캡 배수 15 미만시 50% 지급</span>
   </div>
   <!-- 본인 실적 확인 (버튼) -->
@@ -367,7 +367,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
     <div class="abar">
       <div class="ab gd"><div class="ab-rank">🥇 1위</div><div class="ab-prize">30만원</div></div>
       <div class="ab sv"><div class="ab-rank">🥈 2~3위</div><div class="ab-prize">20만원</div></div>
-      <div class="ab bz"><div class="ab-rank">4~10위</div><div class="ab-prize">주유권5만</div></div>
+      <div class="ab bz"><div class="ab-rank">4~10위</div><div class="ab-prize">시상 주유권 5만원</div></div>
       <div class="ab nt"><div class="ab-rank">⚠️ 중복시상</div><div class="ab-prize">높은금액 1회</div><div class="ab-note">신장액 우선</div></div>
     </div>
     <div class="podium" id="ratePodium"></div>
@@ -381,7 +381,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
     <div class="abar">
       <div class="ab gd"><div class="ab-rank">🥇 1위</div><div class="ab-prize">50만원</div></div>
       <div class="ab sv"><div class="ab-rank">🥈 2~3위</div><div class="ab-prize">30만원</div></div>
-      <div class="ab bz"><div class="ab-rank">4~10위</div><div class="ab-prize">주유권10만</div></div>
+      <div class="ab bz"><div class="ab-rank">4~10위</div><div class="ab-prize">시상 주유권 10만원</div></div>
       <div class="ab nt"><div class="ab-rank">⚠️ 중복시상</div><div class="ab-prize">높은금액 1회</div><div class="ab-note">신장액 우선</div></div>
     </div>
     <div class="podium" id="amtPodium"></div>
@@ -1226,21 +1226,42 @@ function renderAll(){
   document.getElementById('hs-elig').textContent=elig.length+'명';
   document.getElementById('hs-a5').textContent=D.filter(d=>d[11]>=500000).length+'명';
   document.getElementById('hs-a4').textContent=D.filter(d=>d[11]>=300000&&d[11]<500000).length+'명';
-  // 중복시상
-  // 신장액 시상이 신장률 시상보다 큰 경우만 신장률에서 제외
-  // 신장액 1위=50만>신장률1위=30만, 신장액 2위=30만>=신장률시상
-  // → 신장액 TOP2 기준달성자(순증30만이상)를 신장률에서 제외
-  const aExcludeIds=new Set(byAmt.filter((x,k)=>k<2&&x.d[11]>=300000).map(x=>x.d[3]));
-  // 하위 호환을 위해 dualIds도 유지 (배지 표시용)
-  const rTop=new Set(byRate.slice(0,10).map(x=>x.d[3]));
-  const aTop=new Set(byAmt.slice(0,10).map(x=>x.d[3]));
+  // ── 중복시상 로직 (v28: 큰 금액 우선, 동점이면 순위 높은 쪽 우선, 기준미충족은 뒤로) ──
+  const rPrize=k=>k===0?'시상 30만원':k<=2?'시상 20만원':k<10?'시상 주유권 5만원':'-';
+  const aPrize=k=>k===0?'시상 50만원':k<=2?'시상 30만원':k<10?'시상 주유권 10만원':'-';
+  const rAmt=k=>k===0?300000:k<=2?200000:k<10?50000:0;
+  const aAmt=k=>k===0?500000:k<=2?300000:k<10?100000:0;
+  // 기준달성자 먼저, 기준미충족자는 뒤로 (각 리스트 원 순서 유지)
+  const byRateSorted=[...byRate.filter(x=>x.d[11]>=300000),...byRate.filter(x=>x.d[11]<300000)];
+  const byAmtSorted=[...byAmt.filter(x=>x.d[11]>=300000),...byAmt.filter(x=>x.d[11]<300000)];
+  // 각 사람의 신장률/신장액 순위 인덱스 매핑
+  const rRankIdx={};byRateSorted.forEach((x,k)=>{rRankIdx[x.d[3]]=k;});
+  const aRankIdx={};byAmtSorted.forEach((x,k)=>{aRankIdx[x.d[3]]=k;});
+  // 각 사람별 어느 쪽에 속할지 결정 (기준달성 & TOP10만 대상)
+  const aExcludeIds=new Set();  // 신장률 리스트에서 제외
+  const rExcludeIds=new Set();  // 신장액 리스트에서 제외
+  D.forEach(d=>{
+    if(d[11]<300000)return;  // 기준미충족은 어느 쪽도 제외 안 함 (둘 다 하위 순위로 표시)
+    const rk=rRankIdx[d[3]],ak=aRankIdx[d[3]];
+    const rIn=rk!==undefined&&rk<10,aIn=ak!==undefined&&ak<10;
+    if(!rIn||!aIn)return;  // 둘 다 TOP10에 있어야 중복
+    const rP=rAmt(rk),aP=aAmt(ak);
+    // 규칙: 큰 시상금 우선. 금액 동점 시 순위(rk/ak) 작은 쪽 우선
+    if(aP>rP)aExcludeIds.add(d[3]);
+    else if(rP>aP)rExcludeIds.add(d[3]);
+    else{ if(rk<=ak)rExcludeIds.add(d[3]); else aExcludeIds.add(d[3]); }
+  });
+  // 하위 호환 배지용
+  const rTop=new Set(byRateSorted.slice(0,10).map(x=>x.d[3]));
+  const aTop=new Set(byAmtSorted.slice(0,10).map(x=>x.d[3]));
   const dualIds=new Set([...rTop].filter(id=>aTop.has(id)));
-  // 신장률 실질 순위: 신장액 TOP2 제외
-  const rFinalList=byRate.filter(x=>!aExcludeIds.has(x.d[3]));
-  const rPrize=k=>k===0?'시상30만원':k<=2?'시상20만원':'주유권5만';
-  const aPrize=k=>k===0?'시상50만원':k<=2?'시상30만원':'주유권10만';
+  // 신장률 실질 리스트
+  const rFinalList=byRateSorted.filter(x=>!aExcludeIds.has(x.d[3]));
+  const aFinalList=byAmtSorted.filter(x=>!rExcludeIds.has(x.d[3]));
   let rEff=0;const rEffMap={};
   for(let i=0;i<rFinalList.length&&rEff<10;i++){const id=rFinalList[i].d[3];if(rFinalList[i].d[11]>=300000){rEffMap[id]=rEff++;}}
+  let aEff=0;const aEffMap={};
+  for(let i=0;i<aFinalList.length&&aEff<10;i++){const id=aFinalList[i].d[3];if(aFinalList[i].d[11]>=300000){aEffMap[id]=aEff++;}}
   // 홈 미니카드
   // 홈카드: 신장액시상 적용자 제외 후 차순위, 없으면 안내 표시
   const rHomeList=rFinalList.slice(0,3);
@@ -1249,13 +1270,18 @@ function renderAll(){
   } else {
     document.getElementById('home-rate').innerHTML=rHomeList.map(({d},k)=>{
       const gr=(d[11]/d[8]*100).toFixed(1);let aw,st;
-      if(d[11]<300000){aw='기준미충족';st='mb-r';}
-      else{const ek=rEffMap[d[3]];aw=ek!==undefined?rPrize(ek):'기준미충족';st=ek!==undefined?'mb-g':'mb-r';}
+      if(d[11]<300000){aw='기준미충족 ('+rPrize(k)+')';st='mb-r';}
+      else{const ek=rEffMap[d[3]];aw=ek!==undefined?rPrize(ek):'기준미충족 ('+rPrize(k)+')';st=ek!==undefined?'mb-g':'mb-r';}
       return `<div style="display:flex;align-items:center;gap:7px;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.06);"><span class="mn ${mc(k)}">${k+1}</span><div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:900;color:#0a2050;">${d[5]}&nbsp;<span style="font-size:12px;font-weight:700;color:#0040b0;">${gr}%</span></div><div style="margin-top:2px;"><span class="mbadge ${st}" style="font-size:10px;">${aw}</span></div></div></div>`;
     }).join('');
   }
-  document.getElementById('home-amt').innerHTML=byAmt.slice(0,3).map(({d},k)=>{
-    const aw=d[11]>=300000?aPrize(k):'기준미충족';const st=d[11]>=300000?'mb-g':'mb-r';
+  const aHomeList=aFinalList.slice(0,3);
+  document.getElementById('home-amt').innerHTML=aHomeList.length===0
+    ?'<div style="padding:12px 0;text-align:center;color:#888;font-size:11px;">신장률시상 제외 후 신장액 시상 대상자 없음</div>'
+    :aHomeList.map(({d},k)=>{
+    const ek=aEffMap[d[3]];
+    const aw=d[11]>=300000?(ek!==undefined?aPrize(ek):'기준미충족 ('+aPrize(k)+')'):'기준미충족 ('+aPrize(k)+')';
+    const st=d[11]>=300000&&ek!==undefined?'mb-g':'mb-r';
     return `<div style="display:flex;align-items:center;gap:7px;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.06);"><span class="mn ${mc(k)}">${k+1}</span><div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:900;color:#0a2050;">${d[5]}&nbsp;<span style="font-size:12px;font-weight:700;color:#0040b0;">+${Nf(d[11])}원</span></div><div style="margin-top:2px;"><span class="mbadge ${st}" style="font-size:10px;">${aw}</span></div></div></div>`;
   }).join('');
   document.getElementById('home-ipum').innerHTML=ipumTop.length>0
@@ -1276,16 +1302,20 @@ function renderAll(){
   function makePod(top3,valFn,subFn,prizeFn){
     return['p1','p2','p3'].map((cls,k)=>{if(!top3[k])return'';const d=top3[k].d;const crown=['👑','🥈','🥉'][k];const lbl=['1위','2위','3위'][k];const pr=prizeFn(k,d);const dual=pr.includes('적용');return`<div class="pc ${cls}"><div class="pcrown">${crown}</div><div class="prank">${lbl}</div><div class="pname">${d[5]}</div><div class="pbranch">${d[2]}</div><div class="pval">${valFn(d)}</div><div class="psub2">${subFn(d)}</div><div class="pprize ${dual?'dual':''}">${pr}</div><div class="pbar"></div></div>`;}).join('');
   }
-  const ratePrizeFn=(k,d)=>{if(d[11]<300000)return'기준미충족';const ek=rEffMap[d[3]];return ek!==undefined?rPrize(ek):'기준미충족';};
-  const rAwardCell=d=>{if(d[11]<300000)return'<span class="bdg b-ms">기준미충족</span>';const ek=rEffMap[d[3]];if(ek===undefined)return'<span class="bdg b-ms">기준미충족</span>';return`<span class="bdg b-g">${rPrize(ek)}</span>`;};
+  const ratePrizeFn=(k,d)=>{if(d[11]<300000)return'기준미충족 ('+rPrize(k)+')';const ek=rEffMap[d[3]];return ek!==undefined?rPrize(ek):'기준미충족 ('+rPrize(k)+')';};
+  const rAwardCell=(d,k)=>{if(d[11]<300000)return'<span class="bdg b-ms">기준미충족 ('+rPrize(k)+')</span>';const ek=rEffMap[d[3]];if(ek===undefined)return'<span class="bdg b-ms">기준미충족 ('+rPrize(k)+')</span>';return`<span class="bdg b-g">${rPrize(ek)}</span>`;};
   // 신장률 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
   if(rFinalList.length>=1)document.getElementById('ratePodium').innerHTML=makePod(rFinalList.slice(0,3),d=>((d[11]/d[8])*100).toFixed(1)+'%',d=>'순증 +'+Nf(d[11])+'원',ratePrizeFn);
-  document.getElementById('rateRest').innerHTML=rFinalList.slice(3,10).map(({d},k)=>`<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td class="td-r net-p">+${Nf(d[11])}</td><td class="c-over">${(d[11]/d[8]*100).toFixed(1)}%</td><td>${rAwardCell(d)}</td></tr>`).join('');
+  document.getElementById('rateRest').innerHTML=rFinalList.slice(3,10).map(({d},k)=>`<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td class="td-r net-p">+${Nf(d[11])}</td><td class="c-over">${(d[11]/d[8]*100).toFixed(1)}%</td><td>${rAwardCell(d,k+3)}</td></tr>`).join('');
   // 신장액 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
-  if(byAmt.length>=1)document.getElementById('amtPodium').innerHTML=makePod(byAmt.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>((d[11]/d[8])*100).toFixed(1)+'% 신장',(k,d)=>d[11]<300000?'기준미달성':aPrize(k));
-  document.getElementById('amtRest').innerHTML=byAmt.slice(3,10).map(function(x,k){
+  if(aFinalList.length>=1)document.getElementById('amtPodium').innerHTML=makePod(aFinalList.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>((d[11]/d[8])*100).toFixed(1)+'% 신장',(k,d)=>{if(d[11]<300000)return'기준미달성 ('+aPrize(k)+')';const ek=aEffMap[d[3]];return ek!==undefined?aPrize(ek):'기준미달성 ('+aPrize(k)+')';});
+  document.getElementById('amtRest').innerHTML=aFinalList.slice(3,10).map(function(x,k){
     var d=x.d;
-    var badge=d[11]>=300000?'<span class="bdg b-g">'+aPrize(k+3)+'</span>':'<span class="bdg b-ms">기준미달성</span>';
+    var ek=aEffMap[d[3]];
+    var badge;
+    if(d[11]<300000)badge='<span class="bdg b-ms">기준미달성 ('+aPrize(k+3)+')</span>';
+    else if(ek===undefined)badge='<span class="bdg b-ms">기준미달성 ('+aPrize(k+3)+')</span>';
+    else badge='<span class="bdg b-g">'+aPrize(ek)+'</span>';
     return '<tr><td>'+RB(k+4)+'</td><td>'+d[2]+'</td><td class="td-name">'+d[5]+'</td><td class="td-r">'+Nf(d[8])+'</td><td class="td-r net-p">+'+Nf(d[11])+'</td><td class="c-over">'+(d[11]/d[8]*100).toFixed(1)+'%</td><td>'+badge+'</td></tr>';
   }).join('');
   // 인품왕
@@ -1325,21 +1355,42 @@ function renderAll(){
   document.getElementById('hs-elig').textContent=elig.length+'명';
   document.getElementById('hs-a5').textContent=D.filter(d=>d[11]>=500000).length+'명';
   document.getElementById('hs-a4').textContent=D.filter(d=>d[11]>=300000&&d[11]<500000).length+'명';
-  // 중복시상
-  // 신장액 시상이 신장률 시상보다 큰 경우만 신장률에서 제외
-  // 신장액 1위=50만>신장률1위=30만, 신장액 2위=30만>=신장률시상
-  // → 신장액 TOP2 기준달성자(순증30만이상)를 신장률에서 제외
-  const aExcludeIds=new Set(byAmt.filter((x,k)=>k<2&&x.d[11]>=300000).map(x=>x.d[3]));
-  // 하위 호환을 위해 dualIds도 유지 (배지 표시용)
-  const rTop=new Set(byRate.slice(0,10).map(x=>x.d[3]));
-  const aTop=new Set(byAmt.slice(0,10).map(x=>x.d[3]));
+  // ── 중복시상 로직 (v28: 큰 금액 우선, 동점이면 순위 높은 쪽 우선, 기준미충족은 뒤로) ──
+  const rPrize=k=>k===0?'시상 30만원':k<=2?'시상 20만원':k<10?'시상 주유권 5만원':'-';
+  const aPrize=k=>k===0?'시상 50만원':k<=2?'시상 30만원':k<10?'시상 주유권 10만원':'-';
+  const rAmt=k=>k===0?300000:k<=2?200000:k<10?50000:0;
+  const aAmt=k=>k===0?500000:k<=2?300000:k<10?100000:0;
+  // 기준달성자 먼저, 기준미충족자는 뒤로 (각 리스트 원 순서 유지)
+  const byRateSorted=[...byRate.filter(x=>x.d[11]>=300000),...byRate.filter(x=>x.d[11]<300000)];
+  const byAmtSorted=[...byAmt.filter(x=>x.d[11]>=300000),...byAmt.filter(x=>x.d[11]<300000)];
+  // 각 사람의 신장률/신장액 순위 인덱스 매핑
+  const rRankIdx={};byRateSorted.forEach((x,k)=>{rRankIdx[x.d[3]]=k;});
+  const aRankIdx={};byAmtSorted.forEach((x,k)=>{aRankIdx[x.d[3]]=k;});
+  // 각 사람별 어느 쪽에 속할지 결정 (기준달성 & TOP10만 대상)
+  const aExcludeIds=new Set();  // 신장률 리스트에서 제외
+  const rExcludeIds=new Set();  // 신장액 리스트에서 제외
+  D.forEach(d=>{
+    if(d[11]<300000)return;  // 기준미충족은 어느 쪽도 제외 안 함 (둘 다 하위 순위로 표시)
+    const rk=rRankIdx[d[3]],ak=aRankIdx[d[3]];
+    const rIn=rk!==undefined&&rk<10,aIn=ak!==undefined&&ak<10;
+    if(!rIn||!aIn)return;  // 둘 다 TOP10에 있어야 중복
+    const rP=rAmt(rk),aP=aAmt(ak);
+    // 규칙: 큰 시상금 우선. 금액 동점 시 순위(rk/ak) 작은 쪽 우선
+    if(aP>rP)aExcludeIds.add(d[3]);
+    else if(rP>aP)rExcludeIds.add(d[3]);
+    else{ if(rk<=ak)rExcludeIds.add(d[3]); else aExcludeIds.add(d[3]); }
+  });
+  // 하위 호환 배지용
+  const rTop=new Set(byRateSorted.slice(0,10).map(x=>x.d[3]));
+  const aTop=new Set(byAmtSorted.slice(0,10).map(x=>x.d[3]));
   const dualIds=new Set([...rTop].filter(id=>aTop.has(id)));
-  // 신장률 실질 순위: 신장액 TOP2 제외
-  const rFinalList=byRate.filter(x=>!aExcludeIds.has(x.d[3]));
-  const rPrize=k=>k===0?'시상30만원':k<=2?'시상20만원':'주유권5만';
-  const aPrize=k=>k===0?'시상50만원':k<=2?'시상30만원':'주유권10만';
+  // 신장률 실질 리스트
+  const rFinalList=byRateSorted.filter(x=>!aExcludeIds.has(x.d[3]));
+  const aFinalList=byAmtSorted.filter(x=>!rExcludeIds.has(x.d[3]));
   let rEff=0;const rEffMap={};
   for(let i=0;i<rFinalList.length&&rEff<10;i++){const id=rFinalList[i].d[3];if(rFinalList[i].d[11]>=300000){rEffMap[id]=rEff++;}}
+  let aEff=0;const aEffMap={};
+  for(let i=0;i<aFinalList.length&&aEff<10;i++){const id=aFinalList[i].d[3];if(aFinalList[i].d[11]>=300000){aEffMap[id]=aEff++;}}
   // 홈 미니카드
   // 홈카드: 신장액시상 적용자 제외 후 차순위, 없으면 안내 표시
   const rHomeList=rFinalList.slice(0,3);
@@ -1348,13 +1399,18 @@ function renderAll(){
   } else {
     document.getElementById('home-rate').innerHTML=rHomeList.map(({d},k)=>{
       const gr=(d[11]/d[8]*100).toFixed(1);let aw,st;
-      if(d[11]<300000){aw='기준미충족';st='mb-r';}
-      else{const ek=rEffMap[d[3]];aw=ek!==undefined?rPrize(ek):'기준미충족';st=ek!==undefined?'mb-g':'mb-r';}
+      if(d[11]<300000){aw='기준미충족 ('+rPrize(k)+')';st='mb-r';}
+      else{const ek=rEffMap[d[3]];aw=ek!==undefined?rPrize(ek):'기준미충족 ('+rPrize(k)+')';st=ek!==undefined?'mb-g':'mb-r';}
       return `<div style="display:flex;align-items:center;gap:7px;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.06);"><span class="mn ${mc(k)}">${k+1}</span><div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:900;color:#0a2050;">${d[5]}&nbsp;<span style="font-size:12px;font-weight:700;color:#0040b0;">${gr}%</span></div><div style="margin-top:2px;"><span class="mbadge ${st}" style="font-size:10px;">${aw}</span></div></div></div>`;
     }).join('');
   }
-  document.getElementById('home-amt').innerHTML=byAmt.slice(0,3).map(({d},k)=>{
-    const aw=d[11]>=300000?aPrize(k):'기준미충족';const st=d[11]>=300000?'mb-g':'mb-r';
+  const aHomeList=aFinalList.slice(0,3);
+  document.getElementById('home-amt').innerHTML=aHomeList.length===0
+    ?'<div style="padding:12px 0;text-align:center;color:#888;font-size:11px;">신장률시상 제외 후 신장액 시상 대상자 없음</div>'
+    :aHomeList.map(({d},k)=>{
+    const ek=aEffMap[d[3]];
+    const aw=d[11]>=300000?(ek!==undefined?aPrize(ek):'기준미충족 ('+aPrize(k)+')'):'기준미충족 ('+aPrize(k)+')';
+    const st=d[11]>=300000&&ek!==undefined?'mb-g':'mb-r';
     return `<div style="display:flex;align-items:center;gap:7px;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.06);"><span class="mn ${mc(k)}">${k+1}</span><div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:900;color:#0a2050;">${d[5]}&nbsp;<span style="font-size:12px;font-weight:700;color:#0040b0;">+${Nf(d[11])}원</span></div><div style="margin-top:2px;"><span class="mbadge ${st}" style="font-size:10px;">${aw}</span></div></div></div>`;
   }).join('');
   document.getElementById('home-ipum').innerHTML=ipumTop.length>0
@@ -1375,16 +1431,20 @@ function renderAll(){
   function makePod(top3,valFn,subFn,prizeFn){
     return['p1','p2','p3'].map((cls,k)=>{if(!top3[k])return'';const d=top3[k].d;const crown=['👑','🥈','🥉'][k];const lbl=['1위','2위','3위'][k];const pr=prizeFn(k,d);const dual=pr.includes('적용');return`<div class="pc ${cls}"><div class="pcrown">${crown}</div><div class="prank">${lbl}</div><div class="pname">${d[5]}</div><div class="pbranch">${d[2]}</div><div class="pval">${valFn(d)}</div><div class="psub2">${subFn(d)}</div><div class="pprize ${dual?'dual':''}">${pr}</div><div class="pbar"></div></div>`;}).join('');
   }
-  const ratePrizeFn=(k,d)=>{if(d[11]<300000)return'기준미충족';const ek=rEffMap[d[3]];return ek!==undefined?rPrize(ek):'기준미충족';};
-  const rAwardCell=d=>{if(d[11]<300000)return'<span class="bdg b-ms">기준미충족</span>';const ek=rEffMap[d[3]];if(ek===undefined)return'<span class="bdg b-ms">기준미충족</span>';return`<span class="bdg b-g">${rPrize(ek)}</span>`;};
+  const ratePrizeFn=(k,d)=>{if(d[11]<300000)return'기준미충족 ('+rPrize(k)+')';const ek=rEffMap[d[3]];return ek!==undefined?rPrize(ek):'기준미충족 ('+rPrize(k)+')';};
+  const rAwardCell=(d,k)=>{if(d[11]<300000)return'<span class="bdg b-ms">기준미충족 ('+rPrize(k)+')</span>';const ek=rEffMap[d[3]];if(ek===undefined)return'<span class="bdg b-ms">기준미충족 ('+rPrize(k)+')</span>';return`<span class="bdg b-g">${rPrize(ek)}</span>`;};
   // 신장률 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
   if(rFinalList.length>=1)document.getElementById('ratePodium').innerHTML=makePod(rFinalList.slice(0,3),d=>((d[11]/d[8])*100).toFixed(1)+'%',d=>'순증 +'+Nf(d[11])+'원',ratePrizeFn);
-  document.getElementById('rateRest').innerHTML=rFinalList.slice(3,10).map(({d},k)=>`<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td class="td-r net-p">+${Nf(d[11])}</td><td class="c-over">${(d[11]/d[8]*100).toFixed(1)}%</td><td>${rAwardCell(d)}</td></tr>`).join('');
+  document.getElementById('rateRest').innerHTML=rFinalList.slice(3,10).map(({d},k)=>`<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td class="td-r net-p">+${Nf(d[11])}</td><td class="c-over">${(d[11]/d[8]*100).toFixed(1)}%</td><td>${rAwardCell(d,k+3)}</td></tr>`).join('');
   // 신장액 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
-  if(byAmt.length>=1)document.getElementById('amtPodium').innerHTML=makePod(byAmt.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>((d[11]/d[8])*100).toFixed(1)+'% 신장',(k,d)=>d[11]<300000?'기준미달성':aPrize(k));
-  document.getElementById('amtRest').innerHTML=byAmt.slice(3,10).map(function(x,k){
+  if(aFinalList.length>=1)document.getElementById('amtPodium').innerHTML=makePod(aFinalList.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>((d[11]/d[8])*100).toFixed(1)+'% 신장',(k,d)=>{if(d[11]<300000)return'기준미달성 ('+aPrize(k)+')';const ek=aEffMap[d[3]];return ek!==undefined?aPrize(ek):'기준미달성 ('+aPrize(k)+')';});
+  document.getElementById('amtRest').innerHTML=aFinalList.slice(3,10).map(function(x,k){
     var d=x.d;
-    var badge=d[11]>=300000?'<span class="bdg b-g">'+aPrize(k+3)+'</span>':'<span class="bdg b-ms">기준미달성</span>';
+    var ek=aEffMap[d[3]];
+    var badge;
+    if(d[11]<300000)badge='<span class="bdg b-ms">기준미달성 ('+aPrize(k+3)+')</span>';
+    else if(ek===undefined)badge='<span class="bdg b-ms">기준미달성 ('+aPrize(k+3)+')</span>';
+    else badge='<span class="bdg b-g">'+aPrize(ek)+'</span>';
     return '<tr><td>'+RB(k+4)+'</td><td>'+d[2]+'</td><td class="td-name">'+d[5]+'</td><td class="td-r">'+Nf(d[8])+'</td><td class="td-r net-p">+'+Nf(d[11])+'</td><td class="c-over">'+(d[11]/d[8]*100).toFixed(1)+'%</td><td>'+badge+'</td></tr>';
   }).join('');
   // 인품왕
@@ -1616,21 +1676,42 @@ function renderAll(){
   document.getElementById('hs-elig').textContent=elig.length+'명';
   document.getElementById('hs-a5').textContent=D.filter(d=>d[11]>=500000).length+'명';
   document.getElementById('hs-a4').textContent=D.filter(d=>d[11]>=300000&&d[11]<500000).length+'명';
-  // 중복시상
-  // 신장액 시상이 신장률 시상보다 큰 경우만 신장률에서 제외
-  // 신장액 1위=50만>신장률1위=30만, 신장액 2위=30만>=신장률시상
-  // → 신장액 TOP2 기준달성자(순증30만이상)를 신장률에서 제외
-  const aExcludeIds=new Set(byAmt.filter((x,k)=>k<2&&x.d[11]>=300000).map(x=>x.d[3]));
-  // 하위 호환을 위해 dualIds도 유지 (배지 표시용)
-  const rTop=new Set(byRate.slice(0,10).map(x=>x.d[3]));
-  const aTop=new Set(byAmt.slice(0,10).map(x=>x.d[3]));
+  // ── 중복시상 로직 (v28: 큰 금액 우선, 동점이면 순위 높은 쪽 우선, 기준미충족은 뒤로) ──
+  const rPrize=k=>k===0?'시상 30만원':k<=2?'시상 20만원':k<10?'시상 주유권 5만원':'-';
+  const aPrize=k=>k===0?'시상 50만원':k<=2?'시상 30만원':k<10?'시상 주유권 10만원':'-';
+  const rAmt=k=>k===0?300000:k<=2?200000:k<10?50000:0;
+  const aAmt=k=>k===0?500000:k<=2?300000:k<10?100000:0;
+  // 기준달성자 먼저, 기준미충족자는 뒤로 (각 리스트 원 순서 유지)
+  const byRateSorted=[...byRate.filter(x=>x.d[11]>=300000),...byRate.filter(x=>x.d[11]<300000)];
+  const byAmtSorted=[...byAmt.filter(x=>x.d[11]>=300000),...byAmt.filter(x=>x.d[11]<300000)];
+  // 각 사람의 신장률/신장액 순위 인덱스 매핑
+  const rRankIdx={};byRateSorted.forEach((x,k)=>{rRankIdx[x.d[3]]=k;});
+  const aRankIdx={};byAmtSorted.forEach((x,k)=>{aRankIdx[x.d[3]]=k;});
+  // 각 사람별 어느 쪽에 속할지 결정 (기준달성 & TOP10만 대상)
+  const aExcludeIds=new Set();  // 신장률 리스트에서 제외
+  const rExcludeIds=new Set();  // 신장액 리스트에서 제외
+  D.forEach(d=>{
+    if(d[11]<300000)return;  // 기준미충족은 어느 쪽도 제외 안 함 (둘 다 하위 순위로 표시)
+    const rk=rRankIdx[d[3]],ak=aRankIdx[d[3]];
+    const rIn=rk!==undefined&&rk<10,aIn=ak!==undefined&&ak<10;
+    if(!rIn||!aIn)return;  // 둘 다 TOP10에 있어야 중복
+    const rP=rAmt(rk),aP=aAmt(ak);
+    // 규칙: 큰 시상금 우선. 금액 동점 시 순위(rk/ak) 작은 쪽 우선
+    if(aP>rP)aExcludeIds.add(d[3]);
+    else if(rP>aP)rExcludeIds.add(d[3]);
+    else{ if(rk<=ak)rExcludeIds.add(d[3]); else aExcludeIds.add(d[3]); }
+  });
+  // 하위 호환 배지용
+  const rTop=new Set(byRateSorted.slice(0,10).map(x=>x.d[3]));
+  const aTop=new Set(byAmtSorted.slice(0,10).map(x=>x.d[3]));
   const dualIds=new Set([...rTop].filter(id=>aTop.has(id)));
-  // 신장률 실질 순위: 신장액 TOP2 제외
-  const rFinalList=byRate.filter(x=>!aExcludeIds.has(x.d[3]));
-  const rPrize=k=>k===0?'시상30만원':k<=2?'시상20만원':'주유권5만';
-  const aPrize=k=>k===0?'시상50만원':k<=2?'시상30만원':'주유권10만';
+  // 신장률 실질 리스트
+  const rFinalList=byRateSorted.filter(x=>!aExcludeIds.has(x.d[3]));
+  const aFinalList=byAmtSorted.filter(x=>!rExcludeIds.has(x.d[3]));
   let rEff=0;const rEffMap={};
   for(let i=0;i<rFinalList.length&&rEff<10;i++){const id=rFinalList[i].d[3];if(rFinalList[i].d[11]>=300000){rEffMap[id]=rEff++;}}
+  let aEff=0;const aEffMap={};
+  for(let i=0;i<aFinalList.length&&aEff<10;i++){const id=aFinalList[i].d[3];if(aFinalList[i].d[11]>=300000){aEffMap[id]=aEff++;}}
   // 홈 미니카드
   // 홈카드: 신장액시상 적용자 제외 후 차순위, 없으면 안내 표시
   const rHomeList=rFinalList.slice(0,3);
@@ -1639,13 +1720,18 @@ function renderAll(){
   } else {
     document.getElementById('home-rate').innerHTML=rHomeList.map(({d},k)=>{
       const gr=(d[11]/d[8]*100).toFixed(1);let aw,st;
-      if(d[11]<300000){aw='기준미충족';st='mb-r';}
-      else{const ek=rEffMap[d[3]];aw=ek!==undefined?rPrize(ek):'기준미충족';st=ek!==undefined?'mb-g':'mb-r';}
+      if(d[11]<300000){aw='기준미충족 ('+rPrize(k)+')';st='mb-r';}
+      else{const ek=rEffMap[d[3]];aw=ek!==undefined?rPrize(ek):'기준미충족 ('+rPrize(k)+')';st=ek!==undefined?'mb-g':'mb-r';}
       return `<div style="display:flex;align-items:center;gap:7px;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.06);"><span class="mn ${mc(k)}">${k+1}</span><div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:900;color:#0a2050;">${d[5]}&nbsp;<span style="font-size:12px;font-weight:700;color:#0040b0;">${gr}%</span></div><div style="margin-top:2px;"><span class="mbadge ${st}" style="font-size:10px;">${aw}</span></div></div></div>`;
     }).join('');
   }
-  document.getElementById('home-amt').innerHTML=byAmt.slice(0,3).map(({d},k)=>{
-    const aw=d[11]>=300000?aPrize(k):'기준미충족';const st=d[11]>=300000?'mb-g':'mb-r';
+  const aHomeList=aFinalList.slice(0,3);
+  document.getElementById('home-amt').innerHTML=aHomeList.length===0
+    ?'<div style="padding:12px 0;text-align:center;color:#888;font-size:11px;">신장률시상 제외 후 신장액 시상 대상자 없음</div>'
+    :aHomeList.map(({d},k)=>{
+    const ek=aEffMap[d[3]];
+    const aw=d[11]>=300000?(ek!==undefined?aPrize(ek):'기준미충족 ('+aPrize(k)+')'):'기준미충족 ('+aPrize(k)+')';
+    const st=d[11]>=300000&&ek!==undefined?'mb-g':'mb-r';
     return `<div style="display:flex;align-items:center;gap:7px;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.06);"><span class="mn ${mc(k)}">${k+1}</span><div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:900;color:#0a2050;">${d[5]}&nbsp;<span style="font-size:12px;font-weight:700;color:#0040b0;">+${Nf(d[11])}원</span></div><div style="margin-top:2px;"><span class="mbadge ${st}" style="font-size:10px;">${aw}</span></div></div></div>`;
   }).join('');
   document.getElementById('home-ipum').innerHTML=ipumTop.length>0
@@ -1684,16 +1770,20 @@ function renderAll(){
   function makePod(top3,valFn,subFn,prizeFn){
     return['p1','p2','p3'].map((cls,k)=>{if(!top3[k])return'';const d=top3[k].d;const crown=['👑','🥈','🥉'][k];const lbl=['1위','2위','3위'][k];const pr=prizeFn(k,d);const dual=pr.includes('적용');return`<div class="pc ${cls}"><div class="pcrown">${crown}</div><div class="prank">${lbl}</div><div class="pname">${d[5]}</div><div class="pbranch">${d[2]}</div><div class="pval">${valFn(d)}</div><div class="psub2">${subFn(d)}</div><div class="pprize ${dual?'dual':''}">${pr}</div><div class="pbar"></div></div>`;}).join('');
   }
-  const ratePrizeFn=(k,d)=>{if(d[11]<300000)return'기준미충족';const ek=rEffMap[d[3]];return ek!==undefined?rPrize(ek):'기준미충족';};
-  const rAwardCell=d=>{if(d[11]<300000)return'<span class="bdg b-ms">기준미충족</span>';const ek=rEffMap[d[3]];if(ek===undefined)return'<span class="bdg b-ms">기준미충족</span>';return`<span class="bdg b-g">${rPrize(ek)}</span>`;};
+  const ratePrizeFn=(k,d)=>{if(d[11]<300000)return'기준미충족 ('+rPrize(k)+')';const ek=rEffMap[d[3]];return ek!==undefined?rPrize(ek):'기준미충족 ('+rPrize(k)+')';};
+  const rAwardCell=(d,k)=>{if(d[11]<300000)return'<span class="bdg b-ms">기준미충족 ('+rPrize(k)+')</span>';const ek=rEffMap[d[3]];if(ek===undefined)return'<span class="bdg b-ms">기준미충족 ('+rPrize(k)+')</span>';return`<span class="bdg b-g">${rPrize(ek)}</span>`;};
   // 신장률 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
   if(rFinalList.length>=1)document.getElementById('ratePodium').innerHTML=makePod(rFinalList.slice(0,3),d=>((d[11]/d[8])*100).toFixed(1)+'%',d=>'순증 +'+Nf(d[11])+'원',ratePrizeFn);
-  document.getElementById('rateRest').innerHTML=rFinalList.slice(3,10).map(({d},k)=>`<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td class="td-r net-p">+${Nf(d[11])}</td><td class="c-over">${(d[11]/d[8]*100).toFixed(1)}%</td><td>${rAwardCell(d)}</td></tr>`).join('');
+  document.getElementById('rateRest').innerHTML=rFinalList.slice(3,10).map(({d},k)=>`<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td class="td-r net-p">+${Nf(d[11])}</td><td class="c-over">${(d[11]/d[8]*100).toFixed(1)}%</td><td>${rAwardCell(d,k+3)}</td></tr>`).join('');
   // 신장액 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
-  if(byAmt.length>=1)document.getElementById('amtPodium').innerHTML=makePod(byAmt.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>((d[11]/d[8])*100).toFixed(1)+'% 신장',(k,d)=>d[11]<300000?'기준미달성':aPrize(k));
-  document.getElementById('amtRest').innerHTML=byAmt.slice(3,10).map(function(x,k){
+  if(aFinalList.length>=1)document.getElementById('amtPodium').innerHTML=makePod(aFinalList.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>((d[11]/d[8])*100).toFixed(1)+'% 신장',(k,d)=>{if(d[11]<300000)return'기준미달성 ('+aPrize(k)+')';const ek=aEffMap[d[3]];return ek!==undefined?aPrize(ek):'기준미달성 ('+aPrize(k)+')';});
+  document.getElementById('amtRest').innerHTML=aFinalList.slice(3,10).map(function(x,k){
     var d=x.d;
-    var badge=d[11]>=300000?'<span class="bdg b-g">'+aPrize(k+3)+'</span>':'<span class="bdg b-ms">기준미달성</span>';
+    var ek=aEffMap[d[3]];
+    var badge;
+    if(d[11]<300000)badge='<span class="bdg b-ms">기준미달성 ('+aPrize(k+3)+')</span>';
+    else if(ek===undefined)badge='<span class="bdg b-ms">기준미달성 ('+aPrize(k+3)+')</span>';
+    else badge='<span class="bdg b-g">'+aPrize(ek)+'</span>';
     return '<tr><td>'+RB(k+4)+'</td><td>'+d[2]+'</td><td class="td-name">'+d[5]+'</td><td class="td-r">'+Nf(d[8])+'</td><td class="td-r net-p">+'+Nf(d[11])+'</td><td class="c-over">'+(d[11]/d[8]*100).toFixed(1)+'%</td><td>'+badge+'</td></tr>';
   }).join('');
   // 인품왕
@@ -2114,7 +2204,7 @@ var AWARD_DEFAULT={
   rate:'<strong>📈 신장률 TOP10:</strong> 1위 30만원 / 2~3위 20만원 / 4~10위 주유권 5만원',
   amt:'<strong>💰 신장액 TOP10:</strong> 1위 50만원 / 2~3위 30만원 / 4~10위 주유권 10만원',
   crit:'⚠️ 개인 시상 기준조건 : 기준 인보험 실적 대비 <strong>순증 30만원 이상</strong> 달성자에 한함',
-  dup:'※ 신장률·신장액 TOP10 중복시상 없음 — 두 항목 모두 해당 시 높은 금액 1회 지급',
+  dup:'※ 신장률·신장액 TOP10 중복시상 없음 — 두 항목 모두 해당 시 높은 시상금 1회 지급 (동점이면 순위 높은 곳)',
   exc:'※ 환산실적 80만원 미만 시상제외 | 합산 하이캡 배수 15 미만시 50% 지급'
 };
 function applyAwardToDisplay(a){
