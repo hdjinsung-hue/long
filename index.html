@@ -258,7 +258,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
     <span id="todayLabel">2026년 4월 20일</span><span>|</span>
     <span><span class="dot"></span> 전일마감 기준</span>
     <span id="syncStatus" style="font-size:10px;margin-left:6px;color:#888;">연결중...</span>
-    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v30</span>
+    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v31</span>
   </div>
   <div class="tab-nav">
     <button class="tb on" id="tb-home" onclick="goTab('home',this)">🏠 홈 대시보드</button>
@@ -1209,7 +1209,7 @@ function closePerfPopup(){document.getElementById('perfPopup').style.display='no
 // ── renderAll ──
 function renderAll(){
   const total=D.length;
-  const avgR=D.reduce((s,d)=>s+d[10],0)/total;
+  const _avgBase=D.reduce((s,d)=>s+(d[8]||0),0);const _avgCur=D.reduce((s,d)=>s+(d[9]||0),0);const avgR=_avgBase>0?(_avgCur/_avgBase*100):0;
   const over5=D.filter(d=>d[11]>=50000).length;
   const elig=D.filter(d=>d[11]>=300000);
   const byRate=D.map((d,i)=>({i,d})).sort((a,b)=>(b.d[11]/b.d[8])-(a.d[11]/a.d[8]));
@@ -1338,7 +1338,7 @@ function renderAll(){
 }
 function renderAll(){
   const total=D.length;
-  const avgR=D.reduce((s,d)=>s+d[10],0)/total;
+  const _avgBase=D.reduce((s,d)=>s+(d[8]||0),0);const _avgCur=D.reduce((s,d)=>s+(d[9]||0),0);const avgR=_avgBase>0?(_avgCur/_avgBase*100):0;
   const over5=D.filter(d=>d[11]>=50000).length;
   const elig=D.filter(d=>d[11]>=300000);
   const byRate=D.map((d,i)=>({i,d})).sort((a,b)=>(b.d[11]/b.d[8])-(a.d[11]/a.d[8]));
@@ -1659,7 +1659,7 @@ function closePerfPopup(){document.getElementById('perfPopup').style.display='no
 // ── renderAll ──
 function renderAll(){
   const total=D.length;
-  const avgR=D.reduce((s,d)=>s+d[10],0)/total;
+  const _avgBase=D.reduce((s,d)=>s+(d[8]||0),0);const _avgCur=D.reduce((s,d)=>s+(d[9]||0),0);const avgR=_avgBase>0?(_avgCur/_avgBase*100):0;
   const over5=D.filter(d=>d[11]>=50000).length;
   const elig=D.filter(d=>d[11]>=300000);
   const byRate=D.map((d,i)=>({i,d})).sort((a,b)=>(b.d[11]/b.d[8])-(a.d[11]/a.d[8]));
