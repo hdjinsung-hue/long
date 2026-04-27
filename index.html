@@ -258,7 +258,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
     <span id="todayLabel">2026년 4월 20일</span><span>|</span>
     <span><span class="dot"></span> 전일마감 기준</span>
     <span id="syncStatus" style="font-size:10px;margin-left:6px;color:#888;">연결중...</span>
-    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v31</span>
+    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v32</span>
   </div>
   <div class="tab-nav">
     <button class="tb on" id="tb-home" onclick="goTab('home',this)">🏠 홈 대시보드</button>
@@ -843,7 +843,7 @@ function renderGrpTable(){
     const achv=bSum>0?cSum/bSum*100:0;
     const rate=bSum>0?(cSum-bSum)/bSum*100:0;
     const p1=g2Prize(base,cur);const p2=g1Prize(rate);
-    const over5=g.members.filter(m=>{const f=D.find(d=>d[5]===m.name);return f&&f[11]>=50000;}).length;
+    const over5=g.members.filter((m,i)=>cur[i]-base[i]>=50).length;
     return {g,gi,base,cur,bSum,cSum,achv,rate,p1,p2,over5};
   }).sort((a,b)=>b.achv-a.achv);
   grpData.forEach(({g,gi,base,cur,bSum,cSum,achv,rate,p1,p2,over5},rank)=>{
