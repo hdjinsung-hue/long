@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>현대해상 본부 통합 대시보드</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:'Noto Sans KR','Malgun Gothic',sans-serif;
+  font-size:13px;color:#1a1a2e;
+  background:linear-gradient(180deg,#FFF5E8 0%,#FFE0C0 50%,#FFD0A0 100%);
+  min-height:100vh;
+  padding-bottom:50px;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 14px;}
+
+/* 헤더 */
+.hdr{
+  background:linear-gradient(135deg,#5A1500 0%,#A03000 30%,#E85500 70%,#FF6B00 100%);
+  padding:22px 16px 26px;
+  text-align:center;
+  margin-bottom:18px;
+  border-radius:0 0 20px 20px;
+  box-shadow:0 6px 20px rgba(232,85,0,.25);
+  position:relative;
+  overflow:hidden;
+}
+.hdr::before{
+  content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+  background:radial-gradient(circle at 30% 30%,rgba(255,215,0,.15),transparent 50%),
+             radial-gradient(circle at 70% 70%,rgba(255,255,255,.08),transparent 60%);
+  pointer-events:none;
+}
+.hdr-brand{
+  display:inline-block;
+  font-size:11px;font-weight:700;color:#FFD0A0;letter-spacing:3px;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,215,0,.4);
+  padding:4px 14px;border-radius:18px;
+  margin-bottom:8px;position:relative;z-index:1;
+}
+.hdr h1{
+  font-size:24px;font-weight:900;color:#fff;
+  letter-spacing:-0.3px;
+  text-shadow:0 2px 8px rgba(90,21,0,.4);
+  margin-bottom:5px;position:relative;z-index:1;
+}
+.hdr h1 em{font-style:normal;color:#FFD700;font-weight:400;}
+.hdr-sub{
+  font-size:12px;color:#FFE0C0;font-weight:500;
+  position:relative;z-index:1;
+}
+.hdr-stats{
+  display:flex;justify-content:center;gap:14px;
+  margin-top:14px;position:relative;z-index:1;
+}
+.hdr-stat{
+  background:rgba(0,0,0,.18);
+  border:1px solid rgba(255,215,0,.25);
+  border-radius:9px;
+  padding:6px 12px;
+  font-size:10px;color:#FFE0C0;
+  display:flex;align-items:center;gap:5px;
+}
+.hdr-stat b{color:#FFD700;font-size:13px;font-weight:900;}
+
+/* 섹션 타이틀 */
+.sec-title{
+  display:flex;align-items:center;gap:8px;
+  margin:14px 4px 10px;
+}
+.sec-title-icon{
+  background:linear-gradient(135deg,#FF6B00,#E85500);
+  color:#fff;
+  padding:5px 11px;border-radius:7px;
+  font-size:11px;font-weight:900;
+  box-shadow:0 2px 6px rgba(232,85,0,.3);
+}
+.sec-title-text{
+  font-size:14px;font-weight:900;color:#5A1500;
+}
+
+/* 지역단 그리드 */
+.region-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-bottom:20px;
+}
+@media (max-width:640px){
+  .region-grid{grid-template-columns:repeat(3,1fr);gap:8px;}
+}
+@media (max-width:420px){
+  .region-grid{grid-template-columns:repeat(2,1fr);gap:8px;}
+}
+
+.rcard{
+  background:#fff;
+  border-radius:11px;
+  padding:14px 10px;
+  text-align:center;
+  cursor:pointer;
+  transition:all 0.2s ease;
+  position:relative;
+  border:2px solid #FFD0A0;
+  box-shadow:0 2px 6px rgba(232,85,0,.06);
+  text-decoration:none;
+  color:inherit;
+  display:block;
+}
+.rcard:hover{
+  transform:translateY(-3px);
+  box-shadow:0 6px 16px rgba(232,85,0,.18);
+  border-color:#FF8C42;
+}
+.rcard.active{
+  background:linear-gradient(135deg,#FFE0B0 0%,#FF8C42 80%,#E85500 100%);
+  border-color:#E85500;
+  box-shadow:0 4px 12px rgba(232,85,0,.3);
+}
+.rcard.active:hover{
+  transform:translateY(-4px) scale(1.02);
+  box-shadow:0 8px 20px rgba(232,85,0,.4);
+}
+.rcard.disabled{
+  background:linear-gradient(135deg,#F5F5F5,#EAEAEA);
+  border-color:#D0D0D0;
+  cursor:not-allowed;
+  opacity:0.7;
+}
+.rcard.disabled:hover{
+  transform:none;
+  box-shadow:0 2px 4px rgba(0,0,0,.06);
+  border-color:#D0D0D0;
+}
+
+.rcard-icon{
+  font-size:26px;margin-bottom:4px;line-height:1;
+}
+.rcard-name{
+  font-size:14px;font-weight:900;color:#5A1500;
+  margin-bottom:5px;letter-spacing:-0.3px;
+}
+.rcard.active .rcard-name{color:#fff;text-shadow:0 1px 4px rgba(90,21,0,.5);}
+.rcard.disabled .rcard-name{color:#888;}
+.rcard-badge{
+  display:inline-block;
+  font-size:9px;font-weight:700;
+  padding:2px 7px;border-radius:8px;
+  margin-top:1px;
+}
+.rcard.active .rcard-badge{
+  background:#fff;color:#5A1500;
+}
+.rcard.disabled .rcard-badge{
+  background:#ccc;color:#666;
+}
+.rcard-info{
+  font-size:9px;color:#888;
+  margin-top:3px;
+}
+.rcard.active .rcard-info{color:#FFE0C0;}
+
+/* 안내 박스 */
+.notice{
+  background:linear-gradient(90deg,#FFF7E8,#FFEBC8);
+  border-left:4px solid #E85500;
+  padding:12px 14px;
+  border-radius:8px;
+  font-size:11px;color:#7A2500;
+  line-height:1.7;
+  margin-top:10px;
+}
+.notice b{color:#5A1500;font-weight:900;}
+
+/* 통합 KPI 자리 (Stage 3 예고) */
+.kpi-placeholder{
+  background:linear-gradient(135deg,#fff,#fff7ee);
+  border:2px dashed #FFC890;
+  border-radius:11px;
+  padding:24px;text-align:center;
+  margin-bottom:14px;
+}
+.kpi-placeholder-icon{font-size:32px;margin-bottom:6px;opacity:.5;}
+.kpi-placeholder-text{font-size:12px;color:#888;font-weight:700;}
+.kpi-placeholder-sub{font-size:10px;color:#aaa;margin-top:3px;}
+
+/* 푸터 */
+.ftr{
+  text-align:center;padding:14px 0 6px;
+  font-size:10px;color:#aa6644;
+}
+.ftr-ver{
+  display:inline-block;
+  background:#FFD0A0;color:#7A2500;
+  padding:2px 8px;border-radius:10px;
+  font-weight:700;font-size:10px;
+}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-brand">⚡ HYUNDAI MARINE ⚡</div>
+  <h1><em>🏢 현대해상 </em>본부 통합 대시보드</h1>
+  <div class="hdr-sub">전국 17개 지역단 종합 현황 시스템</div>
+  <div class="hdr-stats">
+    <div class="hdr-stat">📍 <b id="stat-total">17</b>개 지역단</div>
+    <div class="hdr-stat">✅ <b id="stat-active">1</b>개 운영중</div>
+    <div class="hdr-stat">⏳ <b id="stat-pending">16</b>개 준비중</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="sec-title">
+    <span class="sec-title-icon">📍 지역단</span>
+    <span class="sec-title-text">17개 지역단 현황판</span>
+  </div>
+
+  <div class="region-grid" id="region-grid">
+    <!-- JS로 동적 생성 -->
+  </div>
+
+  <div class="kpi-placeholder">
+    <div class="kpi-placeholder-icon">📊</div>
+    <div class="kpi-placeholder-text">본부 통합 KPI</div>
+    <div class="kpi-placeholder-sub">17개 지역단 종합 분석 (Stage 3 예정)</div>
+  </div>
+
+  <div class="notice">
+    <b>ⓘ 안내</b><br>
+    현재 <b>호남지역단</b>만 운영 중입니다. 호남 카드를 클릭하면 호남지역단 현황판으로 이동합니다.<br>
+    다른 16개 지역단은 명단·시상안 입력 후 점진적으로 활성화될 예정입니다.
+  </div>
+
+  <div class="ftr">
+    현대해상 본부 통합 대시보드 · <span class="ftr-ver">v1.0</span>
+  </div>
+</div>
+
+<script>
+// 17개 지역단 정보
+// status: 'active' = 운영중, 'pending' = 준비중
+// link: 운영중일 때 이동할 URL
+var REGIONS = [
+  {name:'호남', icon:'🌾', status:'active', link:'index.html', desc:'광주·전남'},
+  {name:'북부', icon:'🌲', status:'pending', desc:'서울 북부'},
+  {name:'강북', icon:'🏙️', status:'pending', desc:'서울 강북'},
+  {name:'강서', icon:'🌉', status:'pending', desc:'서울 강서'},
+  {name:'제주', icon:'🌴', status:'pending', desc:'제주특별자치도'},
+  {name:'경남', icon:'⛰️', status:'pending', desc:'경상남도'},
+  {name:'경인', icon:'🏗️', status:'pending', desc:'인천·경기'},
+  {name:'강원', icon:'🏔️', status:'pending', desc:'강원특별자치도'},
+  {name:'전북', icon:'🌾', status:'pending', desc:'전라북도'},
+  {name:'강남', icon:'🌆', status:'pending', desc:'서울 강남'},
+  {name:'중부', icon:'🏛️', status:'pending', desc:'서울 중부'},
+  {name:'경기', icon:'🌳', status:'pending', desc:'경기도'},
+  {name:'영남', icon:'🌊', status:'pending', desc:'영남권'},
+  {name:'성남', icon:'🏘️', status:'pending', desc:'성남·분당'},
+  {name:'충청', icon:'🌻', status:'pending', desc:'충청권'},
+  {name:'대경', icon:'🏯', status:'pending', desc:'대구·경북'},
+  {name:'부산', icon:'⚓', status:'pending', desc:'부산광역시'}
+];
+
+function renderRegions(){
+  var html = REGIONS.map(function(r){
+    var isActive = (r.status === 'active');
+    var cls = isActive ? 'rcard active' : 'rcard disabled';
+    var badge = isActive 
+      ? '<span class="rcard-badge">✅ 운영중</span>'
+      : '<span class="rcard-badge">⏳ 준비중</span>';
+    var inner = 
+      '<div class="rcard-icon">' + r.icon + '</div>'
+      + '<div class="rcard-name">' + r.name + '</div>'
+      + badge
+      + (r.desc ? '<div class="rcard-info">' + r.desc + '</div>' : '');
+    if(isActive && r.link){
+      return '<a class="' + cls + '" href="' + r.link + '" title="' + r.name + '지역단으로 이동">' + inner + '</a>';
+    } else {
+      return '<div class="' + cls + '" onclick="onPendingClick(\'' + r.name + '\')">' + inner + '</div>';
+    }
+  }).join('');
+  document.getElementById('region-grid').innerHTML = html;
+  // 통계 업데이트
+  var actCount = REGIONS.filter(function(r){return r.status==='active';}).length;
+  document.getElementById('stat-total').textContent = REGIONS.length;
+  document.getElementById('stat-active').textContent = actCount;
+  document.getElementById('stat-pending').textContent = REGIONS.length - actCount;
+}
+
+function onPendingClick(name){
+  alert('⏳ ' + name + '지역단은 아직 준비중입니다.\n\n명단 및 시상안 입력 후 활성화될 예정입니다.');
+}
+
+renderRegions();
+</script>
+</body>
+</html>
