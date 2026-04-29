@@ -258,7 +258,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
     <span id="todayLabel">2026년 4월 20일</span><span>|</span>
     <span><span class="dot"></span> 전일마감 기준</span>
     <span id="syncStatus" style="font-size:10px;margin-left:6px;color:#888;">연결중...</span>
-    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v33</span>
+    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v34</span>
   </div>
   <div class="tab-nav">
     <button class="tb on" id="tb-home" onclick="goTab('home',this)">🏠 홈 대시보드</button>
@@ -1240,16 +1240,32 @@ function renderAll(){
   // 각 사람별 어느 쪽에 속할지 결정 (기준달성 & TOP10만 대상)
   const aExcludeIds=new Set();  // 신장률 리스트에서 제외
   const rExcludeIds=new Set();  // 신장액 리스트에서 제외
+  // 순차 처리: 시상금 큰 순서로 한 명씩 분기 (실질 순위 기준)
+  // 한 명 분기할 때마다 다른 사람의 실질 순위가 변하므로 매번 재계산
+  const dupList=[];
   D.forEach((d,i)=>{
-    if(d[11]<300000)return;  // 기준미충족은 어느 쪽도 제외 안 함 (둘 다 하위 순위로 표시)
+    if(d[11]<300000)return;
     const rk=rRankIdx[i],ak=aRankIdx[i];
-    const rIn=rk!==undefined&&rk<10,aIn=ak!==undefined&&ak<10;
-    if(!rIn||!aIn)return;  // 둘 다 TOP10에 있어야 중복
-    const rP=rAmt(rk),aP=aAmt(ak);
-    // 규칙: 큰 시상금 우선. 금액 동점 시 순위(rk/ak) 작은 쪽 우선
+    if(rk!==undefined&&rk<10&&ak!==undefined&&ak<10)dupList.push({i,rk,ak});
+  });
+  // 처리 순서: 신장액 시상금 큰 순 → 신장률 시상금 큰 순 → 신장액 순위 빠른 순
+  dupList.sort((a,b)=>{
+    const aP_a=aAmt(a.ak),aP_b=aAmt(b.ak);if(aP_a!==aP_b)return aP_b-aP_a;
+    const rP_a=rAmt(a.rk),rP_b=rAmt(b.rk);if(rP_a!==rP_b)return rP_b-rP_a;
+    return a.ak-b.ak;
+  });
+  dupList.forEach(({i})=>{
+    // 매번 실질 순위 재계산 (분기 결과 반영)
+    const rTemp=byRateSorted.filter(x=>!aExcludeIds.has(x.i));
+    const aTemp=byAmtSorted.filter(x=>!rExcludeIds.has(x.i));
+    let reK=-1,aeK=-1;
+    let re=0;for(let rti=0;rti<rTemp.length&&re<10;rti++){if(rTemp[rti].d[11]>=300000){if(rTemp[rti].i===i)reK=re;re++;}}
+    let ae=0;for(let ati=0;ati<aTemp.length&&ae<10;ati++){if(aTemp[ati].d[11]>=300000){if(aTemp[ati].i===i)aeK=ae;ae++;}}
+    if(reK<0||aeK<0)return;
+    const rP=rAmt(reK),aP=aAmt(aeK);
     if(aP>rP)aExcludeIds.add(i);
     else if(rP>aP)rExcludeIds.add(i);
-    else{ if(rk<=ak)rExcludeIds.add(i); else aExcludeIds.add(i); }
+    else{ if(reK<=aeK)rExcludeIds.add(i); else aExcludeIds.add(i); }
   });
   // 하위 호환 배지용
   const rTop=new Set(byRateSorted.slice(0,10).map(x=>x.i));
@@ -1369,16 +1385,32 @@ function renderAll(){
   // 각 사람별 어느 쪽에 속할지 결정 (기준달성 & TOP10만 대상)
   const aExcludeIds=new Set();  // 신장률 리스트에서 제외
   const rExcludeIds=new Set();  // 신장액 리스트에서 제외
+  // 순차 처리: 시상금 큰 순서로 한 명씩 분기 (실질 순위 기준)
+  // 한 명 분기할 때마다 다른 사람의 실질 순위가 변하므로 매번 재계산
+  const dupList=[];
   D.forEach((d,i)=>{
-    if(d[11]<300000)return;  // 기준미충족은 어느 쪽도 제외 안 함 (둘 다 하위 순위로 표시)
+    if(d[11]<300000)return;
     const rk=rRankIdx[i],ak=aRankIdx[i];
-    const rIn=rk!==undefined&&rk<10,aIn=ak!==undefined&&ak<10;
-    if(!rIn||!aIn)return;  // 둘 다 TOP10에 있어야 중복
-    const rP=rAmt(rk),aP=aAmt(ak);
-    // 규칙: 큰 시상금 우선. 금액 동점 시 순위(rk/ak) 작은 쪽 우선
+    if(rk!==undefined&&rk<10&&ak!==undefined&&ak<10)dupList.push({i,rk,ak});
+  });
+  // 처리 순서: 신장액 시상금 큰 순 → 신장률 시상금 큰 순 → 신장액 순위 빠른 순
+  dupList.sort((a,b)=>{
+    const aP_a=aAmt(a.ak),aP_b=aAmt(b.ak);if(aP_a!==aP_b)return aP_b-aP_a;
+    const rP_a=rAmt(a.rk),rP_b=rAmt(b.rk);if(rP_a!==rP_b)return rP_b-rP_a;
+    return a.ak-b.ak;
+  });
+  dupList.forEach(({i})=>{
+    // 매번 실질 순위 재계산 (분기 결과 반영)
+    const rTemp=byRateSorted.filter(x=>!aExcludeIds.has(x.i));
+    const aTemp=byAmtSorted.filter(x=>!rExcludeIds.has(x.i));
+    let reK=-1,aeK=-1;
+    let re=0;for(let rti=0;rti<rTemp.length&&re<10;rti++){if(rTemp[rti].d[11]>=300000){if(rTemp[rti].i===i)reK=re;re++;}}
+    let ae=0;for(let ati=0;ati<aTemp.length&&ae<10;ati++){if(aTemp[ati].d[11]>=300000){if(aTemp[ati].i===i)aeK=ae;ae++;}}
+    if(reK<0||aeK<0)return;
+    const rP=rAmt(reK),aP=aAmt(aeK);
     if(aP>rP)aExcludeIds.add(i);
     else if(rP>aP)rExcludeIds.add(i);
-    else{ if(rk<=ak)rExcludeIds.add(i); else aExcludeIds.add(i); }
+    else{ if(reK<=aeK)rExcludeIds.add(i); else aExcludeIds.add(i); }
   });
   // 하위 호환 배지용
   const rTop=new Set(byRateSorted.slice(0,10).map(x=>x.i));
@@ -1690,16 +1722,32 @@ function renderAll(){
   // 각 사람별 어느 쪽에 속할지 결정 (기준달성 & TOP10만 대상)
   const aExcludeIds=new Set();  // 신장률 리스트에서 제외
   const rExcludeIds=new Set();  // 신장액 리스트에서 제외
+  // 순차 처리: 시상금 큰 순서로 한 명씩 분기 (실질 순위 기준)
+  // 한 명 분기할 때마다 다른 사람의 실질 순위가 변하므로 매번 재계산
+  const dupList=[];
   D.forEach((d,i)=>{
-    if(d[11]<300000)return;  // 기준미충족은 어느 쪽도 제외 안 함 (둘 다 하위 순위로 표시)
+    if(d[11]<300000)return;
     const rk=rRankIdx[i],ak=aRankIdx[i];
-    const rIn=rk!==undefined&&rk<10,aIn=ak!==undefined&&ak<10;
-    if(!rIn||!aIn)return;  // 둘 다 TOP10에 있어야 중복
-    const rP=rAmt(rk),aP=aAmt(ak);
-    // 규칙: 큰 시상금 우선. 금액 동점 시 순위(rk/ak) 작은 쪽 우선
+    if(rk!==undefined&&rk<10&&ak!==undefined&&ak<10)dupList.push({i,rk,ak});
+  });
+  // 처리 순서: 신장액 시상금 큰 순 → 신장률 시상금 큰 순 → 신장액 순위 빠른 순
+  dupList.sort((a,b)=>{
+    const aP_a=aAmt(a.ak),aP_b=aAmt(b.ak);if(aP_a!==aP_b)return aP_b-aP_a;
+    const rP_a=rAmt(a.rk),rP_b=rAmt(b.rk);if(rP_a!==rP_b)return rP_b-rP_a;
+    return a.ak-b.ak;
+  });
+  dupList.forEach(({i})=>{
+    // 매번 실질 순위 재계산 (분기 결과 반영)
+    const rTemp=byRateSorted.filter(x=>!aExcludeIds.has(x.i));
+    const aTemp=byAmtSorted.filter(x=>!rExcludeIds.has(x.i));
+    let reK=-1,aeK=-1;
+    let re=0;for(let rti=0;rti<rTemp.length&&re<10;rti++){if(rTemp[rti].d[11]>=300000){if(rTemp[rti].i===i)reK=re;re++;}}
+    let ae=0;for(let ati=0;ati<aTemp.length&&ae<10;ati++){if(aTemp[ati].d[11]>=300000){if(aTemp[ati].i===i)aeK=ae;ae++;}}
+    if(reK<0||aeK<0)return;
+    const rP=rAmt(reK),aP=aAmt(aeK);
     if(aP>rP)aExcludeIds.add(i);
     else if(rP>aP)rExcludeIds.add(i);
-    else{ if(rk<=ak)rExcludeIds.add(i); else aExcludeIds.add(i); }
+    else{ if(reK<=aeK)rExcludeIds.add(i); else aExcludeIds.add(i); }
   });
   // 하위 호환 배지용
   const rTop=new Set(byRateSorted.slice(0,10).map(x=>x.i));
