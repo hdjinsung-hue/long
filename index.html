@@ -315,7 +315,7 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
     <span id="todayLabel">2026년 4월 20일</span><span>|</span>
     <span><span class="dot"></span> 전일마감 기준</span>
     <span id="syncStatus" style="font-size:10px;margin-left:6px;color:#888;">연결중...</span>
-    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v47</span>
+    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.005</span>
   </div>
   <div class="tab-nav">
     <button class="tb on" id="tb-home" onclick="goTab('home',this)">🏠 홈 대시보드</button>
@@ -940,8 +940,8 @@ const GROUPS = [
   {id:5, center:'광주비전센터', members:[
     {name:'문효숙', branch:'신광주지점',  base:567},
     {name:'정인숙', branch:'신광주지점',  base:379},
-    {name:'박진옥', branch:'신광주지점',  base:500},
-    {name:'최길레', branch:'신광주지점',  base:471},
+    {name:'박진욱', branch:'신광주지점',  base:500},
+    {name:'최길례', branch:'신광주지점',  base:471},
   ]},
   // ── 동광주비전센터 ──
   {id:6, center:'동광주비전센터', members:[
@@ -1198,7 +1198,7 @@ function openGrpDetail(gi){
       +'<td style="padding:5px 4px;text-align:right;font-weight:700;">'+Math.round(cc/1000).toLocaleString()+'</td>'
       +'<td style="padding:5px 4px;text-align:right;font-weight:700;color:'+netc+';">'+(netk>=0?'+':'')+netk.toLocaleString()+'</td>'
       +'<td style="padding:5px 4px;text-align:center;font-weight:900;color:'+nc+';">'+achv.toFixed(1)+'%</td>'
-      +'<td style="padding:5px 4px;text-align:center;">'+(net>=50000?'<span style="color:#006030;font-weight:900;">✅</span>':'<span style="color:#cc5500;font-size:10px;">'+needk+'k↑</span>')+'</td>'
+      +'<td style="padding:5px 4px;text-align:center;">'+(net>=50000?'<span style="color:#006030;font-weight:900;">✅</span>':'<span style="color:#cc5500;font-size:10px;">'+needk+'천원↑</span>')+'</td>'
       +'</tr>';
   });
   rows+='</tbody></table>';
@@ -1216,7 +1216,7 @@ function openGrpDetail(gi){
       if(cur[mi]-base[mi]<50){
         var need=50-(cur[mi]-base[mi]);
         g1html+='<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px solid #f0e8cc;">'
-          +'<b>'+m.name+'</b><span style="color:#cc5500;font-weight:700;">+'+need.toLocaleString()+'k 필요</span></div>';
+          +'<b>'+m.name+'</b><span style="color:#cc5500;font-weight:700;">+'+need.toLocaleString()+'천원 필요</span></div>';
       }
     });
     g1html+='<div style="font-size:16px;font-weight:900;color:#884400;margin-top:8px;text-align:center;padding:6px;background:#fff8e0;border-radius:7px;\">달성시 인당 5만원 지급</div>';
@@ -1230,8 +1230,8 @@ function openGrpDetail(gi){
   if(nextPrize){
     var pp=Math.ceil(nextTarget/g.members.length);
     g2html+='<div style="font-size:12px;color:#1a5cb0;font-weight:700;margin-bottom:3px;">상위 목표: '+nextPrize+'</div>'
-      +'<div style="font-size:12px;color:#334466;">팀 <b>'+nextTarget.toLocaleString()+'k↑</b> 필요</div>'
-      +'<div style="font-size:11px;color:#556688;margin-top:2px;">1인당 약 <b>'+pp.toLocaleString()+'k</b></div>';
+      +'<div style="font-size:12px;color:#334466;">팀 <b>'+nextTarget.toLocaleString()+'천원↑</b> 필요</div>'
+      +'<div style="font-size:11px;color:#556688;margin-top:2px;">1인당 약 <b>'+pp.toLocaleString()+'천원</b></div>';
   } else {
     g2html+='<div style="font-size:13px;color:#006030;font-weight:700;text-align:center;padding:8px 0;">🎉 최고 등급!<br>인당 15만원</div>';
   }
@@ -1485,7 +1485,7 @@ function renderAll(){
   // KPI
   document.getElementById('kpi-perf').innerHTML=`<div class="kpi sky"><div class="kl">총 인원</div><div class="kv">${total}명</div></div><div class="kpi g"><div class="kl">5만원↑ 순증</div><div class="kv" style="color:#005030">${over5}명</div></div><div class="kpi gd"><div class="kl">30만원↑ 순증</div><div class="kv" style="color:#7a5000">${elig.length}명</div></div><div class="kpi"><div class="kl">평균 달성률</div><div class="kv">${avgR.toFixed(1)}%</div></div>`;
   // 실적 테이블
-  document.getElementById('mainTbody').innerHTML=[...byAmt].map(({i,d},rank)=>{
+  document.getElementById('mainTbody').innerHTML=D.map((d,i)=>({i,d})).sort((a,b)=>b.d[11]-a.d[11]).map(({i,d},rank)=>{
     const nc=d[10]>=120?'c-over':d[10]>=100?'c-good':d[10]>=80?'c-mid':'c-low';
     const netc=d[11]>0?'net-p':d[11]<0?'net-m':'';
     const awd=d[11]>=500000?'<span class="bdg b-g">150%지급</span>':d[11]>=300000?'<span class="bdg b-g">120%지급</span>':d[11]>=200000?'<span class="bdg b-gr">20만원</span>':d[11]>=100000?'<span class="bdg b-gr">10만원</span>':d[11]>=50000?'<span class="bdg b-gr">5만원</span>':'<span class="b-no">-</span>';
@@ -1630,7 +1630,7 @@ function renderAll(){
   // KPI
   document.getElementById('kpi-perf').innerHTML=`<div class="kpi sky"><div class="kl">총 인원</div><div class="kv">${total}명</div></div><div class="kpi g"><div class="kl">5만원↑ 순증</div><div class="kv" style="color:#005030">${over5}명</div></div><div class="kpi gd"><div class="kl">30만원↑ 순증</div><div class="kv" style="color:#7a5000">${elig.length}명</div></div><div class="kpi"><div class="kl">평균 달성률</div><div class="kv">${avgR.toFixed(1)}%</div></div>`;
   // 실적 테이블
-  document.getElementById('mainTbody').innerHTML=[...byAmt].map(({i,d},rank)=>{
+  document.getElementById('mainTbody').innerHTML=D.map((d,i)=>({i,d})).sort((a,b)=>b.d[11]-a.d[11]).map(({i,d},rank)=>{
     const nc=d[10]>=120?'c-over':d[10]>=100?'c-good':d[10]>=80?'c-mid':'c-low';
     const netc=d[11]>0?'net-p':d[11]<0?'net-m':'';
     const awd=d[11]>=500000?'<span class="bdg b-g">150%지급</span>':d[11]>=300000?'<span class="bdg b-g">120%지급</span>':d[11]>=200000?'<span class="bdg b-gr">20만원</span>':d[11]>=100000?'<span class="bdg b-gr">10만원</span>':d[11]>=50000?'<span class="bdg b-gr">5만원</span>':'<span class="b-no">-</span>';
@@ -1967,7 +1967,7 @@ function renderAll(){
   // KPI
   document.getElementById('kpi-perf').innerHTML=`<div class="kpi sky"><div class="kl">총 인원</div><div class="kv">${total}명</div></div><div class="kpi g"><div class="kl">5만원↑ 순증</div><div class="kv" style="color:#005030">${over5}명</div></div><div class="kpi gd"><div class="kl">30만원↑ 순증</div><div class="kv" style="color:#7a5000">${elig.length}명</div></div><div class="kpi"><div class="kl">평균 달성률</div><div class="kv">${avgR.toFixed(1)}%</div></div>`;
   // 실적 테이블
-  var mainRows=[...byAmt].map(({i,d},rank)=>{
+  var mainRows=D.map((d,i)=>({i,d})).sort((a,b)=>b.d[11]-a.d[11]).map(({i,d},rank)=>{
     const nc=d[10]>=120?'c-over':d[10]>=100?'c-good':d[10]>=80?'c-mid':'c-low';
     const netc=d[11]>0?'net-p':d[11]<0?'net-m':'';
     const awd=d[11]>=500000?'<span class="bdg b-g">150%지급</span>':d[11]>=300000?'<span class="bdg b-g">120%지급</span>':d[11]>=200000?'<span class="bdg b-gr">20만원</span>':d[11]>=100000?'<span class="bdg b-gr">10만원</span>':d[11]>=50000?'<span class="bdg b-gr">5만원</span>':'<span class="b-no">-</span>';
@@ -2230,7 +2230,7 @@ function levDist(a,b){
 function extractNamesAndNumbers(rawText){
   if(!rawText)return '';
   var dNames=D.map(function(d){return d[5];}).filter(Boolean);
-  // 긴 이름부터 매칭 (박진옥자가 박진옥보다 먼저, 박진옥이 박진보다 먼저)
+  // 긴 이름부터 매칭 (예: 박진욱자가 박진욱보다 먼저, 박진욱이 박진보다 먼저)
   var sorted=dNames.slice().sort(function(a,b){return b.length-a.length;});
   var results=[];
   var missing=[];
@@ -2335,6 +2335,7 @@ function applyBasePaste(){
   }
   msg.style.display='inline';
   setTimeout(()=>msg.style.display='none',5000);
+  syncGroupsFromD();
   renderAll();renderGrpTable();pushToFirebase();
 }
 
@@ -2371,12 +2372,42 @@ function resetToInitial(){
     if(CURRENT_COURSE==='2'){r[9]=0;r[10]=0;r[11]=-r[8];r[12]=0;r[13]=0;}
     D.push(r);
   });
+  syncGroupsFromD();
   showResetMsg('✅ 처음 상태로 복원 완료 ('+_courseLabel()+')','#666');
   renderAll();renderGrpTable();pushToFirebase();
 }
 
 function applyIpumPaste(){const txt=document.getElementById('ipumPasteArea').value;let cnt=0;txt.split('\n').forEach(line=>{const parts=line.trim().split(/\s+/);if(parts.length<2)return;let name=parts[0];if(typeof NAME_FIX!=='undefined'&&NAME_FIX[name])name=NAME_FIX[name];var cnt12=parseInt(parts[1].replace(/,/g,''))||0;var amt13=parts.length>=3?parseInt(parts[parts.length-1].replace(/,/g,''))||0:0;D.forEach(d=>{if(d[5]===name){d[12]=cnt12;if(amt13>0)d[13]=amt13;cnt++;}});});const msg=document.getElementById('ipumPasteMsg');msg.textContent='✅ '+cnt+'명 반영';msg.style.display='inline';msg.style.color='#1a8a40';setTimeout(()=>msg.style.display='none',3000);renderAll();pushToFirebase();}
-function saveEdits(){D.forEach((d,i)=>{const nameEl=document.getElementById('e5_'+i);if(nameEl){const newName=nameEl.value.trim();if(newName)d[5]=newName;}const baseEl=document.getElementById('e8_'+i);if(baseEl){const base=parseFloat(baseEl.value);if(!isNaN(base)&&base>=0)d[8]=base;}const cur=parseFloat(document.getElementById('e9_'+i)?.value)||d[9];d[9]=cur;d[10]=d[8]>0?parseFloat((cur/d[8]*100).toFixed(1)):0;d[11]=cur-d[8];d[12]=parseInt(document.getElementById('e12_'+i)?.value)||0;d[13]=parseInt(document.getElementById('e13_'+i)?.value)||0;});document.getElementById('saveMsg').style.display='inline';setTimeout(()=>document.getElementById('saveMsg').style.display='none',2500);renderAll();renderGrpTable();pushToFirebase();}
+function saveEdits(){
+  D.forEach((d,i)=>{
+    const nameEl=document.getElementById('e5_'+i);
+    if(nameEl){const newName=nameEl.value.trim();if(newName)d[5]=newName;}
+    const baseEl=document.getElementById('e8_'+i);
+    if(baseEl){const base=parseFloat(baseEl.value);if(!isNaN(base)&&base>=0)d[8]=base;}
+    const cur=parseFloat(document.getElementById('e9_'+i)?.value)||d[9];
+    d[9]=cur;
+    d[10]=d[8]>0?parseFloat((cur/d[8]*100).toFixed(1)):0;
+    d[11]=cur-d[8];
+    d[12]=parseInt(document.getElementById('e12_'+i)?.value)||0;
+    d[13]=parseInt(document.getElementById('e13_'+i)?.value)||0;
+  });
+  // ⭐ D[8]·D[5] 변경 후 GROUPS의 m.base, m.name 도 동기화 (그룹시상 정확 반영)
+  syncGroupsFromD();
+  document.getElementById('saveMsg').style.display='inline';
+  setTimeout(()=>document.getElementById('saveMsg').style.display='none',2500);
+  renderAll();renderGrpTable();pushToFirebase();
+}
+// D 배열의 변경사항을 GROUPS 배열로 동기화
+function syncGroupsFromD(){
+  if(typeof GROUPS==='undefined') return;
+  GROUPS.forEach(function(g){
+    g.members.forEach(function(m){
+      // D 배열에서 같은 이름 찾기 (이름이 일치하는 경우만 base 갱신)
+      var f=D.find(function(d){return d[5]===m.name;});
+      if(f && f[8]>=0) m.base = Math.round(f[8]/1000);
+    });
+  });
+}
 function saveIpumEdits(){D.forEach((d,i)=>{d[12]=parseInt(document.getElementById('ip12_'+i)?.value)||0;d[13]=parseInt(document.getElementById('ip13_'+i)?.value)||0;});document.getElementById('ipumSaveMsg').style.display='inline';setTimeout(()=>document.getElementById('ipumSaveMsg').style.display='none',2500);renderAll();pushToFirebase();}
 
 const FB_CFG={apiKey:"AIzaSyB1yFZ4HKLIhUihjqOJkQy2XIC-CrZqmQM",authDomain:"master-itv.firebaseapp.com",databaseURL:"https://master-itv-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"master-itv",storageBucket:"master-itv.firebasestorage.app",messagingSenderId:"95151539764",appId:"1:95151539764:web:00af682c79fc39abe9ac61"};
@@ -2421,7 +2452,16 @@ function initFirebase(){
       });
       return;
     }
-    if(val.D&&Array.isArray(val.D)){val.D.forEach(function(row,i){if(D[i]){D[i][9]=row[9]||D[i][9];D[i][10]=row[10]||D[i][10];D[i][11]=row[11]||D[i][11];D[i][12]=row[12]||D[i][12];D[i][13]=row[13]||D[i][13];}});renderAll();renderGrpTable();}
+    if(val.D&&Array.isArray(val.D)){val.D.forEach(function(row,i){if(D[i]){
+      // 이름·기준실적·실적·인품 모두 동기화 (undefined 체크로 0도 정확히 반영)
+      if(row[5]) D[i][5]=row[5];
+      if(row[8]!==undefined) D[i][8]=row[8];
+      if(row[9]!==undefined) D[i][9]=row[9];
+      if(row[10]!==undefined) D[i][10]=row[10];
+      if(row[11]!==undefined) D[i][11]=row[11];
+      if(row[12]!==undefined) D[i][12]=row[12];
+      if(row[13]!==undefined) D[i][13]=row[13];
+    }});syncGroupsFromD();renderAll();renderGrpTable();}
     showSyncStatus('✅ 실시간 연동 '+new Date().toLocaleTimeString('ko-KR'),'#1a8a40');
   },function(err){console.log('[Firebase] 연동 오류:',err&&err.message);showSyncStatusWithRetry('❌ 서버 연결 오류','#cc0000');});
 }
@@ -2624,7 +2664,7 @@ function reloadFirebaseForCourse(){
       renderAll();renderGrpTable();
       return;
     }
-    if(val.D&&Array.isArray(val.D)){val.D.forEach(function(row,i){if(D[i]){if(row[5])D[i][5]=row[5];if(typeof row[8]==='number')D[i][8]=row[8];D[i][9]=row[9]||0;D[i][10]=row[10]||0;D[i][11]=typeof row[11]==='number'?row[11]:(D[i][9]-D[i][8]);D[i][12]=row[12]||0;D[i][13]=row[13]||0;}});renderAll();renderGrpTable();}
+    if(val.D&&Array.isArray(val.D)){val.D.forEach(function(row,i){if(D[i]){if(row[5])D[i][5]=row[5];if(typeof row[8]==='number')D[i][8]=row[8];D[i][9]=row[9]||0;D[i][10]=row[10]||0;D[i][11]=typeof row[11]==='number'?row[11]:(D[i][9]-D[i][8]);D[i][12]=row[12]||0;D[i][13]=row[13]||0;}});syncGroupsFromD();renderAll();renderGrpTable();}
     showSyncStatus('✅ Master '+(CURRENT_COURSE==='2'?'Ⅱ':'Ⅰ')+' 연동 '+new Date().toLocaleTimeString('ko-KR'),'#1a8a40');
   });
   // meta·award 리스너도 재바인딩
@@ -2642,7 +2682,7 @@ setTimeout(function(){
 },50);
 
 // ── 이름 자동 교정 매핑 (잘못 입력된 옛 이름 → 올바른 이름) ──
-var NAME_FIX={'유혜순':'유해순','모성민':'모상민','감재명':'갈재명','서영린':'서영란','하용순':'허용순'};
+var NAME_FIX={'유혜순':'유해순','모성민':'모상민','감재명':'갈재명','서영린':'서영란','하용순':'허용순','박진옥':'박진욱','최길레':'최길례'};
 function fixName(n){return NAME_FIX[n]||n;}
 // 로컬 D 배열에 남아있을 수 있는 옛 이름 방어적 교정
 (function(){var c=0;D.forEach(function(d){if(NAME_FIX[d[5]]){d[5]=NAME_FIX[d[5]];c++;}});if(c>0)console.log('[이름교정] D 배열에서 '+c+'명 교정');})();
