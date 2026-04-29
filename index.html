@@ -258,7 +258,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
     <span id="todayLabel">2026년 4월 20일</span><span>|</span>
     <span><span class="dot"></span> 전일마감 기준</span>
     <span id="syncStatus" style="font-size:10px;margin-left:6px;color:#888;">연결중...</span>
-    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v34</span>
+    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v37</span>
   </div>
   <div class="tab-nav">
     <button class="tb on" id="tb-home" onclick="goTab('home',this)">🏠 홈 대시보드</button>
@@ -541,6 +541,17 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
         <span id="pasteMsg" style="font-size:10px;display:none;font-weight:700;"></span>
       </div>
     </div>
+    <div style="background:#e8fff4;border:1px solid #1e7e3a;border-radius:7px;padding:10px;margin-bottom:10px;position:relative;">
+      <div style="font-size:11px;font-weight:700;color:#005030;margin-bottom:5px;">🎯 기준실적 일괄 입력 — 이름 기준실적</div>
+      <div style="font-size:10px;color:#1e7e3a;margin-bottom:6px;">엑셀에서 이름·기준실적 2열 복사 후 붙여넣기 (탭/공백·쉼표 모두 OK)</div>
+      <textarea id="basePasteArea" rows="5" autocomplete="off" spellcheck="false" style="width:100%;padding:7px;font-size:11px;border:1px solid #1e7e3a;border-radius:5px;font-family:inherit;resize:vertical;background:#fff;" placeholder="정경화  1450413"></textarea>
+      <div style="margin-top:6px;display:flex;gap:6px;align-items:center;">
+        <button class="sbtn2" onclick="applyBasePaste()" style="background:#1e7e3a;">📥 기준 반영</button>
+        <button class="sbtn2" onclick="document.getElementById('basePasteArea').value=''" style="background:#888;">🗑 초기화</button>
+        <span id="basePasteMsg" style="font-size:10px;display:none;font-weight:700;"></span>
+      </div>
+    </div>
+    <div style="font-size:10px;color:#556688;margin-bottom:5px;padding:6px 9px;background:#fffbe8;border-left:3px solid #e0a800;border-radius:4px;">💡 기준실적도 직접 수정 가능 — 기준이 바뀌면 달성률·순증이 자동 재계산됩니다. 수정 후 [💾 저장 및 반영] 버튼을 눌러주세요.</div>
     <div class="tbl"><table><thead><tr class="hd1"><th>No</th><th>지점</th><th>사번</th><th>성명</th><th>기준실적</th><th>현재실적</th><th>달성률%</th><th>순증(원)</th><th>인품건</th><th>인품실적</th></tr></thead><tbody id="editTbody"></tbody></table></div>
     <div style="margin-top:9px"><button class="sbtn2" onclick="saveEdits()">💾 저장 및 반영</button><span class="smsg" id="saveMsg">✅ 저장 완료</span></div>
   </div>
@@ -1349,7 +1360,7 @@ function renderAll(){
   document.getElementById('adm-a4').textContent=D.filter(d=>d[11]>=300000&&d[11]<500000).length+'명';
   document.getElementById('adm-a3').textContent=D.filter(d=>d[11]>=50000&&d[11]<300000).length+'명';
   document.getElementById('adm-a0').textContent=D.filter(d=>d[11]<50000).length+'명';
-  document.getElementById('editTbody').innerHTML=D.map((d,i)=>`<tr><td>${i+1}</td><td>${d[2]}</td><td>${d[3]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td><input type="number" id="e9_${i}" value="${d[9]}" oninput="autoCalc(${i})"/></td><td><input type="number" id="e10_${i}" value="${d[10].toFixed(1)}" step="0.1" readonly/></td><td><input type="number" id="e11_${i}" value="${d[11]}" readonly/></td><td><input type="number" id="e12_${i}" value="${d[12]}" min="0"/></td><td><input type="number" id="e13_${i}" value="${d[13]}" min="0"/></td></tr>`).join('');
+  document.getElementById('editTbody').innerHTML=D.map((d,i)=>`<tr><td>${i+1}</td><td>${d[2]}</td><td>${d[3]}</td><td class="td-name">${d[5]}</td><td><input type="number" id="e8_${i}" value="${d[8]}" oninput="autoCalc(${i})"/></td><td><input type="number" id="e9_${i}" value="${d[9]}" oninput="autoCalc(${i})"/></td><td><input type="number" id="e10_${i}" value="${d[10].toFixed(1)}" step="0.1" readonly/></td><td><input type="number" id="e11_${i}" value="${d[11]}" readonly/></td><td><input type="number" id="e12_${i}" value="${d[12]}" min="0"/></td><td><input type="number" id="e13_${i}" value="${d[13]}" min="0"/></td></tr>`).join('');
   document.getElementById('ipumEditTbody').innerHTML=D.map((d,i)=>`<tr><td>${i+1}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td><input type="number" id="ip12_${i}" value="${d[12]}" min="0"/></td><td><input type="number" id="ip13_${i}" value="${d[13]}" min="0"/></td></tr>`).join('');
 }
 function renderAll(){
@@ -1494,7 +1505,7 @@ function renderAll(){
   document.getElementById('adm-a4').textContent=D.filter(d=>d[11]>=300000&&d[11]<500000).length+'명';
   document.getElementById('adm-a3').textContent=D.filter(d=>d[11]>=50000&&d[11]<300000).length+'명';
   document.getElementById('adm-a0').textContent=D.filter(d=>d[11]<50000).length+'명';
-  document.getElementById('editTbody').innerHTML=D.map((d,i)=>`<tr><td>${i+1}</td><td>${d[2]}</td><td>${d[3]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td><input type="number" id="e9_${i}" value="${d[9]}" oninput="autoCalc(${i})"/></td><td><input type="number" id="e10_${i}" value="${d[10].toFixed(1)}" step="0.1" readonly/></td><td><input type="number" id="e11_${i}" value="${d[11]}" readonly/></td><td><input type="number" id="e12_${i}" value="${d[12]}" min="0"/></td><td><input type="number" id="e13_${i}" value="${d[13]}" min="0"/></td></tr>`).join('');
+  document.getElementById('editTbody').innerHTML=D.map((d,i)=>`<tr><td>${i+1}</td><td>${d[2]}</td><td>${d[3]}</td><td class="td-name">${d[5]}</td><td><input type="number" id="e8_${i}" value="${d[8]}" oninput="autoCalc(${i})"/></td><td><input type="number" id="e9_${i}" value="${d[9]}" oninput="autoCalc(${i})"/></td><td><input type="number" id="e10_${i}" value="${d[10].toFixed(1)}" step="0.1" readonly/></td><td><input type="number" id="e11_${i}" value="${d[11]}" readonly/></td><td><input type="number" id="e12_${i}" value="${d[12]}" min="0"/></td><td><input type="number" id="e13_${i}" value="${d[13]}" min="0"/></td></tr>`).join('');
   document.getElementById('ipumEditTbody').innerHTML=D.map((d,i)=>`<tr><td>${i+1}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td><input type="number" id="ip12_${i}" value="${d[12]}" min="0"/></td><td><input type="number" id="ip13_${i}" value="${d[13]}" min="0"/></td></tr>`).join('');
 }
 function printSection(viewId){
@@ -1849,7 +1860,7 @@ function renderAll(){
   document.getElementById('adm-a4').textContent=D.filter(d=>d[11]>=300000&&d[11]<500000).length+'명';
   document.getElementById('adm-a3').textContent=D.filter(d=>d[11]>=50000&&d[11]<300000).length+'명';
   document.getElementById('adm-a0').textContent=D.filter(d=>d[11]<50000).length+'명';
-  document.getElementById('editTbody').innerHTML=D.map((d,i)=>`<tr><td>${i+1}</td><td>${d[2]}</td><td>${d[3]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td><input type="number" id="e9_${i}" value="${d[9]}" oninput="autoCalc(${i})"/></td><td><input type="number" id="e10_${i}" value="${d[10].toFixed(1)}" step="0.1" readonly/></td><td><input type="number" id="e11_${i}" value="${d[11]}" readonly/></td><td><input type="number" id="e12_${i}" value="${d[12]}" min="0"/></td><td><input type="number" id="e13_${i}" value="${d[13]}" min="0"/></td></tr>`).join('');
+  document.getElementById('editTbody').innerHTML=D.map((d,i)=>`<tr><td>${i+1}</td><td>${d[2]}</td><td>${d[3]}</td><td class="td-name">${d[5]}</td><td><input type="number" id="e8_${i}" value="${d[8]}" oninput="autoCalc(${i})"/></td><td><input type="number" id="e9_${i}" value="${d[9]}" oninput="autoCalc(${i})"/></td><td><input type="number" id="e10_${i}" value="${d[10].toFixed(1)}" step="0.1" readonly/></td><td><input type="number" id="e11_${i}" value="${d[11]}" readonly/></td><td><input type="number" id="e12_${i}" value="${d[12]}" min="0"/></td><td><input type="number" id="e13_${i}" value="${d[13]}" min="0"/></td></tr>`).join('');
   document.getElementById('ipumEditTbody').innerHTML=D.map((d,i)=>`<tr><td>${i+1}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td><input type="number" id="ip12_${i}" value="${d[12]}" min="0"/></td><td><input type="number" id="ip13_${i}" value="${d[13]}" min="0"/></td></tr>`).join('');
 }
 function printSection(viewId){
@@ -2125,10 +2136,42 @@ function applyPhotoResult(){
   pushToFirebase();
 }
 
-function autoCalc(i){const cur=parseFloat(document.getElementById('e9_'+i).value)||0;const base=D[i][8];document.getElementById('e10_'+i).value=(base>0?cur/base*100:0).toFixed(1);document.getElementById('e11_'+i).value=cur-base;}
+function autoCalc(i){const baseEl=document.getElementById('e8_'+i);const base=baseEl?(parseFloat(baseEl.value)||0):D[i][8];const cur=parseFloat(document.getElementById('e9_'+i).value)||0;document.getElementById('e10_'+i).value=(base>0?cur/base*100:0).toFixed(1);document.getElementById('e11_'+i).value=cur-base;}
 function applyPaste(){const txt=document.getElementById('pasteArea').value;let cnt=0;txt.split('\n').forEach(line=>{const parts=line.trim().split(/\s+/);if(parts.length<2)return;let name=parts[0];if(typeof NAME_FIX!=='undefined'&&NAME_FIX[name])name=NAME_FIX[name];const val=parseInt(parts[parts.length-1].replace(/,/g,''));if(isNaN(val))return;D.forEach(d=>{if(d[5]===name){d[9]=val;d[10]=d[8]>0?parseFloat((val/d[8]*100).toFixed(1)):0;d[11]=val-d[8];cnt++;}});});const msg=document.getElementById('pasteMsg');msg.textContent='✅ '+cnt+'명 반영';msg.style.display='inline';msg.style.color='#1a8a40';setTimeout(()=>msg.style.display='none',3000);renderAll();renderGrpTable();pushToFirebase();}
+function applyBasePaste(){
+  const txt=document.getElementById('basePasteArea').value;
+  let cnt=0,unmatched=[];
+  txt.split('\n').forEach(line=>{
+    const parts=line.trim().split(/\s+/);if(parts.length<2)return;
+    let name=parts[0];
+    if(typeof NAME_FIX!=='undefined'&&NAME_FIX[name])name=NAME_FIX[name];
+    const val=parseInt(parts[parts.length-1].replace(/,/g,''));
+    if(isNaN(val)||val<=0)return;
+    let matched=false;
+    D.forEach(d=>{
+      if(d[5]===name){
+        d[8]=val;
+        d[10]=val>0?parseFloat((d[9]/val*100).toFixed(1)):0;
+        d[11]=d[9]-val;
+        cnt++;matched=true;
+      }
+    });
+    if(!matched)unmatched.push(name);
+  });
+  const msg=document.getElementById('basePasteMsg');
+  if(unmatched.length>0){
+    msg.textContent='✅ '+cnt+'명 반영, ⚠️ 매칭실패: '+unmatched.join(',');
+    msg.style.color='#cc5500';
+  } else {
+    msg.textContent='✅ '+cnt+'명 기준실적 반영';
+    msg.style.color='#1a8a40';
+  }
+  msg.style.display='inline';
+  setTimeout(()=>msg.style.display='none',5000);
+  renderAll();renderGrpTable();pushToFirebase();
+}
 function applyIpumPaste(){const txt=document.getElementById('ipumPasteArea').value;let cnt=0;txt.split('\n').forEach(line=>{const parts=line.trim().split(/\s+/);if(parts.length<2)return;let name=parts[0];if(typeof NAME_FIX!=='undefined'&&NAME_FIX[name])name=NAME_FIX[name];var cnt12=parseInt(parts[1].replace(/,/g,''))||0;var amt13=parts.length>=3?parseInt(parts[parts.length-1].replace(/,/g,''))||0:0;D.forEach(d=>{if(d[5]===name){d[12]=cnt12;if(amt13>0)d[13]=amt13;cnt++;}});});const msg=document.getElementById('ipumPasteMsg');msg.textContent='✅ '+cnt+'명 반영';msg.style.display='inline';msg.style.color='#1a8a40';setTimeout(()=>msg.style.display='none',3000);renderAll();pushToFirebase();}
-function saveEdits(){D.forEach((d,i)=>{const cur=parseFloat(document.getElementById('e9_'+i)?.value)||d[9];d[9]=cur;d[10]=d[8]>0?parseFloat((cur/d[8]*100).toFixed(1)):0;d[11]=cur-d[8];d[12]=parseInt(document.getElementById('e12_'+i)?.value)||0;d[13]=parseInt(document.getElementById('e13_'+i)?.value)||0;});document.getElementById('saveMsg').style.display='inline';setTimeout(()=>document.getElementById('saveMsg').style.display='none',2500);renderAll();renderGrpTable();pushToFirebase();}
+function saveEdits(){D.forEach((d,i)=>{const baseEl=document.getElementById('e8_'+i);if(baseEl){const base=parseFloat(baseEl.value);if(!isNaN(base)&&base>=0)d[8]=base;}const cur=parseFloat(document.getElementById('e9_'+i)?.value)||d[9];d[9]=cur;d[10]=d[8]>0?parseFloat((cur/d[8]*100).toFixed(1)):0;d[11]=cur-d[8];d[12]=parseInt(document.getElementById('e12_'+i)?.value)||0;d[13]=parseInt(document.getElementById('e13_'+i)?.value)||0;});document.getElementById('saveMsg').style.display='inline';setTimeout(()=>document.getElementById('saveMsg').style.display='none',2500);renderAll();renderGrpTable();pushToFirebase();}
 function saveIpumEdits(){D.forEach((d,i)=>{d[12]=parseInt(document.getElementById('ip12_'+i)?.value)||0;d[13]=parseInt(document.getElementById('ip13_'+i)?.value)||0;});document.getElementById('ipumSaveMsg').style.display='inline';setTimeout(()=>document.getElementById('ipumSaveMsg').style.display='none',2500);renderAll();pushToFirebase();}
 
 const FB_CFG={apiKey:"AIzaSyB1yFZ4HKLIhUihjqOJkQy2XIC-CrZqmQM",authDomain:"master-itv.firebaseapp.com",databaseURL:"https://master-itv-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"master-itv",storageBucket:"master-itv.firebasestorage.app",messagingSenderId:"95151539764",appId:"1:95151539764:web:00af682c79fc39abe9ac61"};
