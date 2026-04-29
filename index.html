@@ -235,6 +235,58 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
 .grp-tbl input{width:80px;padding:3px 4px;border:1px solid var(--border);border-radius:4px;font-size:11px;text-align:right;font-family:inherit;}
 /* 팝업 */
 #grpPopup{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:2000;align-items:center;justify-content:center;}
+/* ═══════════════════════════════════════════════════════
+   과정별 테마 — body.theme-c1 (Master Ⅰ 블루) / theme-c2 (Master Ⅱ 오렌지) / theme-cmp (비교)
+   ═══════════════════════════════════════════════════════ */
+/* ── 공통 — body 배경 ── */
+body.theme-c1{background:linear-gradient(180deg,#F0F4FB 0%,#E0EBF7 100%);min-height:100vh;}
+body.theme-c2{background:linear-gradient(180deg,#FFF7EE 0%,#FFE8D0 100%);min-height:100vh;}
+body.theme-cmp{background:linear-gradient(180deg,#F4F0FB 0%,#E8E0F7 100%);min-height:100vh;}
+
+/* ── theme-c1 (Master Ⅰ 블루) ── */
+body.theme-c1 .hdr{background:linear-gradient(135deg,#0A1933 0%,#1E3F8B 50%,#2A5DB0 100%);}
+body.theme-c1 .hdr h1{color:#fff;text-shadow:0 2px 8px rgba(255,215,0,.18);}
+body.theme-c1 .hdr h1 em{color:#FFD700;}
+body.theme-c1 .org{color:#FFD700;background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.4);}
+body.theme-c1 .tb.on::after{background:#FFD700;}
+
+/* ── theme-c2 (Master Ⅱ 오렌지 — 과감 적용) ── */
+body.theme-c2 .hdr{background:linear-gradient(135deg,#5A1500 0%,#C04020 45%,#FF6B00 100%);}
+body.theme-c2 .hdr h1{color:#fff;text-shadow:0 2px 8px rgba(255,140,66,.4);}
+body.theme-c2 .hdr h1 em{color:#FFD0A0;}
+body.theme-c2 .hdr-sub{color:#FFD0A0;}
+body.theme-c2 .org{color:#fff;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);font-weight:900;}
+body.theme-c2 .tb{color:rgba(255,255,255,.6);}
+body.theme-c2 .tb.on{color:#fff;}
+body.theme-c2 .tb.on::after{background:#FFA500;height:3px;box-shadow:0 0 6px rgba(255,165,0,.6);}
+/* 카드 — 오렌지 액센트 */
+body.theme-c2 .card{border-color:#FFD0A8;box-shadow:0 1px 4px rgba(255,107,0,.06);}
+body.theme-c2 .card-hdr:hover{background:#FFF7EE;}
+body.theme-c2 .ci-gold{background:linear-gradient(135deg,#FF8C42,#FF6B00);color:#fff;}
+body.theme-c2 .ci-org{background:linear-gradient(135deg,#FFA500,#E85D00);color:#fff;}
+body.theme-c2 .ci-pink{background:linear-gradient(135deg,#FF6B85,#E84050);color:#fff;}
+body.theme-c2 .ci-sky{background:linear-gradient(135deg,#FFB870,#FF8C42);color:#fff;}
+/* 시상안 박스 — 오렌지 톤 */
+body.theme-c2 .award-box{background:#FFF7EE;border:1px solid #FFC890;}
+body.theme-c2 .award-box h3{color:#7A2500;}
+body.theme-c2 .ab{background:linear-gradient(135deg,#FFE8D0,#FFD0A0);border:1px solid #FFA060;}
+body.theme-c2 .ab.gd{background:linear-gradient(135deg,#FFE0B0,#FFA040);border-color:#E8651A;}
+body.theme-c2 .ab .ab-rank{color:#7A2500;}
+body.theme-c2 .ab .ab-prize{color:#C04020;}
+body.theme-c2 .pc.p1{background:linear-gradient(160deg,#FFE8D0,#FFA040);border-color:#E8651A;}
+body.theme-c2 .an-warn{color:#7A2500;}
+/* KPI — 오렌지 강조선 */
+body.theme-c2 .kpi{border-left-color:#FF8C42;}
+body.theme-c2 .kpi.sky{border-left-color:#FF6B00;}
+body.theme-c2 .kpi.g{border-left-color:#E8651A;}
+body.theme-c2 .kpi.gd{border-left-color:#C04020;}
+/* 백버튼 / 일반 버튼 */
+body.theme-c2 .back-btn{color:#7A2500;border-color:#FFC890;}
+body.theme-c2 .back-btn:hover{background:#FFF0E0;}
+body.theme-c2 .sbtn{background:#FFE8D0;border-color:#FFA060;color:#7A2500;}
+/* 합계행 / 강조 */
+body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
+/* 인쇄/출력 버튼류는 그대로 */
 </style>
 </head>
 <body>
@@ -243,7 +295,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
 <div id="pwScreen" style="display:none;">
   <div class="pw-box">
     <div class="pw-logo">🏆</div>
-    <div class="pw-title">고객컨설팅 Master Ⅰ</div>
+    <div class="pw-title" id="pw-title">고객컨설팅 Master Ⅰ</div>
     <div class="pw-sub">관리자 비밀번호를 입력하세요</div>
     <input class="pw-input" type="password" id="pwInput" maxlength="4" placeholder="••••" onkeydown="if(event.key==='Enter')checkPw()">
     <button class="pw-btn" onclick="checkPw()">확인</button>
@@ -253,12 +305,17 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
 
 <div class="hdr">
   <div class="org" id="hdr-org">현대해상 호남 지역단</div>
+  <div id="course-tabs" style="display:flex;gap:6px;justify-content:center;margin:8px auto 10px;max-width:480px;">
+    <button id="ctab-1" onclick="switchCourse('1')" style="flex:1;padding:9px 10px;font-size:12px;font-weight:900;border-radius:9px;border:2px solid #ffe066;background:#ffe066;color:#7a5000;cursor:pointer;transition:all 0.18s;font-family:inherit;box-shadow:0 2px 8px rgba(255,224,102,.4);">📘 Master Ⅰ</button>
+    <button id="ctab-2" onclick="switchCourse('2')" style="flex:1;padding:9px 10px;font-size:12px;font-weight:900;border-radius:9px;border:2px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.08);color:#cce0ff;cursor:pointer;transition:all 0.18s;font-family:inherit;">📗 Master Ⅱ</button>
+    <button id="ctab-cmp" onclick="switchCourse('compare')" style="flex:1;padding:9px 10px;font-size:12px;font-weight:900;border-radius:9px;border:2px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.08);color:#cce0ff;cursor:pointer;transition:all 0.18s;font-family:inherit;">⚖️ 비교</button>
+  </div>
   <h1 id="hdr-title"><em>고객컨설팅 </em>Master Ⅰ 현황판</h1>
   <div class="hdr-sub">
     <span id="todayLabel">2026년 4월 20일</span><span>|</span>
     <span><span class="dot"></span> 전일마감 기준</span>
     <span id="syncStatus" style="font-size:10px;margin-left:6px;color:#888;">연결중...</span>
-    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v39</span>
+    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v44</span>
   </div>
   <div class="tab-nav">
     <button class="tb on" id="tb-home" onclick="goTab('home',this)">🏠 홈 대시보드</button>
@@ -552,6 +609,17 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
       </div>
     </div>
     <div style="font-size:10px;color:#556688;margin-bottom:5px;padding:6px 9px;background:#fffbe8;border-left:3px solid #e0a800;border-radius:4px;">💡 성명·기준실적·현재실적·인품 모두 직접 수정 가능 — 기준이 바뀌면 달성률·순증·조별합계가 자동 재계산됩니다. 수정 후 [💾 저장 및 반영] 버튼을 눌러주세요.<br>⚠️ 성명 수정 시: 조별 명단(GROUPS)에도 같은 이름으로 등록되어 있어야 조별시상에 정확히 반영됩니다. 필요시 [🏅 조별 명단 관리]에서도 동일하게 수정하세요.</div>
+    <div style="background:#fff0f0;border:2px solid #cc4444;border-radius:8px;padding:10px;margin-bottom:10px;">
+      <div style="font-size:12px;font-weight:900;color:#cc0000;margin-bottom:5px;">🔄 실적 초기화 — 현재 과정의 데이터 리셋</div>
+      <div style="font-size:10px;color:#884400;margin-bottom:8px;">⚠️ 되돌릴 수 없습니다. 다른 과정 데이터엔 영향 없음.</div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px;">
+        <button class="sbtn2" onclick="resetCurrentPerf()" style="background:#cc7700;font-size:11px;">💰 현재실적만 0으로</button>
+        <button class="sbtn2" onclick="resetIpum()" style="background:#aa0080;font-size:11px;">✨ 인품만 0으로</button>
+        <button class="sbtn2" onclick="resetAllPerf()" style="background:#cc4444;font-size:11px;">🔄 실적+인품 모두 0</button>
+        <button class="sbtn2" onclick="resetToInitial()" style="background:#666;font-size:11px;">⚠️ 명단까지 처음 상태로</button>
+      </div>
+      <div id="resetMsg" style="margin-top:6px;font-size:10px;display:none;font-weight:700;"></div>
+    </div>
     <div class="tbl"><table><thead><tr class="hd1"><th>No</th><th>지점</th><th>사번</th><th>성명</th><th>기준실적</th><th>현재실적</th><th>달성률%</th><th>순증(원)</th><th>인품건</th><th>인품실적</th></tr></thead><tbody id="editTbody"></tbody></table></div>
     <div style="margin-top:9px"><button class="sbtn2" onclick="saveEdits()">💾 저장 및 반영</button><span class="smsg" id="saveMsg">✅ 저장 완료</span></div>
   </div>
@@ -679,6 +747,72 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
     <div id="vfyResult" style="font-size:11px;"></div>
   </div>
 </div></div>
+</div>
+
+<!-- ═══════ Master Ⅰ vs Ⅱ 비교 화면 ═══════ -->
+<div id="pg-compare" class="pg" style="display:none;">
+  <div style="text-align:center;margin-bottom:14px;padding:12px;background:linear-gradient(135deg,#0d2554,#2a5db0);border-radius:10px;color:#fff;">
+    <div style="font-size:18px;font-weight:900;letter-spacing:0.5px;">⚖️ Master Ⅰ vs Ⅱ 종합 비교</div>
+    <div style="font-size:11px;opacity:0.85;margin-top:3px;">두 과정 실시간 데이터를 한눈에 비교</div>
+  </div>
+  <div id="cmp-loading" style="text-align:center;padding:30px;color:#888;font-size:13px;">🔄 데이터 로딩 중...</div>
+  <div id="cmp-content" style="display:none;">
+
+    <!-- KPI 카드 비교 -->
+    <div style="margin-bottom:14px;">
+      <div style="font-size:13px;font-weight:900;color:#0a2050;margin-bottom:8px;padding-left:4px;">📊 핵심 지표 비교</div>
+      <div id="cmp-kpi" style="display:grid;grid-template-columns:1fr;gap:8px;"></div>
+    </div>
+
+    <!-- 신장률 TOP3 비교 -->
+    <div style="margin-bottom:14px;">
+      <div style="font-size:13px;font-weight:900;color:#0a2050;margin-bottom:8px;padding-left:4px;">📈 최고 신장률 TOP3</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div style="background:#fff7e0;border:2px solid #ffe066;border-radius:10px;padding:10px;">
+          <div style="font-size:11px;font-weight:900;color:#7a5000;margin-bottom:6px;">📘 Master Ⅰ</div>
+          <div id="cmp-r-1" style="font-size:11px;line-height:1.8;"></div>
+        </div>
+        <div style="background:#f0fff0;border:2px solid #88dd66;border-radius:10px;padding:10px;">
+          <div style="font-size:11px;font-weight:900;color:#1a4a00;margin-bottom:6px;">📗 Master Ⅱ</div>
+          <div id="cmp-r-2" style="font-size:11px;line-height:1.8;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 신장액 TOP3 비교 -->
+    <div style="margin-bottom:14px;">
+      <div style="font-size:13px;font-weight:900;color:#0a2050;margin-bottom:8px;padding-left:4px;">💰 최고 신장액 TOP3</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div style="background:#fff7e0;border:2px solid #ffe066;border-radius:10px;padding:10px;">
+          <div style="font-size:11px;font-weight:900;color:#7a5000;margin-bottom:6px;">📘 Master Ⅰ</div>
+          <div id="cmp-a-1" style="font-size:11px;line-height:1.8;"></div>
+        </div>
+        <div style="background:#f0fff0;border:2px solid #88dd66;border-radius:10px;padding:10px;">
+          <div style="font-size:11px;font-weight:900;color:#1a4a00;margin-bottom:6px;">📗 Master Ⅱ</div>
+          <div id="cmp-a-2" style="font-size:11px;line-height:1.8;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 인품왕 TOP3 비교 -->
+    <div style="margin-bottom:14px;">
+      <div style="font-size:13px;font-weight:900;color:#0a2050;margin-bottom:8px;padding-left:4px;">✨ 인품왕 TOP3</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div style="background:#fff7e0;border:2px solid #ffe066;border-radius:10px;padding:10px;">
+          <div style="font-size:11px;font-weight:900;color:#7a5000;margin-bottom:6px;">📘 Master Ⅰ</div>
+          <div id="cmp-i-1" style="font-size:11px;line-height:1.8;"></div>
+        </div>
+        <div style="background:#f0fff0;border:2px solid #88dd66;border-radius:10px;padding:10px;">
+          <div style="font-size:11px;font-weight:900;color:#1a4a00;margin-bottom:6px;">📗 Master Ⅱ</div>
+          <div id="cmp-i-2" style="font-size:11px;line-height:1.8;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:18px;">
+      <button onclick="loadComparisonData()" style="padding:9px 18px;background:#1a5cb0;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">🔄 새로고침</button>
+    </div>
+  </div>
 </div>
 
 <!-- 팀별 상세 팝업 -->
@@ -2172,6 +2306,44 @@ function applyBasePaste(){
   setTimeout(()=>msg.style.display='none',5000);
   renderAll();renderGrpTable();pushToFirebase();
 }
+
+// ── 실적 초기화 함수들 (현재 과정만 영향) ──
+function showResetMsg(t,color){var el=document.getElementById('resetMsg');if(!el)return;el.textContent=t;el.style.color=color||'#1a8a40';el.style.display='inline';setTimeout(function(){el.style.display='none';},4000);}
+function _courseLabel(){return CURRENT_COURSE==='2'?'Master Ⅱ':'Master Ⅰ';}
+function resetCurrentPerf(){
+  if(!confirm('['+_courseLabel()+'] 과정의 모든 현재실적을 0으로 초기화합니다.\n\n진행하시겠습니까?'))return;
+  if(!confirm('정말로 초기화하시겠습니까?\n되돌릴 수 없습니다.'))return;
+  D.forEach(function(d){d[9]=0;d[10]=0;d[11]=-d[8];});
+  showResetMsg('✅ 현재실적 초기화 완료 ('+_courseLabel()+')','#1a8a40');
+  renderAll();renderGrpTable();pushToFirebase();
+}
+function resetIpum(){
+  if(!confirm('['+_courseLabel()+'] 과정의 모든 인품 데이터(건수·금액)를 0으로 초기화합니다.\n\n진행하시겠습니까?'))return;
+  if(!confirm('정말로 초기화하시겠습니까?\n되돌릴 수 없습니다.'))return;
+  D.forEach(function(d){d[12]=0;d[13]=0;});
+  showResetMsg('✅ 인품 초기화 완료 ('+_courseLabel()+')','#aa0080');
+  renderAll();pushToFirebase();
+}
+function resetAllPerf(){
+  if(!confirm('['+_courseLabel()+'] 과정의 실적+인품을 모두 0으로 초기화합니다.\n\n진행하시겠습니까?'))return;
+  if(!confirm('정말로 초기화하시겠습니까?\n되돌릴 수 없습니다.'))return;
+  D.forEach(function(d){d[9]=0;d[10]=0;d[11]=-d[8];d[12]=0;d[13]=0;});
+  showResetMsg('✅ 실적+인품 모두 초기화 완료 ('+_courseLabel()+')','#cc4444');
+  renderAll();renderGrpTable();pushToFirebase();
+}
+function resetToInitial(){
+  if(!confirm('['+_courseLabel()+'] 과정을 명단까지 처음 상태로 되돌립니다.\n(이름·기준실적까지 초기 상태로 복원)\n\n진행하시겠습니까?'))return;
+  if(!confirm('정말로 초기화하시겠습니까?\n되돌릴 수 없습니다.'))return;
+  D.length=0;
+  COURSE_INITIAL_D.forEach(function(row){
+    var r=row.slice();
+    if(CURRENT_COURSE==='2'){r[9]=0;r[10]=0;r[11]=-r[8];r[12]=0;r[13]=0;}
+    D.push(r);
+  });
+  showResetMsg('✅ 처음 상태로 복원 완료 ('+_courseLabel()+')','#666');
+  renderAll();renderGrpTable();pushToFirebase();
+}
+
 function applyIpumPaste(){const txt=document.getElementById('ipumPasteArea').value;let cnt=0;txt.split('\n').forEach(line=>{const parts=line.trim().split(/\s+/);if(parts.length<2)return;let name=parts[0];if(typeof NAME_FIX!=='undefined'&&NAME_FIX[name])name=NAME_FIX[name];var cnt12=parseInt(parts[1].replace(/,/g,''))||0;var amt13=parts.length>=3?parseInt(parts[parts.length-1].replace(/,/g,''))||0:0;D.forEach(d=>{if(d[5]===name){d[12]=cnt12;if(amt13>0)d[13]=amt13;cnt++;}});});const msg=document.getElementById('ipumPasteMsg');msg.textContent='✅ '+cnt+'명 반영';msg.style.display='inline';msg.style.color='#1a8a40';setTimeout(()=>msg.style.display='none',3000);renderAll();pushToFirebase();}
 function saveEdits(){D.forEach((d,i)=>{const nameEl=document.getElementById('e5_'+i);if(nameEl){const newName=nameEl.value.trim();if(newName)d[5]=newName;}const baseEl=document.getElementById('e8_'+i);if(baseEl){const base=parseFloat(baseEl.value);if(!isNaN(base)&&base>=0)d[8]=base;}const cur=parseFloat(document.getElementById('e9_'+i)?.value)||d[9];d[9]=cur;d[10]=d[8]>0?parseFloat((cur/d[8]*100).toFixed(1)):0;d[11]=cur-d[8];d[12]=parseInt(document.getElementById('e12_'+i)?.value)||0;d[13]=parseInt(document.getElementById('e13_'+i)?.value)||0;});document.getElementById('saveMsg').style.display='inline';setTimeout(()=>document.getElementById('saveMsg').style.display='none',2500);renderAll();renderGrpTable();pushToFirebase();}
 function saveIpumEdits(){D.forEach((d,i)=>{d[12]=parseInt(document.getElementById('ip12_'+i)?.value)||0;d[13]=parseInt(document.getElementById('ip13_'+i)?.value)||0;});document.getElementById('ipumSaveMsg').style.display='inline';setTimeout(()=>document.getElementById('ipumSaveMsg').style.display='none',2500);renderAll();pushToFirebase();}
@@ -2201,7 +2373,7 @@ function initFirebase(){
     showSyncStatusWithRetry('❌ SDK 로드 실패(광고차단/방화벽)','#cc4444');return;
   }
   if(!firebase.apps.length)firebase.initializeApp(FB_CFG);
-  try{db_ref=firebase.database().ref('master_dashboard_v1');fb_ready=true;}catch(e){console.log('[Firebase] DB 초기화 오류:',e.message);showSyncStatusWithRetry('❌ DB 초기화 실패','#cc4444');return;}
+  try{db_ref=firebase.database().ref(fbPath('master_dashboard_v1'));fb_ready=true;}catch(e){console.log('[Firebase] DB 초기화 오류:',e.message);showSyncStatusWithRetry('❌ DB 초기화 실패','#cc4444');return;}
   console.log('[Firebase] 연결 시도, FB_CFG:',FB_CFG.databaseURL);
   showSyncStatus('연결중...','#888');
   db_ref.on('value',function(snap){
@@ -2231,6 +2403,212 @@ document.getElementById('pg-admin').style.display='none';
 document.getElementById('mtoggle').style.display='none';
 window.addEventListener('load',function(){setTimeout(initFirebase,500);});
 
+// ── Master Ⅰ/Ⅱ 과정 전환 ──
+var CURRENT_COURSE = (function(){try{return localStorage.getItem('currentCourse')||'1';}catch(e){return '1';}})();
+var COURSE_INITIAL_D = D.map(function(row){return row.slice();}); // 초기 명단 백업
+function fbPath(name){return CURRENT_COURSE==='2'?(name+'_c2'):name;}
+function updateCourseTabs(){
+  var b1=document.getElementById('ctab-1'),b2=document.getElementById('ctab-2'),bc=document.getElementById('ctab-cmp');
+  if(!b1||!b2)return;
+  var on={bg:'#ffe066',color:'#7a5000',border:'#ffe066',shadow:'0 2px 8px rgba(255,224,102,.4)'};
+  var on2={bg:'#88dd66',color:'#1a4a00',border:'#88dd66',shadow:'0 2px 8px rgba(136,221,102,.4)'};
+  var onC={bg:'#aac8ff',color:'#0a2a70',border:'#aac8ff',shadow:'0 2px 8px rgba(170,200,255,.4)'};
+  var off={bg:'rgba(255,255,255,0.08)',color:'#cce0ff',border:'rgba(255,255,255,0.3)',shadow:'none'};
+  var s1=CURRENT_COURSE==='1'?on:off, s2=CURRENT_COURSE==='2'?on2:off, sc=CURRENT_COURSE==='compare'?onC:off;
+  b1.style.background=s1.bg;b1.style.color=s1.color;b1.style.borderColor=s1.border;b1.style.boxShadow=s1.shadow;
+  b2.style.background=s2.bg;b2.style.color=s2.color;b2.style.borderColor=s2.border;b2.style.boxShadow=s2.shadow;
+  if(bc){bc.style.background=sc.bg;bc.style.color=sc.color;bc.style.borderColor=sc.border;bc.style.boxShadow=sc.shadow;}
+  // 헤더 제목·과정명 업데이트 (비교 모드는 다른 표기)
+  var t=document.getElementById('hdr-title');
+  if(t){
+    if(CURRENT_COURSE==='compare')t.innerHTML='<em>고객컨설팅 </em>Ⅰ vs Ⅱ 비교';
+    else t.innerHTML='<em>고객컨설팅 </em>Master '+(CURRENT_COURSE==='2'?'Ⅱ':'Ⅰ')+' 현황판';
+  }
+  var awt=document.getElementById('aw-title');
+  if(awt&&awt.innerHTML.indexOf('Master')<0&&CURRENT_COURSE!=='compare')awt.innerHTML='📋 2026년 고객마스터'+(CURRENT_COURSE==='2'?'Ⅱ':'')+'과정 활성화 시상안';
+  // 관리자 비밀번호 모달 제목도 갱신
+  var pwt=document.getElementById('pw-title');
+  if(pwt&&CURRENT_COURSE!=='compare')pwt.textContent='고객컨설팅 Master '+(CURRENT_COURSE==='2'?'Ⅱ':'Ⅰ');
+  // body에 테마 클래스 토글
+  document.body.classList.remove('theme-c1','theme-c2','theme-cmp');
+  document.body.classList.add('theme-'+(CURRENT_COURSE==='2'?'c2':CURRENT_COURSE==='compare'?'cmp':'c1'));
+}
+function switchCourse(c){
+  if(c==='compare'){
+    // 비교 모드 진입
+    CURRENT_COURSE='compare';
+    try{localStorage.setItem('currentCourse',c);}catch(e){}
+    document.getElementById('pg-home').style.display='none';
+    document.getElementById('pg-detail').style.display='none';
+    document.getElementById('pg-admin').style.display='none';
+    document.getElementById('pg-compare').style.display='block';
+    var nav=document.querySelector('.tab-nav');if(nav)nav.style.display='none';
+    var mt=document.getElementById('mtoggle');if(mt)mt.style.display='none';
+    updateCourseTabs();
+    loadComparisonData();
+    window.scrollTo(0,0);
+    return;
+  }
+  // 비교에서 다른 탭으로 복귀
+  document.getElementById('pg-compare').style.display='none';
+  var nav2=document.querySelector('.tab-nav');if(nav2)nav2.style.display='';
+  if(CURRENT_COURSE===c){updateCourseTabs();return;}
+  CURRENT_COURSE=c;
+  try{localStorage.setItem('currentCourse',c);}catch(e){}
+  // 로컬 D를 초기 상태로 리셋 (실적 데이터 0으로)
+  D.length=0;
+  COURSE_INITIAL_D.forEach(function(row){
+    var r=row.slice();
+    if(c==='2'){r[9]=0;r[10]=0;r[11]=-r[8];r[12]=0;r[13]=0;}
+    D.push(r);
+  });
+  // 홈으로 복귀
+  document.getElementById('pg-home').style.display='block';
+  document.getElementById('pg-detail').style.display='none';
+  document.getElementById('pg-admin').style.display='none';
+  updateCourseTabs();
+  // Firebase 재연결 (새 경로로)
+  reloadFirebaseForCourse();
+  showSyncStatus('🔄 Master '+(c==='2'?'Ⅱ':'Ⅰ')+' 데이터 로드 중...','#888');
+}
+
+// ── 비교 화면 데이터 로드 ──
+function loadComparisonData(){
+  var loading=document.getElementById('cmp-loading');
+  var content=document.getElementById('cmp-content');
+  if(loading){loading.style.display='block';loading.textContent='🔄 데이터 로딩 중...';}
+  if(content)content.style.display='none';
+  if(typeof firebase==='undefined'||!firebase.apps||!firebase.apps.length){
+    if(loading)loading.textContent='⚠️ Firebase 연결 필요 — 인터넷 환경에서 열어주세요';
+    return;
+  }
+  var p1=firebase.database().ref('master_dashboard_v1').once('value').then(function(s){return s.val();}).catch(function(){return null;});
+  var p2=firebase.database().ref('master_dashboard_v1_c2').once('value').then(function(s){return s.val();}).catch(function(){return null;});
+  Promise.all([p1,p2]).then(function(results){
+    var d1=results[0]&&results[0].D?results[0].D:COURSE_INITIAL_D.map(function(r){return r.slice();});
+    var d2=results[1]&&results[1].D?results[1].D:COURSE_INITIAL_D.map(function(r){var x=r.slice();x[9]=0;x[10]=0;x[11]=-x[8];x[12]=0;x[13]=0;return x;});
+    renderComparison(d1,d2);
+    if(loading)loading.style.display='none';
+    if(content)content.style.display='block';
+  }).catch(function(err){
+    if(loading)loading.textContent='❌ 데이터 로드 실패: '+(err&&err.message);
+  });
+}
+
+function renderComparison(d1,d2){
+  // KPI 계산
+  function calc(D2){
+    var total=D2.length;
+    var sumBase=D2.reduce(function(s,d){return s+(d[8]||0);},0);
+    var sumCur=D2.reduce(function(s,d){return s+(d[9]||0);},0);
+    var sumNet=D2.reduce(function(s,d){return s+(d[11]||0);},0);
+    var avgR=sumBase>0?(sumCur/sumBase*100):0;
+    var over5=D2.filter(function(d){return (d[11]||0)>=50000;}).length;
+    var over30=D2.filter(function(d){return (d[11]||0)>=300000;}).length;
+    var over50=D2.filter(function(d){return (d[11]||0)>=500000;}).length;
+    return {total:total,sumBase:sumBase,sumCur:sumCur,sumNet:sumNet,avgR:avgR,over5:over5,over30:over30,over50:over50};
+  }
+  var k1=calc(d1),k2=calc(d2);
+  // KPI 카드
+  function kpiRow(label,v1,v2,fmt,unit,higherBetter){
+    var f=fmt||function(x){return x.toLocaleString();};
+    var diff=v2-v1;
+    var diffStr=(diff>0?'+':'')+f(diff)+(unit||'');
+    var arrow=diff>0?'↑':diff<0?'↓':'─';
+    var betterColor=higherBetter?(diff>0?'#1a8a40':diff<0?'#cc4444':'#888'):(diff<0?'#1a8a40':diff>0?'#cc4444':'#888');
+    if(diff===0)betterColor='#888';
+    return '<div style="display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:6px;align-items:center;padding:8px 10px;background:#fff;border-radius:8px;border:1px solid #e0e8f0;">'
+      +'<div style="font-size:11px;font-weight:700;color:#0a2050;">'+label+'</div>'
+      +'<div style="font-size:13px;font-weight:900;color:#7a5000;text-align:right;">'+f(v1)+(unit||'')+'</div>'
+      +'<div style="font-size:13px;font-weight:900;color:#1a4a00;text-align:right;">'+f(v2)+(unit||'')+'</div>'
+      +'<div style="font-size:11px;font-weight:900;color:'+betterColor+';text-align:right;">'+arrow+' '+(diff===0?'─':diffStr.replace(/^\+-/,'-'))+'</div>'
+      +'</div>';
+  }
+  var hdr='<div style="display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:6px;padding:6px 10px;background:#0d2554;border-radius:7px;color:#fff;font-size:11px;font-weight:700;margin-bottom:5px;">'
+    +'<div>지표</div>'
+    +'<div style="text-align:right;color:#ffe066;">📘 Master Ⅰ</div>'
+    +'<div style="text-align:right;color:#88dd66;">📗 Master Ⅱ</div>'
+    +'<div style="text-align:right;">증감 (Ⅱ-Ⅰ)</div>'
+    +'</div>';
+  var winFmt=function(x){return Math.round(x).toLocaleString();};
+  var pctFmt=function(x){return x.toFixed(1);};
+  document.getElementById('cmp-kpi').innerHTML=hdr
+    +kpiRow('👥 총 인원',k1.total,k2.total,null,'명',true)
+    +kpiRow('📊 평균 달성률',k1.avgR,k2.avgR,pctFmt,'%',true)
+    +kpiRow('💵 기준실적 합계',k1.sumBase,k2.sumBase,winFmt,'원',true)
+    +kpiRow('💰 현재실적 합계',k1.sumCur,k2.sumCur,winFmt,'원',true)
+    +kpiRow('📈 총 순증액',k1.sumNet,k2.sumNet,winFmt,'원',true)
+    +kpiRow('✅ 5만원↑ 인원',k1.over5,k2.over5,null,'명',true)
+    +kpiRow('🎯 30만원↑ 인원',k1.over30,k2.over30,null,'명',true)
+    +kpiRow('🏆 50만원↑ 인원',k1.over50,k2.over50,null,'명',true);
+  // 신장률 TOP3 (d[10] 내림차순)
+  function renderRate(elId,Dx){
+    var sorted=Dx.map(function(d){return d;}).filter(function(d){return d[8]>0;}).sort(function(a,b){return (b[11]/b[8])-(a[11]/a[8]);});
+    var html=sorted.slice(0,3).map(function(d,k){
+      var rate=(d[11]/d[8]*100).toFixed(1);
+      var medal=k===0?'🥇':k===1?'🥈':'🥉';
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(0,0,0,0.08);"><span><b>'+medal+' '+d[5]+'</b></span><span style="font-weight:900;color:#0040b0;">'+rate+'%</span></div>';
+    }).join('');
+    var el=document.getElementById(elId);if(el)el.innerHTML=html||'<div style="color:#aaa;">데이터 없음</div>';
+  }
+  renderRate('cmp-r-1',d1);renderRate('cmp-r-2',d2);
+  // 신장액 TOP3
+  function renderAmt(elId,Dx){
+    var sorted=Dx.slice().sort(function(a,b){return (b[11]||0)-(a[11]||0);});
+    var html=sorted.slice(0,3).map(function(d,k){
+      var medal=k===0?'🥇':k===1?'🥈':'🥉';
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(0,0,0,0.08);"><span><b>'+medal+' '+d[5]+'</b></span><span style="font-weight:900;color:#cc5500;">+'+(d[11]||0).toLocaleString()+'원</span></div>';
+    }).join('');
+    var el=document.getElementById(elId);if(el)el.innerHTML=html||'<div style="color:#aaa;">데이터 없음</div>';
+  }
+  renderAmt('cmp-a-1',d1);renderAmt('cmp-a-2',d2);
+  // 인품왕 TOP3
+  function renderIpum(elId,Dx){
+    var sorted=Dx.slice().filter(function(d){return (d[13]||0)>0;}).sort(function(a,b){return (b[13]||0)-(a[13]||0);});
+    var html=sorted.slice(0,3).map(function(d,k){
+      var medal=k===0?'👑':k===1?'🥈':'🥉';
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(0,0,0,0.08);"><span><b>'+medal+' '+d[5]+'</b></span><span style="font-weight:900;color:#b0006a;">'+(d[13]||0).toLocaleString()+'원</span></div>';
+    }).join('');
+    var el=document.getElementById(elId);if(el)el.innerHTML=html||'<div style="color:#aaa;font-size:10px;">인품 데이터 없음</div>';
+  }
+  renderIpum('cmp-i-1',d1);renderIpum('cmp-i-2',d2);
+}
+function reloadFirebaseForCourse(){
+  if(typeof firebase==='undefined'||!firebase.apps||!firebase.apps.length)return;
+  // 이전 리스너 제거
+  if(db_ref&&db_ref.off)try{db_ref.off();}catch(e){}
+  try{firebase.database().ref('master_meta').off();}catch(e){}
+  try{firebase.database().ref('master_meta_c2').off();}catch(e){}
+  try{firebase.database().ref('master_award').off();}catch(e){}
+  try{firebase.database().ref('master_award_c2').off();}catch(e){}
+  // 새 경로로 재연결
+  db_ref=firebase.database().ref(fbPath('master_dashboard_v1'));
+  db_ref.on('value',function(snap){
+    var val=snap.val();
+    if(!val){
+      // 새 과정 첫 진입 — 현재 D 자동 업로드
+      console.log('[Firebase] '+fbPath('master_dashboard_v1')+' 비어있음, 초기 업로드');
+      db_ref.set({D:D.map(function(row){return row.slice();}),updatedAt:new Date().toISOString()});
+      renderAll();renderGrpTable();
+      return;
+    }
+    if(val.D&&Array.isArray(val.D)){val.D.forEach(function(row,i){if(D[i]){if(row[5])D[i][5]=row[5];if(typeof row[8]==='number')D[i][8]=row[8];D[i][9]=row[9]||0;D[i][10]=row[10]||0;D[i][11]=typeof row[11]==='number'?row[11]:(D[i][9]-D[i][8]);D[i][12]=row[12]||0;D[i][13]=row[13]||0;}});renderAll();renderGrpTable();}
+    showSyncStatus('✅ Master '+(CURRENT_COURSE==='2'?'Ⅱ':'Ⅰ')+' 연동 '+new Date().toLocaleTimeString('ko-KR'),'#1a8a40');
+  });
+  // meta·award 리스너도 재바인딩
+  if(typeof loadMeta==='function')loadMeta();
+  if(typeof loadAward==='function')loadAward();
+}
+// 페이지 시작 시 탭 상태 반영 (compare 모드면 비교 화면 자동 진입)
+setTimeout(function(){
+  updateCourseTabs();
+  if(CURRENT_COURSE==='compare'){
+    // compare 모드 복원 — D는 1번 데이터로 유지하고 화면만 비교로
+    CURRENT_COURSE='1';
+    switchCourse('compare');
+  }
+},50);
+
 // ── 이름 자동 교정 매핑 (잘못 입력된 옛 이름 → 올바른 이름) ──
 var NAME_FIX={'유혜순':'유해순','모성민':'모상민','감재명':'갈재명','서영린':'서영란','하용순':'허용순'};
 function fixName(n){return NAME_FIX[n]||n;}
@@ -2256,7 +2634,7 @@ function saveMeta(){
   var o=document.getElementById('hdr-org');if(o)o.textContent=org;
   // Firebase에 저장
   if(fb_ready&&typeof firebase!=='undefined'){
-    firebase.database().ref('master_meta').set({title:title,org:org,t:Date.now()},function(err){
+    firebase.database().ref(fbPath('master_meta')).set({title:title,org:org,t:Date.now()},function(err){
       var msg=document.getElementById('metaMsg');if(!msg)return;
       msg.textContent=err?'❌ 저장실패':'✅ 저장완료';msg.style.color=err?'#cc0000':'#1a8a40';msg.style.display='inline';
       setTimeout(function(){msg.style.display='none';},2500);
@@ -2269,7 +2647,7 @@ function loadMeta(){
   if(_metaLoaded)return;
   if(!fb_ready||typeof firebase==='undefined'){setTimeout(loadMeta,500);return;}
   _metaLoaded=true;
-  firebase.database().ref('master_meta').on('value',function(snap){
+  firebase.database().ref(fbPath('master_meta')).on('value',function(snap){
     var v=snap.val();if(!v)return;
     if(v.title){
       var t=document.getElementById('meta-title');if(t)t.value=v.title;
@@ -2334,7 +2712,7 @@ function saveAward(){
   applyAwardToDisplay(a);
   var msg=document.getElementById('awardMsg');
   if(fb_ready&&typeof firebase!=='undefined'){
-    firebase.database().ref('master_award').set(a,function(err){
+    firebase.database().ref(fbPath('master_award')).set(a,function(err){
       if(!msg)return;
       msg.textContent=err?'❌ 저장실패':'✅ 저장완료';msg.style.color=err?'#cc0000':'#1a8a40';msg.style.display='inline';
       setTimeout(function(){msg.style.display='none';},2500);
@@ -2353,7 +2731,7 @@ function loadAward(){
   if(_awardLoaded)return;
   if(!fb_ready||typeof firebase==='undefined'){setTimeout(loadAward,500);return;}
   _awardLoaded=true;
-  firebase.database().ref('master_award').on('value',function(snap){
+  firebase.database().ref(fbPath('master_award')).on('value',function(snap){
     var v=snap.val();
     if(v){
       applyAwardToDisplay(v);
@@ -2541,7 +2919,7 @@ function logViewHistory(name,branch,item){
     // 2초 내 동일 이름+항목 중복 방지
     var k=name+'|'+item+'|'+Math.floor(Date.now()/2000);
     if(k===_vhLastKey)return;_vhLastKey=k;
-    var ref=firebase.database().ref('master_view_history/'+item);
+    var ref=firebase.database().ref(fbPath('master_view_history')+'/'+item);
     ref.push({n:name,b:branch||'',t:Date.now()});
     // 해당 항목 최근 100건만 유지
     ref.orderByChild('t').limitToLast(120).once('value',function(snap){
@@ -2575,7 +2953,7 @@ function loadViewHistory(){
   body.innerHTML='<div style="text-align:center;color:#888;padding:12px;">로딩 중...</div>';
   var keys=Object.keys(ITEMS);
   var promises=keys.map(function(item){
-    return firebase.database().ref('master_view_history/'+item).orderByChild('t').limitToLast(100).once('value').then(function(snap){
+    return firebase.database().ref(fbPath('master_view_history')+'/'+item).orderByChild('t').limitToLast(100).once('value').then(function(snap){
       var arr=[];snap.forEach(function(c){var v=c.val();arr.push({n:v.n,b:v.b,i:item,t:v.t});});
       return arr;
     }).catch(function(){return [];});
@@ -2680,7 +3058,7 @@ function renderHistoryByItem(arr,body){
 function clearViewHistory(){
   if(!confirm('조회이력 전체를 삭제하시겠습니까? (모든 항목)'))return;
   if(!fb_ready||typeof firebase==='undefined'){alert('Firebase 연결 필요');return;}
-  firebase.database().ref('master_view_history').set(null,function(){loadViewHistory();});
+  firebase.database().ref(fbPath('master_view_history')).set(null,function(){loadViewHistory();});
 }
 
 // ── 실적 합계 검증 ──
