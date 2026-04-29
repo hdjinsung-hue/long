@@ -258,7 +258,7 @@ input[type=number][readonly]{color:#556688;background:#f8f8f8;}
     <span id="todayLabel">2026년 4월 20일</span><span>|</span>
     <span><span class="dot"></span> 전일마감 기준</span>
     <span id="syncStatus" style="font-size:10px;margin-left:6px;color:#888;">연결중...</span>
-    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v37</span>
+    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v38</span>
   </div>
   <div class="tab-nav">
     <button class="tb on" id="tb-home" onclick="goTab('home',this)">🏠 홈 대시보드</button>
@@ -744,6 +744,8 @@ let D = [
   ["호남지역단","광주비전센터",  "광주TC지점",  "1A4011",    "",              "김윤영", 81,"SM",        434500,  392710, 90.4,  -41790, 1, 116330],
   ["호남지역단","광주비전센터",  "광주TC지점",  "1B9374",    "",              "천수정", 41,"",          610965,  720910,118.0,  109945, 1, 188020],
 ];
+// 헬퍼: GROUPS 멤버의 base를 D[8]/1000과 동기화 (D 우선, 없으면 GROUPS 폴백)
+function memberBase(m){var f=D.find(function(d){return d[5]===m.name;});return f?Math.round(f[8]/1000):m.base;}
 const GROUPS = [
   // ── 광주비전센터 ──
   {id:1, center:'광주비전센터', members:[
@@ -847,8 +849,8 @@ function renderGrpTable(){
   if(!tb)return;
   let html='',sumHtml='<div class="grp-summary">';
   const grpData=GROUPS.map((g,gi)=>{
-    const base=g.members.map(m=>m.base);
-    const cur=g.members.map(m=>{const f=D.find(d=>d[5]===m.name);return f?Math.round(f[9]/1000):m.base;});
+    const base=g.members.map(m=>memberBase(m));
+    const cur=g.members.map(m=>{const f=D.find(d=>d[5]===m.name);return f?Math.round(f[9]/1000):memberBase(m);});
     const bSum=base.reduce((s,v)=>s+v,0);
     const cSum=cur.reduce((s,v)=>s+v,0);
     const achv=bSum>0?cSum/bSum*100:0;
@@ -991,8 +993,8 @@ function printAll(){
 
 function openGrpDetail(gi){
   var g=GROUPS[gi];
-  var base=g.members.map(function(m){return m.base;});
-  var cur=g.members.map(function(m){var f=D.find(function(d){return d[5]===m.name;});return f?Math.round(f[9]/1000):m.base;});
+  var base=g.members.map(function(m){return memberBase(m);});
+  var cur=g.members.map(function(m){var f=D.find(function(d){return d[5]===m.name;});return f?Math.round(f[9]/1000):memberBase(m);});
   var bSum=base.reduce(function(s,v){return s+v;},0);
   var cSum=cur.reduce(function(s,v){return s+v;},0);
   var grpRate=bSum>0?(cSum-bSum)/bSum*100:0;
@@ -1018,7 +1020,7 @@ function openGrpDetail(gi){
     +'</tr></thead><tbody>';
   g.members.forEach(function(m,mi){
     var f=D.find(function(d){return d[5]===m.name;});
-    var bc=m.base*1000,cc=f?f[9]:bc,net=cc-bc;
+    var bc=memberBase(m)*1000,cc=f?f[9]:bc,net=cc-bc;
     var achv=bc>0?cc/bc*100:0;
     var nc=achv>=100?'#006030':achv>=80?'#1a6030':achv>=50?'#884400':'#880000';
     var netc=net>0?'#0040b0':'#880000';
@@ -1027,7 +1029,7 @@ function openGrpDetail(gi){
     var needk=50-Math.round(net/1000);
     rows+='<tr style="background:'+bg+';border-bottom:1px solid #e8eef8;">'
       +'<td style="padding:5px 4px;font-weight:700;color:#0a2050;white-space:nowrap;">'+m.name+'</td>'
-      +'<td style="padding:5px 4px;text-align:right;color:#556688;">'+m.base.toLocaleString()+'</td>'
+      +'<td style="padding:5px 4px;text-align:right;color:#556688;">'+memberBase(m).toLocaleString()+'</td>'
       +'<td style="padding:5px 4px;text-align:right;font-weight:700;">'+Math.round(cc/1000).toLocaleString()+'</td>'
       +'<td style="padding:5px 4px;text-align:right;font-weight:700;color:'+netc+';">'+(netk>=0?'+':'')+netk.toLocaleString()+'</td>'
       +'<td style="padding:5px 4px;text-align:center;font-weight:900;color:'+nc+';">'+achv.toFixed(1)+'%</td>'
@@ -1089,8 +1091,8 @@ function renderHomeGrp(){
   var hgrp=document.getElementById('home-grp');
   if(!hgrp)return;
   var ranked=GROUPS.map(function(g,gi){
-    var base=g.members.map(function(m){return m.base;});
-    var cur=g.members.map(function(m){var f=D.find(function(d){return d[5]===m.name;});return f?Math.round(f[9]/1000):m.base;});
+    var base=g.members.map(function(m){return memberBase(m);});
+    var cur=g.members.map(function(m){var f=D.find(function(d){return d[5]===m.name;});return f?Math.round(f[9]/1000):memberBase(m);});
     var bSum=base.reduce(function(s,v){return s+v;},0);
     var cSum=cur.reduce(function(s,v){return s+v;},0);
     return {id:g.id,gi:gi,achv:bSum>0?cSum/bSum*100:0,members:g.members};
@@ -1113,8 +1115,8 @@ function renderHomeGrp(){
   var hgrp=document.getElementById('home-grp');
   if(!hgrp)return;
   var ranked=GROUPS.map(function(g,gi){
-    var base=g.members.map(function(m){return m.base;});
-    var cur=g.members.map(function(m){var f=D.find(function(d){return d[5]===m.name;});return f?Math.round(f[9]/1000):m.base;});
+    var base=g.members.map(function(m){return memberBase(m);});
+    var cur=g.members.map(function(m){var f=D.find(function(d){return d[5]===m.name;});return f?Math.round(f[9]/1000):memberBase(m);});
     var bSum=base.reduce(function(s,v){return s+v;},0);
     var cSum=cur.reduce(function(s,v){return s+v;},0);
     return {id:g.id,gi:gi,achv:bSum>0?cSum/bSum*100:0,members:g.members};
@@ -1172,8 +1174,8 @@ function openPerfPopup(i){
     var g=GROUPS[gi];
     var found=g.members.find(function(m){return m.name===name;});
     if(!found)continue;
-    var base2=g.members.map(function(m){return m.base;});
-    var cur2=g.members.map(function(m){var f=D.find(function(dd){return dd[5]===m.name;});return f?Math.round(f[9]/1000):m.base;});
+    var base2=g.members.map(function(m){return memberBase(m);});
+    var cur2=g.members.map(function(m){var f=D.find(function(dd){return dd[5]===m.name;});return f?Math.round(f[9]/1000):memberBase(m);});
     var bSum=base2.reduce(function(s,v){return s+v;},0);
     var cSum=cur2.reduce(function(s,v){return s+v;},0);
     var grpRate=bSum>0?(cSum-bSum)/bSum*100:0;
@@ -1595,8 +1597,8 @@ function renderHomeGrp(){
   var hgrp=document.getElementById('home-grp');
   if(!hgrp)return;
   var ranked=GROUPS.map(function(g,gi){
-    var base=g.members.map(function(m){return m.base;});
-    var cur=g.members.map(function(m){var f=D.find(function(d){return d[5]===m.name;});return f?Math.round(f[9]/1000):m.base;});
+    var base=g.members.map(function(m){return memberBase(m);});
+    var cur=g.members.map(function(m){var f=D.find(function(d){return d[5]===m.name;});return f?Math.round(f[9]/1000):memberBase(m);});
     var bSum=base.reduce(function(s,v){return s+v;},0);
     var cSum=cur.reduce(function(s,v){return s+v;},0);
     return {id:g.id,gi:gi,achv:bSum>0?cSum/bSum*100:0,members:g.members};
@@ -1654,8 +1656,8 @@ function openPerfPopup(i){
     var g=GROUPS[gi];
     var found=g.members.find(function(m){return m.name===name;});
     if(!found)continue;
-    var base2=g.members.map(function(m){return m.base;});
-    var cur2=g.members.map(function(m){var f=D.find(function(dd){return dd[5]===m.name;});return f?Math.round(f[9]/1000):m.base;});
+    var base2=g.members.map(function(m){return memberBase(m);});
+    var cur2=g.members.map(function(m){var f=D.find(function(dd){return dd[5]===m.name;});return f?Math.round(f[9]/1000):memberBase(m);});
     var bSum=base2.reduce(function(s,v){return s+v;},0);
     var cSum=cur2.reduce(function(s,v){return s+v;},0);
     var grpRate=bSum>0?(cSum-bSum)/bSum*100:0;
