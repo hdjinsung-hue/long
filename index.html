@@ -303,7 +303,8 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
   </div>
 </div>
 
-<div class="hdr">
+<div class="hdr" style="position:relative;">
+  <a href="headquarters.html" id="hq-home-btn" style="position:absolute;top:10px;right:12px;display:inline-flex;align-items:center;gap:4px;padding:5px 11px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.4);border-radius:18px;font-size:11px;font-weight:800;color:#fff;text-decoration:none;font-family:inherit;cursor:pointer;transition:all 0.18s;backdrop-filter:blur(4px);z-index:10;" onmouseover="this.style.background='rgba(255,255,255,0.28)';this.style.transform='translateY(-1px)';" onmouseout="this.style.background='rgba(255,255,255,0.15)';this.style.transform='translateY(0)';" title="본부 통합 대시보드로 이동">🏢 본부로</a>
   <div class="org" id="hdr-org">현대해상 호남 지역단</div>
   <div id="course-tabs" style="display:flex;gap:6px;justify-content:center;margin:8px auto 10px;max-width:480px;">
     <button id="ctab-1" onclick="switchCourse('1')" style="flex:1;padding:9px 10px;font-size:12px;font-weight:900;border-radius:9px;border:2px solid #ffe066;background:#ffe066;color:#7a5000;cursor:pointer;transition:all 0.18s;font-family:inherit;box-shadow:0 2px 8px rgba(255,224,102,.4);">📘 Master Ⅰ</button>
@@ -315,7 +316,7 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
     <span id="todayLabel">2026년 4월 20일</span><span>|</span>
     <span><span class="dot"></span> 전일마감 기준</span>
     <span id="syncStatus" style="font-size:10px;margin-left:6px;color:#888;">연결중...</span>
-    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.005</span>
+    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.006</span>
   </div>
   <div class="tab-nav">
     <button class="tb on" id="tb-home" onclick="goTab('home',this)">🏠 홈 대시보드</button>

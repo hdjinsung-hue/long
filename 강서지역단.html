@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>고객컨설팅 Master Ⅰ 현황판 (중부)</title>
+<title>고객컨설팅 Master Ⅰ 현황판 (강서)</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
@@ -305,7 +305,7 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
 
 <div class="hdr" style="position:relative;">
   <a href="headquarters.html" id="hq-home-btn" style="position:absolute;top:10px;right:12px;display:inline-flex;align-items:center;gap:4px;padding:5px 11px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.4);border-radius:18px;font-size:11px;font-weight:800;color:#fff;text-decoration:none;font-family:inherit;cursor:pointer;transition:all 0.18s;backdrop-filter:blur(4px);z-index:10;" onmouseover="this.style.background='rgba(255,255,255,0.28)';this.style.transform='translateY(-1px)';" onmouseout="this.style.background='rgba(255,255,255,0.15)';this.style.transform='translateY(0)';" title="본부 통합 대시보드로 이동">🏢 본부로</a>
-  <div class="org" id="hdr-org">현대해상 중부 지역단</div>
+  <div class="org" id="hdr-org">현대해상 강서 지역단</div>
   <div id="course-tabs" style="display:flex;gap:6px;justify-content:center;margin:8px auto 10px;max-width:480px;">
     <button id="ctab-1" onclick="switchCourse('1')" style="flex:1;padding:9px 10px;font-size:12px;font-weight:900;border-radius:9px;border:2px solid #ffe066;background:#ffe066;color:#7a5000;cursor:pointer;transition:all 0.18s;font-family:inherit;box-shadow:0 2px 8px rgba(255,224,102,.4);">📘 Master Ⅰ</button>
     <button id="ctab-2" onclick="switchCourse('2')" style="flex:1;padding:9px 10px;font-size:12px;font-weight:900;border-radius:9px;border:2px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.08);color:#cce0ff;cursor:pointer;transition:all 0.18s;font-family:inherit;">📗 Master Ⅱ</button>
@@ -540,7 +540,7 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
   <div class="ag">
     <div class="ac"><h3>📌 과정 기본 정보 <button class="sbtn" onclick="saveMeta()" style="background:#1a5cb0;color:#fff;border-color:#1a5cb0;">💾 저장</button><span id="metaMsg" style="font-size:9px;color:#1a8a40;display:none;margin-left:4px;">✅ 저장완료</span></h3>
       <div class="ar"><span class="al">과정명</span><input type="text" id="meta-title" class="av" value="고객컨설팅 Master Ⅰ" style="width:60%;padding:3px 6px;font-size:11px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;text-align:right;"></div>
-      <div class="ar"><span class="al">지역단</span><input type="text" id="meta-org" class="av" value="현대해상 중부 지역단" style="width:60%;padding:3px 6px;font-size:11px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;text-align:right;"></div>
+      <div class="ar"><span class="al">지역단</span><input type="text" id="meta-org" class="av" value="현대해상 강서 지역단" style="width:60%;padding:3px 6px;font-size:11px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;text-align:right;"></div>
       <div class="ar"><span class="al">기준일</span><span class="av" id="meta-date">-</span></div>
       <div class="ar"><span class="al">총 인원</span><span class="av" id="adm-total">-</span></div>
     </div>
@@ -866,72 +866,70 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
 <script>
 
 let D = [
-  ["중부지역단","","","072557","","한연미",0,"",606018,0,0,-606018,0,0],
-  ["중부지역단","","","1C7592","","조선경",0,"",410373,0,0,-410373,0,0],
-  ["중부지역단","","","1D0071","","이해옥",0,"",346695,0,0,-346695,0,0],
-  ["중부지역단","","","033723","","이규란",0,"",118865,0,0,-118865,0,0],
-  ["중부지역단","","","149689","","김성예",0,"",480929,0,0,-480929,0,0],
-  ["중부지역단","","","193845","","김상금",0,"",536988,0,0,-536988,0,0],
-  ["중부지역단","","","1B0071","","이우선",0,"",422703,0,0,-422703,0,0],
-  ["중부지역단","","","961199","","유수근",0,"",1040833,0,0,-1040833,0,0],
-  ["중부지역단","","","111239","","우미식",0,"",1054045,0,0,-1054045,0,0],
-  ["중부지역단","","","1B5038","","정선화",0,"",622138,0,0,-622138,0,0],
-  ["중부지역단","","","1C2331","","전보은",0,"",382305,0,0,-382305,0,0],
-  ["중부지역단","","","983703","","최보은",0,"",1881986,0,0,-1881986,0,0],
-  ["중부지역단","","","985634","","김성자",0,"",868635,0,0,-868635,0,0],
-  ["중부지역단","","","049573","","한은미",0,"",501053,0,0,-501053,0,0],
-  ["중부지역단","","","074226","","안현숙",0,"",598330,0,0,-598330,0,0],
-  ["중부지역단","","","148071","","이수경",0,"",356788,0,0,-356788,0,0],
-  ["중부지역단","","","1A3187","","정의근",0,"",257440,0,0,-257440,0,0],
-  ["중부지역단","","","1C4672","","김민주",0,"",233088,0,0,-233088,0,0],
-  ["중부지역단","","","1D2372","","황진자",0,"",373075,0,0,-373075,0,0],
-  ["중부지역단","","","956418","","백영미",0,"",513275,0,0,-513275,0,0],
-  ["중부지역단","","","974787","","양효심",0,"",1405758,0,0,-1405758,0,0],
-  ["중부지역단","","","089933","","김영자",0,"",470785,0,0,-470785,0,0],
-  ["중부지역단","","","108427","","진명옥",0,"",1358313,0,0,-1358313,0,0],
-  ["중부지역단","","","1A1516","","이재복",0,"",1201918,0,0,-1201918,0,0],
-  ["중부지역단","","","972389","","김성순",0,"",513763,0,0,-513763,0,0],
-  ["중부지역단","","","143613","","이연구",0,"",874700,0,0,-874700,0,0],
-  ["중부지역단","","","159865","","김미선",0,"",356855,0,0,-356855,0,0],
-  ["중부지역단","","","1B1878","","정정애",0,"",298018,0,0,-298018,0,0],
-  ["중부지역단","","","1B9158","","전향숙",0,"",329273,0,0,-329273,0,0],
-  ["중부지역단","","","950655","","남철희",0,"",465213,0,0,-465213,0,0],
+  ["강서지역단","","","190938","","박현숙",0,"",446960,0,0,-446960,0,0],
+  ["강서지역단","","","1A9113","","이민정",0,"",443223,0,0,-443223,0,0],
+  ["강서지역단","","","1C5510","","안권철",0,"",1252650,0,0,-1252650,0,0],
+  ["강서지역단","","","946008","","이점숙",0,"",482610,0,0,-482610,0,0],
+  ["강서지역단","","","955205","","김영숙",0,"",443460,0,0,-443460,0,0],
+  ["강서지역단","","","975920","","성진숙",0,"",401398,0,0,-401398,0,0],
+  ["강서지역단","","","102905","","방희원",0,"",446338,0,0,-446338,0,0],
+  ["강서지역단","","","139170","","박광숙",0,"",642063,0,0,-642063,0,0],
+  ["강서지역단","","","157192","","추은숙",0,"",449247,0,0,-449247,0,0],
+  ["강서지역단","","","195113","","이윤주",0,"",325593,0,0,-325593,0,0],
+  ["강서지역단","","","1A1229","","심은숙",0,"",802393,0,0,-802393,0,0],
+  ["강서지역단","","","1A7357","","강현탁",0,"",459255,0,0,-459255,0,0],
+  ["강서지역단","","","743840","","신지현",0,"",1042345,0,0,-1042345,0,0],
+  ["강서지역단","","","962085","","김학중",0,"",704495,0,0,-704495,0,0],
+  ["강서지역단","","","106888","","최명자",0,"",911563,0,0,-911563,0,0],
+  ["강서지역단","","","109580","","김영자",0,"",698995,0,0,-698995,0,0],
+  ["강서지역단","","","143086","","김옥",0,"",1077480,0,0,-1077480,0,0],
+  ["강서지역단","","","148268","","최옥매",0,"",473945,0,0,-473945,0,0],
+  ["강서지역단","","","195667","","임완수",0,"",1312795,0,0,-1312795,0,0],
+  ["강서지역단","","","1A3439","","이가연",0,"",483690,0,0,-483690,0,0],
+  ["강서지역단","","","1A7792","","전경애",0,"",480270,0,0,-480270,0,0],
+  ["강서지역단","","","952267","","임정미",0,"",1172313,0,0,-1172313,0,0],
+  ["강서지역단","","","153032","","김경연",0,"",1172093,0,0,-1172093,0,0],
+  ["강서지역단","","","1B2295","","양정미",0,"",460433,0,0,-460433,0,0],
+  ["강서지역단","","","1B6967","","김탐라",0,"",346863,0,0,-346863,0,0],
+  ["강서지역단","","","1C2268","","전순희",0,"",328165,0,0,-328165,0,0],
+  ["강서지역단","","","954911","","최선화",0,"",1035483,0,0,-1035483,0,0],
+  ["강서지역단","","","962277","","변종순",0,"",292205,0,0,-292205,0,0],
+  ["강서지역단","","","972024","","배기옥",0,"",417335,0,0,-417335,0,0],
 ];
 // 헬퍼: GROUPS 멤버의 base를 D[8]/1000과 동기화 (D 우선, 없으면 GROUPS 폴백)
 function memberBase(m){var f=D.find(function(d){return d[5]===m.name;});return f?Math.round(f[8]/1000):m.base;}
 const GROUPS = [
-  // ── 중부지역단 (조 미정) ──
+  // ── 강서지역단 (조 미정) ──
   {id:1, center:'미정', members:[
-    {name:'한연미', branch:'', base:606},
-    {name:'조선경', branch:'', base:410},
-    {name:'이해옥', branch:'', base:347},
-    {name:'이규란', branch:'', base:119},
-    {name:'김성예', branch:'', base:481},
-    {name:'김상금', branch:'', base:537},
-    {name:'이우선', branch:'', base:423},
-    {name:'유수근', branch:'', base:1041},
-    {name:'우미식', branch:'', base:1054},
-    {name:'정선화', branch:'', base:622},
-    {name:'전보은', branch:'', base:382},
-    {name:'최보은', branch:'', base:1882},
-    {name:'김성자', branch:'', base:869},
-    {name:'한은미', branch:'', base:501},
-    {name:'안현숙', branch:'', base:598},
-    {name:'이수경', branch:'', base:357},
-    {name:'정의근', branch:'', base:257},
-    {name:'김민주', branch:'', base:233},
-    {name:'황진자', branch:'', base:373},
-    {name:'백영미', branch:'', base:513},
-    {name:'양효심', branch:'', base:1406},
-    {name:'김영자', branch:'', base:471},
-    {name:'진명옥', branch:'', base:1358},
-    {name:'이재복', branch:'', base:1202},
-    {name:'김성순', branch:'', base:514},
-    {name:'이연구', branch:'', base:875},
-    {name:'김미선', branch:'', base:357},
-    {name:'정정애', branch:'', base:298},
-    {name:'전향숙', branch:'', base:329},
-    {name:'남철희', branch:'', base:465}
+    {name:'박현숙', branch:'', base:447},
+    {name:'이민정', branch:'', base:443},
+    {name:'안권철', branch:'', base:1253},
+    {name:'이점숙', branch:'', base:483},
+    {name:'김영숙', branch:'', base:443},
+    {name:'성진숙', branch:'', base:401},
+    {name:'방희원', branch:'', base:446},
+    {name:'박광숙', branch:'', base:642},
+    {name:'추은숙', branch:'', base:449},
+    {name:'이윤주', branch:'', base:326},
+    {name:'심은숙', branch:'', base:802},
+    {name:'강현탁', branch:'', base:459},
+    {name:'신지현', branch:'', base:1042},
+    {name:'김학중', branch:'', base:704},
+    {name:'최명자', branch:'', base:912},
+    {name:'김영자', branch:'', base:699},
+    {name:'김옥', branch:'', base:1077},
+    {name:'최옥매', branch:'', base:474},
+    {name:'임완수', branch:'', base:1313},
+    {name:'이가연', branch:'', base:484},
+    {name:'전경애', branch:'', base:480},
+    {name:'임정미', branch:'', base:1172},
+    {name:'김경연', branch:'', base:1172},
+    {name:'양정미', branch:'', base:460},
+    {name:'김탐라', branch:'', base:347},
+    {name:'전순희', branch:'', base:328},
+    {name:'최선화', branch:'', base:1035},
+    {name:'변종순', branch:'', base:292},
+    {name:'배기옥', branch:'', base:417}
   ]}
 ];
 
@@ -2394,8 +2392,7 @@ window.addEventListener('load',function(){setTimeout(initFirebase,500);});
 var CURRENT_COURSE = (function(){try{return localStorage.getItem('currentCourse')||'1';}catch(e){return '1';}})();
 var COURSE_INITIAL_D = D.map(function(row){return row.slice();}); // 초기 명단 백업
 function fbPath(name){
-  // 중부지역단 전용 경로
-  var n=name.replace(/^master_/,'master_중부_');
+  var n=name.replace(/^master_/,'master_강서_');
   return CURRENT_COURSE==='2'?(n+'_c2'):n;
 }
 function updateCourseTabs(){
@@ -2473,8 +2470,8 @@ function loadComparisonData(){
     if(loading)loading.textContent='⚠️ Firebase 연결 필요 — 인터넷 환경에서 열어주세요';
     return;
   }
-  var p1=firebase.database().ref('master_중부_dashboard_v1').once('value').then(function(s){return s.val();}).catch(function(){return null;});
-  var p2=firebase.database().ref('master_중부_dashboard_v1_c2').once('value').then(function(s){return s.val();}).catch(function(){return null;});
+  var p1=firebase.database().ref('master_강서_dashboard_v1').once('value').then(function(s){return s.val();}).catch(function(){return null;});
+  var p2=firebase.database().ref('master_강서_dashboard_v1_c2').once('value').then(function(s){return s.val();}).catch(function(){return null;});
   Promise.all([p1,p2]).then(function(results){
     var d1=results[0]&&results[0].D?results[0].D:COURSE_INITIAL_D.map(function(r){return r.slice();});
     var d2=results[1]&&results[1].D?results[1].D:COURSE_INITIAL_D.map(function(r){var x=r.slice();x[9]=0;x[10]=0;x[11]=-x[8];x[12]=0;x[13]=0;return x;});
@@ -2569,10 +2566,10 @@ function reloadFirebaseForCourse(){
   if(typeof firebase==='undefined'||!firebase.apps||!firebase.apps.length)return;
   // 이전 리스너 제거
   if(db_ref&&db_ref.off)try{db_ref.off();}catch(e){}
-  try{firebase.database().ref('master_중부_meta').off();}catch(e){}
-  try{firebase.database().ref('master_중부_meta_c2').off();}catch(e){}
-  try{firebase.database().ref('master_중부_award').off();}catch(e){}
-  try{firebase.database().ref('master_중부_award_c2').off();}catch(e){}
+  try{firebase.database().ref('master_강서_meta').off();}catch(e){}
+  try{firebase.database().ref('master_강서_meta_c2').off();}catch(e){}
+  try{firebase.database().ref('master_강서_award').off();}catch(e){}
+  try{firebase.database().ref('master_강서_award_c2').off();}catch(e){}
   // 새 경로로 재연결
   db_ref=firebase.database().ref(fbPath('master_dashboard_v1'));
   db_ref.on('value',function(snap){

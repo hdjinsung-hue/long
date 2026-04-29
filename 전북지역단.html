@@ -303,7 +303,8 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
   </div>
 </div>
 
-<div class="hdr">
+<div class="hdr" style="position:relative;">
+  <a href="headquarters.html" id="hq-home-btn" style="position:absolute;top:10px;right:12px;display:inline-flex;align-items:center;gap:4px;padding:5px 11px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.4);border-radius:18px;font-size:11px;font-weight:800;color:#fff;text-decoration:none;font-family:inherit;cursor:pointer;transition:all 0.18s;backdrop-filter:blur(4px);z-index:10;" onmouseover="this.style.background='rgba(255,255,255,0.28)';this.style.transform='translateY(-1px)';" onmouseout="this.style.background='rgba(255,255,255,0.15)';this.style.transform='translateY(0)';" title="본부 통합 대시보드로 이동">🏢 본부로</a>
   <div class="org" id="hdr-org">현대해상 전북 지역단</div>
   <div id="course-tabs" style="display:flex;gap:6px;justify-content:center;margin:8px auto 10px;max-width:480px;">
     <button id="ctab-1" onclick="switchCourse('1')" style="flex:1;padding:9px 10px;font-size:12px;font-weight:900;border-radius:9px;border:2px solid #ffe066;background:#ffe066;color:#7a5000;cursor:pointer;transition:all 0.18s;font-family:inherit;box-shadow:0 2px 8px rgba(255,224,102,.4);">📘 Master Ⅰ</button>
@@ -315,7 +316,7 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
     <span id="todayLabel">2026년 4월 20일</span><span>|</span>
     <span><span class="dot"></span> 전일마감 기준</span>
     <span id="syncStatus" style="font-size:10px;margin-left:6px;color:#888;">연결중...</span>
-    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">전북v1</span>
+    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.006</span>
   </div>
   <div class="tab-nav">
     <button class="tb on" id="tb-home" onclick="goTab('home',this)">🏠 홈 대시보드</button>
@@ -1153,7 +1154,7 @@ function openGrpDetail(gi){
       +'<td style="padding:5px 4px;text-align:right;font-weight:700;">'+Math.round(cc/1000).toLocaleString()+'</td>'
       +'<td style="padding:5px 4px;text-align:right;font-weight:700;color:'+netc+';">'+(netk>=0?'+':'')+netk.toLocaleString()+'</td>'
       +'<td style="padding:5px 4px;text-align:center;font-weight:900;color:'+nc+';">'+achv.toFixed(1)+'%</td>'
-      +'<td style="padding:5px 4px;text-align:center;">'+(net>=50000?'<span style="color:#006030;font-weight:900;">✅</span>':'<span style="color:#cc5500;font-size:10px;">'+needk+'k↑</span>')+'</td>'
+      +'<td style="padding:5px 4px;text-align:center;">'+(net>=50000?'<span style="color:#006030;font-weight:900;">✅</span>':'<span style="color:#cc5500;font-size:10px;">'+needk+'천원↑</span>')+'</td>'
       +'</tr>';
   });
   rows+='</tbody></table>';
@@ -1171,7 +1172,7 @@ function openGrpDetail(gi){
       if(cur[mi]-base[mi]<50){
         var need=50-(cur[mi]-base[mi]);
         g1html+='<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px solid #f0e8cc;">'
-          +'<b>'+m.name+'</b><span style="color:#cc5500;font-weight:700;">+'+need.toLocaleString()+'k 필요</span></div>';
+          +'<b>'+m.name+'</b><span style="color:#cc5500;font-weight:700;">+'+need.toLocaleString()+'천원 필요</span></div>';
       }
     });
     g1html+='<div style="font-size:16px;font-weight:900;color:#884400;margin-top:8px;text-align:center;padding:6px;background:#fff8e0;border-radius:7px;\">달성시 인당 5만원 지급</div>';
@@ -1185,8 +1186,8 @@ function openGrpDetail(gi){
   if(nextPrize){
     var pp=Math.ceil(nextTarget/g.members.length);
     g2html+='<div style="font-size:12px;color:#1a5cb0;font-weight:700;margin-bottom:3px;">상위 목표: '+nextPrize+'</div>'
-      +'<div style="font-size:12px;color:#334466;">팀 <b>'+nextTarget.toLocaleString()+'k↑</b> 필요</div>'
-      +'<div style="font-size:11px;color:#556688;margin-top:2px;">1인당 약 <b>'+pp.toLocaleString()+'k</b></div>';
+      +'<div style="font-size:12px;color:#334466;">팀 <b>'+nextTarget.toLocaleString()+'천원↑</b> 필요</div>'
+      +'<div style="font-size:11px;color:#556688;margin-top:2px;">1인당 약 <b>'+pp.toLocaleString()+'천원</b></div>';
   } else {
     g2html+='<div style="font-size:13px;color:#006030;font-weight:700;text-align:center;padding:8px 0;">🎉 최고 등급!<br>인당 15만원</div>';
   }
