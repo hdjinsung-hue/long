@@ -315,7 +315,7 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
     <span id="todayLabel">2026년 4월 20일</span><span>|</span>
     <span><span class="dot"></span> 전일마감 기준</span>
     <span id="syncStatus" style="font-size:10px;margin-left:6px;color:#888;">연결중...</span>
-    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v44</span>
+    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v46</span>
   </div>
   <div class="tab-nav">
     <button class="tb on" id="tb-home" onclick="goTab('home',this)">🏠 홈 대시보드</button>
@@ -984,7 +984,7 @@ function renderGrpTable(){
   let html='',sumHtml='<div class="grp-summary">';
   const grpData=GROUPS.map((g,gi)=>{
     const base=g.members.map(m=>memberBase(m));
-    const cur=g.members.map(m=>{const f=D.find(d=>d[5]===m.name);return f?Math.round(f[9]/1000):memberBase(m);});
+    const cur=g.members.map(m=>{const f=D.find(d=>d[5]===m.name);return f?Math.round(f[9]/1000):0;});
     const bSum=base.reduce((s,v)=>s+v,0);
     const cSum=cur.reduce((s,v)=>s+v,0);
     const achv=bSum>0?cSum/bSum*100:0;
@@ -1128,7 +1128,7 @@ function printAll(){
 function openGrpDetail(gi){
   var g=GROUPS[gi];
   var base=g.members.map(function(m){return memberBase(m);});
-  var cur=g.members.map(function(m){var f=D.find(function(d){return d[5]===m.name;});return f?Math.round(f[9]/1000):memberBase(m);});
+  var cur=g.members.map(function(m){var f=D.find(function(d){return d[5]===m.name;});return f?Math.round(f[9]/1000):0;});
   var bSum=base.reduce(function(s,v){return s+v;},0);
   var cSum=cur.reduce(function(s,v){return s+v;},0);
   var grpRate=bSum>0?(cSum-bSum)/bSum*100:0;
@@ -1154,7 +1154,7 @@ function openGrpDetail(gi){
     +'</tr></thead><tbody>';
   g.members.forEach(function(m,mi){
     var f=D.find(function(d){return d[5]===m.name;});
-    var bc=memberBase(m)*1000,cc=f?f[9]:bc,net=cc-bc;
+    var bc=memberBase(m)*1000,cc=f?f[9]:0,net=cc-bc;
     var achv=bc>0?cc/bc*100:0;
     var nc=achv>=100?'#006030':achv>=80?'#1a6030':achv>=50?'#884400':'#880000';
     var netc=net>0?'#0040b0':'#880000';
@@ -1226,7 +1226,7 @@ function renderHomeGrp(){
   if(!hgrp)return;
   var ranked=GROUPS.map(function(g,gi){
     var base=g.members.map(function(m){return memberBase(m);});
-    var cur=g.members.map(function(m){var f=D.find(function(d){return d[5]===m.name;});return f?Math.round(f[9]/1000):memberBase(m);});
+    var cur=g.members.map(function(m){var f=D.find(function(d){return d[5]===m.name;});return f?Math.round(f[9]/1000):0;});
     var bSum=base.reduce(function(s,v){return s+v;},0);
     var cSum=cur.reduce(function(s,v){return s+v;},0);
     return {id:g.id,gi:gi,achv:bSum>0?cSum/bSum*100:0,members:g.members};
@@ -1250,7 +1250,7 @@ function renderHomeGrp(){
   if(!hgrp)return;
   var ranked=GROUPS.map(function(g,gi){
     var base=g.members.map(function(m){return memberBase(m);});
-    var cur=g.members.map(function(m){var f=D.find(function(d){return d[5]===m.name;});return f?Math.round(f[9]/1000):memberBase(m);});
+    var cur=g.members.map(function(m){var f=D.find(function(d){return d[5]===m.name;});return f?Math.round(f[9]/1000):0;});
     var bSum=base.reduce(function(s,v){return s+v;},0);
     var cSum=cur.reduce(function(s,v){return s+v;},0);
     return {id:g.id,gi:gi,achv:bSum>0?cSum/bSum*100:0,members:g.members};
@@ -1309,7 +1309,7 @@ function openPerfPopup(i){
     var found=g.members.find(function(m){return m.name===name;});
     if(!found)continue;
     var base2=g.members.map(function(m){return memberBase(m);});
-    var cur2=g.members.map(function(m){var f=D.find(function(dd){return dd[5]===m.name;});return f?Math.round(f[9]/1000):memberBase(m);});
+    var cur2=g.members.map(function(m){var f=D.find(function(dd){return dd[5]===m.name;});return f?Math.round(f[9]/1000):0;});
     var bSum=base2.reduce(function(s,v){return s+v;},0);
     var cSum=cur2.reduce(function(s,v){return s+v;},0);
     var grpRate=bSum>0?(cSum-bSum)/bSum*100:0;
@@ -1359,8 +1359,8 @@ function renderAll(){
   const _avgBase=D.reduce((s,d)=>s+(d[8]||0),0);const _avgCur=D.reduce((s,d)=>s+(d[9]||0),0);const avgR=_avgBase>0?(_avgCur/_avgBase*100):0;
   const over5=D.filter(d=>d[11]>=50000).length;
   const elig=D.filter(d=>d[11]>=300000);
-  const byRate=D.map((d,i)=>({i,d})).sort((a,b)=>(b.d[11]/b.d[8])-(a.d[11]/a.d[8]));
-  const byAmt=D.map((d,i)=>({i,d})).sort((a,b)=>b.d[11]-a.d[11]);
+  const byRate=D.map((d,i)=>({i,d})).filter(x=>x.d[11]>0&&x.d[8]>0).sort((a,b)=>(b.d[11]/b.d[8])-(a.d[11]/a.d[8]));
+  const byAmt=D.map((d,i)=>({i,d})).filter(x=>x.d[11]>0).sort((a,b)=>b.d[11]-a.d[11]);
   const byIpum=D.map((d,i)=>({i,d})).sort((a,b)=>b.d[13]-a.d[13]||b.d[12]-a.d[12]);
   const rRank={},aRank={},ipRank={};
   byRate.forEach((x,k)=>rRank[x.i]=k+1);byAmt.forEach((x,k)=>aRank[x.i]=k+1);
@@ -1468,10 +1468,10 @@ function renderAll(){
   const ratePrizeFn=(k,d)=>{if(d[11]<300000)return'기준미충족 ('+rPrize(k)+')';const ek=rEffMap[D.indexOf(d)];return ek!==undefined?rPrize(ek):'기준미충족 ('+rPrize(k)+')';};
   const rAwardCell=(d,k)=>{if(d[11]<300000)return'<span class="bdg b-ms">기준미충족 ('+rPrize(k)+')</span>';const ek=rEffMap[D.indexOf(d)];if(ek===undefined)return'<span class="bdg b-ms">기준미충족 ('+rPrize(k)+')</span>';return`<span class="bdg b-g">${rPrize(ek)}</span>`;};
   // 신장률 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
-  if(rFinalList.length>=1)document.getElementById('ratePodium').innerHTML=makePod(rFinalList.slice(0,3),d=>((d[11]/d[8])*100).toFixed(1)+'%',d=>'순증 +'+Nf(d[11])+'원',ratePrizeFn);
+  if(rFinalList.length>=1)document.getElementById('ratePodium').innerHTML=makePod(rFinalList.slice(0,3),d=>((d[11]/d[8])*100).toFixed(1)+'%',d=>'순증 +'+Nf(d[11])+'원',ratePrizeFn);else document.getElementById('ratePodium').innerHTML='<div style="padding:30px;text-align:center;color:#888;font-size:13px;background:#f8f8f8;border-radius:10px;">📊 신장률 시상 대상자 없음<br><span style="font-size:11px;color:#aaa;">(순증 양수인 인원 필요)</span></div>';
   document.getElementById('rateRest').innerHTML=rFinalList.slice(3,10).map(({d},k)=>`<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td class="td-r net-p">+${Nf(d[11])}</td><td class="c-over">${(d[11]/d[8]*100).toFixed(1)}%</td><td>${rAwardCell(d,k+3)}</td></tr>`).join('');
   // 신장액 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
-  if(aFinalList.length>=1)document.getElementById('amtPodium').innerHTML=makePod(aFinalList.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>((d[11]/d[8])*100).toFixed(1)+'% 신장',(k,d)=>{if(d[11]<300000)return'기준미달성 ('+aPrize(k)+')';const ek=aEffMap[D.indexOf(d)];return ek!==undefined?aPrize(ek):'기준미달성 ('+aPrize(k)+')';});
+  if(aFinalList.length>=1)document.getElementById('amtPodium').innerHTML=makePod(aFinalList.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>((d[11]/d[8])*100).toFixed(1)+'% 신장',(k,d)=>{if(d[11]<300000)return'기준미달성 ('+aPrize(k)+')';const ek=aEffMap[D.indexOf(d)];return ek!==undefined?aPrize(ek):'기준미달성 ('+aPrize(k)+')';});else document.getElementById('amtPodium').innerHTML='<div style="padding:30px;text-align:center;color:#888;font-size:13px;background:#f8f8f8;border-radius:10px;">💰 신장액 시상 대상자 없음<br><span style="font-size:11px;color:#aaa;">(순증 양수인 인원 필요)</span></div>';
   document.getElementById('amtRest').innerHTML=aFinalList.slice(3,10).map(function(x,k){
     var d=x.d;
     var ek=aEffMap[D.indexOf(d)];
@@ -1504,8 +1504,8 @@ function renderAll(){
   const _avgBase=D.reduce((s,d)=>s+(d[8]||0),0);const _avgCur=D.reduce((s,d)=>s+(d[9]||0),0);const avgR=_avgBase>0?(_avgCur/_avgBase*100):0;
   const over5=D.filter(d=>d[11]>=50000).length;
   const elig=D.filter(d=>d[11]>=300000);
-  const byRate=D.map((d,i)=>({i,d})).sort((a,b)=>(b.d[11]/b.d[8])-(a.d[11]/a.d[8]));
-  const byAmt=D.map((d,i)=>({i,d})).sort((a,b)=>b.d[11]-a.d[11]);
+  const byRate=D.map((d,i)=>({i,d})).filter(x=>x.d[11]>0&&x.d[8]>0).sort((a,b)=>(b.d[11]/b.d[8])-(a.d[11]/a.d[8]));
+  const byAmt=D.map((d,i)=>({i,d})).filter(x=>x.d[11]>0).sort((a,b)=>b.d[11]-a.d[11]);
   const byIpum=D.map((d,i)=>({i,d})).sort((a,b)=>b.d[13]-a.d[13]||b.d[12]-a.d[12]);
   const rRank={},aRank={},ipRank={};
   byRate.forEach((x,k)=>rRank[x.i]=k+1);byAmt.forEach((x,k)=>aRank[x.i]=k+1);
@@ -1613,10 +1613,10 @@ function renderAll(){
   const ratePrizeFn=(k,d)=>{if(d[11]<300000)return'기준미충족 ('+rPrize(k)+')';const ek=rEffMap[D.indexOf(d)];return ek!==undefined?rPrize(ek):'기준미충족 ('+rPrize(k)+')';};
   const rAwardCell=(d,k)=>{if(d[11]<300000)return'<span class="bdg b-ms">기준미충족 ('+rPrize(k)+')</span>';const ek=rEffMap[D.indexOf(d)];if(ek===undefined)return'<span class="bdg b-ms">기준미충족 ('+rPrize(k)+')</span>';return`<span class="bdg b-g">${rPrize(ek)}</span>`;};
   // 신장률 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
-  if(rFinalList.length>=1)document.getElementById('ratePodium').innerHTML=makePod(rFinalList.slice(0,3),d=>((d[11]/d[8])*100).toFixed(1)+'%',d=>'순증 +'+Nf(d[11])+'원',ratePrizeFn);
+  if(rFinalList.length>=1)document.getElementById('ratePodium').innerHTML=makePod(rFinalList.slice(0,3),d=>((d[11]/d[8])*100).toFixed(1)+'%',d=>'순증 +'+Nf(d[11])+'원',ratePrizeFn);else document.getElementById('ratePodium').innerHTML='<div style="padding:30px;text-align:center;color:#888;font-size:13px;background:#f8f8f8;border-radius:10px;">📊 신장률 시상 대상자 없음<br><span style="font-size:11px;color:#aaa;">(순증 양수인 인원 필요)</span></div>';
   document.getElementById('rateRest').innerHTML=rFinalList.slice(3,10).map(({d},k)=>`<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td class="td-r net-p">+${Nf(d[11])}</td><td class="c-over">${(d[11]/d[8]*100).toFixed(1)}%</td><td>${rAwardCell(d,k+3)}</td></tr>`).join('');
   // 신장액 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
-  if(aFinalList.length>=1)document.getElementById('amtPodium').innerHTML=makePod(aFinalList.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>((d[11]/d[8])*100).toFixed(1)+'% 신장',(k,d)=>{if(d[11]<300000)return'기준미달성 ('+aPrize(k)+')';const ek=aEffMap[D.indexOf(d)];return ek!==undefined?aPrize(ek):'기준미달성 ('+aPrize(k)+')';});
+  if(aFinalList.length>=1)document.getElementById('amtPodium').innerHTML=makePod(aFinalList.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>((d[11]/d[8])*100).toFixed(1)+'% 신장',(k,d)=>{if(d[11]<300000)return'기준미달성 ('+aPrize(k)+')';const ek=aEffMap[D.indexOf(d)];return ek!==undefined?aPrize(ek):'기준미달성 ('+aPrize(k)+')';});else document.getElementById('amtPodium').innerHTML='<div style="padding:30px;text-align:center;color:#888;font-size:13px;background:#f8f8f8;border-radius:10px;">💰 신장액 시상 대상자 없음<br><span style="font-size:11px;color:#aaa;">(순증 양수인 인원 필요)</span></div>';
   document.getElementById('amtRest').innerHTML=aFinalList.slice(3,10).map(function(x,k){
     var d=x.d;
     var ek=aEffMap[D.indexOf(d)];
@@ -1732,7 +1732,7 @@ function renderHomeGrp(){
   if(!hgrp)return;
   var ranked=GROUPS.map(function(g,gi){
     var base=g.members.map(function(m){return memberBase(m);});
-    var cur=g.members.map(function(m){var f=D.find(function(d){return d[5]===m.name;});return f?Math.round(f[9]/1000):memberBase(m);});
+    var cur=g.members.map(function(m){var f=D.find(function(d){return d[5]===m.name;});return f?Math.round(f[9]/1000):0;});
     var bSum=base.reduce(function(s,v){return s+v;},0);
     var cSum=cur.reduce(function(s,v){return s+v;},0);
     return {id:g.id,gi:gi,achv:bSum>0?cSum/bSum*100:0,members:g.members};
@@ -1791,7 +1791,7 @@ function openPerfPopup(i){
     var found=g.members.find(function(m){return m.name===name;});
     if(!found)continue;
     var base2=g.members.map(function(m){return memberBase(m);});
-    var cur2=g.members.map(function(m){var f=D.find(function(dd){return dd[5]===m.name;});return f?Math.round(f[9]/1000):memberBase(m);});
+    var cur2=g.members.map(function(m){var f=D.find(function(dd){return dd[5]===m.name;});return f?Math.round(f[9]/1000):0;});
     var bSum=base2.reduce(function(s,v){return s+v;},0);
     var cSum=cur2.reduce(function(s,v){return s+v;},0);
     var grpRate=bSum>0?(cSum-bSum)/bSum*100:0;
@@ -1841,8 +1841,8 @@ function renderAll(){
   const _avgBase=D.reduce((s,d)=>s+(d[8]||0),0);const _avgCur=D.reduce((s,d)=>s+(d[9]||0),0);const avgR=_avgBase>0?(_avgCur/_avgBase*100):0;
   const over5=D.filter(d=>d[11]>=50000).length;
   const elig=D.filter(d=>d[11]>=300000);
-  const byRate=D.map((d,i)=>({i,d})).sort((a,b)=>(b.d[11]/b.d[8])-(a.d[11]/a.d[8]));
-  const byAmt=D.map((d,i)=>({i,d})).sort((a,b)=>b.d[11]-a.d[11]);
+  const byRate=D.map((d,i)=>({i,d})).filter(x=>x.d[11]>0&&x.d[8]>0).sort((a,b)=>(b.d[11]/b.d[8])-(a.d[11]/a.d[8]));
+  const byAmt=D.map((d,i)=>({i,d})).filter(x=>x.d[11]>0).sort((a,b)=>b.d[11]-a.d[11]);
   const byIpum=D.map((d,i)=>({i,d})).sort((a,b)=>b.d[13]-a.d[13]||b.d[12]-a.d[12]);
   const rRank={},aRank={},ipRank={};
   byRate.forEach((x,k)=>rRank[x.i]=k+1);byAmt.forEach((x,k)=>aRank[x.i]=k+1);
@@ -1968,10 +1968,10 @@ function renderAll(){
   const ratePrizeFn=(k,d)=>{if(d[11]<300000)return'기준미충족 ('+rPrize(k)+')';const ek=rEffMap[D.indexOf(d)];return ek!==undefined?rPrize(ek):'기준미충족 ('+rPrize(k)+')';};
   const rAwardCell=(d,k)=>{if(d[11]<300000)return'<span class="bdg b-ms">기준미충족 ('+rPrize(k)+')</span>';const ek=rEffMap[D.indexOf(d)];if(ek===undefined)return'<span class="bdg b-ms">기준미충족 ('+rPrize(k)+')</span>';return`<span class="bdg b-g">${rPrize(ek)}</span>`;};
   // 신장률 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
-  if(rFinalList.length>=1)document.getElementById('ratePodium').innerHTML=makePod(rFinalList.slice(0,3),d=>((d[11]/d[8])*100).toFixed(1)+'%',d=>'순증 +'+Nf(d[11])+'원',ratePrizeFn);
+  if(rFinalList.length>=1)document.getElementById('ratePodium').innerHTML=makePod(rFinalList.slice(0,3),d=>((d[11]/d[8])*100).toFixed(1)+'%',d=>'순증 +'+Nf(d[11])+'원',ratePrizeFn);else document.getElementById('ratePodium').innerHTML='<div style="padding:30px;text-align:center;color:#888;font-size:13px;background:#f8f8f8;border-radius:10px;">📊 신장률 시상 대상자 없음<br><span style="font-size:11px;color:#aaa;">(순증 양수인 인원 필요)</span></div>';
   document.getElementById('rateRest').innerHTML=rFinalList.slice(3,10).map(({d},k)=>`<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td class="td-r net-p">+${Nf(d[11])}</td><td class="c-over">${(d[11]/d[8]*100).toFixed(1)}%</td><td>${rAwardCell(d,k+3)}</td></tr>`).join('');
   // 신장액 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
-  if(aFinalList.length>=1)document.getElementById('amtPodium').innerHTML=makePod(aFinalList.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>((d[11]/d[8])*100).toFixed(1)+'% 신장',(k,d)=>{if(d[11]<300000)return'기준미달성 ('+aPrize(k)+')';const ek=aEffMap[D.indexOf(d)];return ek!==undefined?aPrize(ek):'기준미달성 ('+aPrize(k)+')';});
+  if(aFinalList.length>=1)document.getElementById('amtPodium').innerHTML=makePod(aFinalList.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>((d[11]/d[8])*100).toFixed(1)+'% 신장',(k,d)=>{if(d[11]<300000)return'기준미달성 ('+aPrize(k)+')';const ek=aEffMap[D.indexOf(d)];return ek!==undefined?aPrize(ek):'기준미달성 ('+aPrize(k)+')';});else document.getElementById('amtPodium').innerHTML='<div style="padding:30px;text-align:center;color:#888;font-size:13px;background:#f8f8f8;border-radius:10px;">💰 신장액 시상 대상자 없음<br><span style="font-size:11px;color:#aaa;">(순증 양수인 인원 필요)</span></div>';
   document.getElementById('amtRest').innerHTML=aFinalList.slice(3,10).map(function(x,k){
     var d=x.d;
     var ek=aEffMap[D.indexOf(d)];
