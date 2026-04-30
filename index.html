@@ -304,7 +304,7 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
 </div>
 
 <div class="hdr" style="position:relative;">
-  <a href="headquarters.html" id="hq-home-btn" style="position:absolute;top:10px;right:12px;display:inline-flex;align-items:center;gap:4px;padding:5px 11px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.4);border-radius:18px;font-size:11px;font-weight:800;color:#fff;text-decoration:none;font-family:inherit;cursor:pointer;transition:all 0.18s;backdrop-filter:blur(4px);z-index:10;" onmouseover="this.style.background='rgba(255,255,255,0.28)';this.style.transform='translateY(-1px)';" onmouseout="this.style.background='rgba(255,255,255,0.15)';this.style.transform='translateY(0)';" title="본부 통합 대시보드로 이동">🏢 본부로</a>
+  <a href="headquarters.html" id="hq-home-btn" style="position:absolute;top:10px;right:12px;display:inline-flex;align-items:center;gap:4px;padding:5px 11px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.4);border-radius:18px;font-size:11px;font-weight:800;color:#fff;text-decoration:none;font-family:inherit;cursor:pointer;transition:all 0.18s;backdrop-filter:blur(4px);z-index:10;" onmouseover="this.style.background='rgba(255,255,255,0.28)';this.style.transform='translateY(-1px)';" onmouseout="this.style.background='rgba(255,255,255,0.15)';this.style.transform='translateY(0)';" title="통합 대시보드로 이동">🏢 통합 대시보드</a>
   <div class="org" id="hdr-org">현대해상 호남 지역단</div>
   <div id="course-tabs" style="display:flex;gap:6px;justify-content:center;margin:8px auto 10px;max-width:480px;">
     <button id="ctab-1" onclick="switchCourse('1')" style="flex:1;padding:9px 10px;font-size:12px;font-weight:900;border-radius:9px;border:2px solid #ffe066;background:#ffe066;color:#7a5000;cursor:pointer;transition:all 0.18s;font-family:inherit;box-shadow:0 2px 8px rgba(255,224,102,.4);">📘 Master Ⅰ</button>
@@ -316,7 +316,7 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
     <span id="todayLabel">2026년 4월 20일</span><span>|</span>
     <span><span class="dot"></span> 전일마감 기준</span>
     <span id="syncStatus" style="font-size:10px;margin-left:6px;color:#888;">연결중...</span>
-    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.006</span>
+    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.010</span>
   </div>
   <div class="tab-nav">
     <button class="tb on" id="tb-home" onclick="goTab('home',this)">🏠 홈 대시보드</button>
@@ -338,15 +338,9 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
 <div class="wrap">
   <div class="award-box">
     <h3 id="aw-title">📋 2026년 고객마스터과정 활성화 시상안</h3>
-    <div class="tier-row">
-      <div class="tier"><div class="tc" id="aw-t1-cond">순증 5만원↑</div><div class="tn" id="aw-t1-prize">5만원 지급</div></div>
-      <div class="tier"><div class="tc" id="aw-t2-cond">순증 10만원↑</div><div class="tn" id="aw-t2-prize">10만원 지급</div></div>
-      <div class="tier"><div class="tc" id="aw-t3-cond">순증 20만원↑</div><div class="tn" id="aw-t3-prize">20만원 지급</div></div>
-      <div class="tier"><div class="tc" id="aw-t4-cond">순증 30만원↑</div><div class="tn" id="aw-t4-prize">120% 지급</div></div>
-      <div class="tier"><div class="tc" id="aw-t5-cond">순증 50만원↑</div><div class="tn" id="aw-t5-prize">150% 지급</div></div>
-    </div>
-    <span class="an" id="aw-rate"><strong>📈 신장률 TOP10:</strong> 1위 30만원 / 2~3위 20만원 / 4~10위 주유권 5만원</span>
-    <span class="an" id="aw-amt"><strong>💰 신장액 TOP10:</strong> 1위 50만원 / 2~3위 30만원 / 4~10위 주유권 10만원</span>
+    <div class="tier-row" id="aw-tiers"></div>
+    <span class="an" id="aw-rate"></span>
+    <span class="an" id="aw-amt"></span>
     <span class="an-crit" id="aw-crit">⚠️ 개인 시상 기준조건 : 기준 인보험 실적 대비 <strong>순증 30만원 이상</strong> 달성자에 한함</span>
     <span class="an an-warn" id="aw-dup">※ 신장률·신장액 TOP10 중복시상 없음 — 두 항목 모두 해당 시 높은 시상금 1회 지급 (동점이면 순위 높은 곳)</span>
     <span class="an an-red" id="aw-exc">※ 환산실적 80만원 미만 시상제외 | 합산 하이캡 배수 15 미만시 50% 지급</span>
@@ -465,13 +459,13 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
         <div style="background:#f6fff8;border:2px solid #1e7e3a;border-top:none;border-radius:0 0 12px 12px;padding:10px 8px;flex:1;display:flex;flex-direction:column;justify-content:center;">
           <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #c8e8cc;">
             <div style="font-size:11px;font-weight:700;color:#1a3a6b;">조건</div>
-            <div style="font-size:14px;font-weight:900;color:#cc5500;">5만원 순증</div>
+            <div id="disp-grp1-cond" style="font-size:14px;font-weight:900;color:#cc5500;">5만원 순증</div>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;">
             <div style="font-size:11px;font-weight:700;color:#1a3a6b;">시상</div>
-            <div style="font-size:18px;font-weight:900;color:#1e7e3a;">5만원</div>
+            <div id="disp-grp1-prize" style="font-size:18px;font-weight:900;color:#1e7e3a;">5만원</div>
           </div>
-          <div style="text-align:center;font-size:10px;font-weight:600;color:#556688;padding-top:6px;border-top:1px dashed #c8e8cc;margin-top:2px;">(전원 참여시 전원 지급)</div>
+          <div id="disp-grp1-note" style="text-align:center;font-size:10px;font-weight:600;color:#556688;padding-top:6px;border-top:1px dashed #c8e8cc;margin-top:2px;">(전원 참여시 전원 지급)</div>
         </div>
       </div>
 
@@ -479,17 +473,19 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
       <div style="flex:1;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.1);">
         <div style="background:#cc5500;color:#fff;text-align:center;padding:10px 6px;font-size:13px;font-weight:900;">🎯 그룹시상 2</div>
         <div style="background:#fff8f0;border:2px solid #cc5500;border-top:none;border-radius:0 0 12px 12px;padding:10px 8px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #f0d8c0;">
-            <div style="font-size:11px;font-weight:700;color:#1a3a6b;">5%↑ 순증</div>
-            <div style="font-size:16px;font-weight:900;color:#1e7e3a;">3만원<span style="font-size:10px;color:#555;font-weight:600;"> 인당</span></div>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #f0d8c0;">
-            <div style="font-size:11px;font-weight:700;color:#1a3a6b;">15%↑ 순증</div>
-            <div style="font-size:16px;font-weight:900;color:#1a5cb0;">7만원<span style="font-size:10px;color:#555;font-weight:600;"> 인당</span></div>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;">
-            <div style="font-size:11px;font-weight:700;color:#1a3a6b;">25%↑ 순증</div>
-            <div style="font-size:16px;font-weight:900;color:#cc5500;">15만원<span style="font-size:10px;color:#555;font-weight:600;"> 인당</span></div>
+          <div id="disp-grp2-rows">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #f0d8c0;">
+              <div style="font-size:11px;font-weight:700;color:#1a3a6b;">5%↑ 순증</div>
+              <div style="font-size:16px;font-weight:900;color:#1e7e3a;">3만원<span style="font-size:10px;color:#555;font-weight:600;"> 인당</span></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #f0d8c0;">
+              <div style="font-size:11px;font-weight:700;color:#1a3a6b;">15%↑ 순증</div>
+              <div style="font-size:16px;font-weight:900;color:#1a5cb0;">7만원<span style="font-size:10px;color:#555;font-weight:600;"> 인당</span></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;">
+              <div style="font-size:11px;font-weight:700;color:#1a3a6b;">25%↑ 순증</div>
+              <div style="font-size:16px;font-weight:900;color:#cc5500;">15만원<span style="font-size:10px;color:#555;font-weight:600;"> 인당</span></div>
+            </div>
           </div>
         </div>
       </div>
@@ -649,25 +645,23 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
       <div style="font-size:11px;font-weight:700;color:#0a2050;margin-bottom:4px;">📋 시상안 제목</div>
       <input type="text" id="inp-aw-title" style="width:100%;padding:6px 8px;font-size:11px;border:1px solid #b8cce0;border-radius:5px;font-family:inherit;margin-bottom:10px;">
 
-      <div style="font-size:11px;font-weight:700;color:#0a2050;margin-bottom:4px;">🎯 Tier 5개 (조건 | 지급)</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:10px;">
-        <input type="text" id="inp-aw-t1-cond" style="padding:5px 7px;font-size:10px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;">
-        <input type="text" id="inp-aw-t1-prize" style="padding:5px 7px;font-size:10px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;">
-        <input type="text" id="inp-aw-t2-cond" style="padding:5px 7px;font-size:10px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;">
-        <input type="text" id="inp-aw-t2-prize" style="padding:5px 7px;font-size:10px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;">
-        <input type="text" id="inp-aw-t3-cond" style="padding:5px 7px;font-size:10px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;">
-        <input type="text" id="inp-aw-t3-prize" style="padding:5px 7px;font-size:10px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;">
-        <input type="text" id="inp-aw-t4-cond" style="padding:5px 7px;font-size:10px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;">
-        <input type="text" id="inp-aw-t4-prize" style="padding:5px 7px;font-size:10px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;">
-        <input type="text" id="inp-aw-t5-cond" style="padding:5px 7px;font-size:10px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;">
-        <input type="text" id="inp-aw-t5-prize" style="padding:5px 7px;font-size:10px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+        <div style="font-size:11px;font-weight:700;color:#0a2050;">🎯 개인시상 등급 (조건 | 지급)</div>
+        <button onclick="addTier()" class="sbtn" style="background:#1e7e3a;color:#fff;border-color:#1e7e3a;font-size:10px;padding:3px 8px;">＋ 등급 추가</button>
       </div>
+      <div id="inp-tiers" style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px;"></div>
 
-      <div style="font-size:11px;font-weight:700;color:#0a2050;margin-bottom:4px;">📈 신장률 TOP10 문구</div>
-      <input type="text" id="inp-aw-rate" style="width:100%;padding:6px 8px;font-size:11px;border:1px solid #b8cce0;border-radius:5px;font-family:inherit;margin-bottom:8px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+        <div style="font-size:11px;font-weight:700;color:#0a2050;">📈 신장률 TOP10 시상 (등수 | 시상)</div>
+        <button onclick="addRateRank()" class="sbtn" style="background:#1e7e3a;color:#fff;border-color:#1e7e3a;font-size:10px;padding:3px 8px;">＋ 등수 추가</button>
+      </div>
+      <div id="inp-rate-ranks" style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px;"></div>
 
-      <div style="font-size:11px;font-weight:700;color:#0a2050;margin-bottom:4px;">💰 신장액 TOP10 문구</div>
-      <input type="text" id="inp-aw-amt" style="width:100%;padding:6px 8px;font-size:11px;border:1px solid #b8cce0;border-radius:5px;font-family:inherit;margin-bottom:8px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+        <div style="font-size:11px;font-weight:700;color:#0a2050;">💰 신장액 TOP10 시상 (등수 | 시상)</div>
+        <button onclick="addAmtRank()" class="sbtn" style="background:#1e7e3a;color:#fff;border-color:#1e7e3a;font-size:10px;padding:3px 8px;">＋ 등수 추가</button>
+      </div>
+      <div id="inp-amt-ranks" style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px;"></div>
 
       <div style="font-size:11px;font-weight:700;color:#0a2050;margin-bottom:4px;">⚠️ 기준조건 안내 <span style="font-size:9px;color:#888;">(HTML 태그 사용 가능)</span></div>
       <textarea id="inp-aw-crit" rows="2" style="width:100%;padding:6px 8px;font-size:11px;border:1px solid #b8cce0;border-radius:5px;font-family:inherit;margin-bottom:8px;resize:vertical;"></textarea>
@@ -677,6 +671,32 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
 
       <div style="font-size:11px;font-weight:700;color:#0a2050;margin-bottom:4px;">※ 환산실적/하이캡 안내</div>
       <textarea id="inp-aw-exc" rows="2" style="width:100%;padding:6px 8px;font-size:11px;border:1px solid #b8cce0;border-radius:5px;font-family:inherit;resize:vertical;"></textarea>
+
+      <div style="margin-top:12px;border-top:2px solid #e0e8f0;padding-top:10px;">
+        <div style="font-size:12px;font-weight:900;color:#1e7e3a;margin-bottom:8px;">💰 그룹시상 1 편집</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;">
+          <div>
+            <div style="font-size:10px;color:#555;margin-bottom:3px;">조건</div>
+            <input type="text" id="inp-grp1-cond" placeholder="예: 5만원 순증" style="width:100%;padding:5px 7px;font-size:11px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#555;margin-bottom:3px;">시상금</div>
+            <input type="text" id="inp-grp1-prize" placeholder="예: 5만원" style="width:100%;padding:5px 7px;font-size:11px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;">
+          </div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:#555;margin-bottom:3px;">안내문구</div>
+          <input type="text" id="inp-grp1-note" placeholder="예: 전원 참여시 전원 지급" style="width:100%;padding:5px 7px;font-size:11px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;">
+        </div>
+      </div>
+
+      <div style="margin-top:10px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <div style="font-size:12px;font-weight:900;color:#cc5500;">🎯 그룹시상 2 편집 (신장률 구간 | 시상금)</div>
+          <button onclick="addGrp2Rank()" class="sbtn" style="background:#cc5500;color:#fff;border-color:#cc5500;font-size:10px;padding:3px 8px;">＋ 구간 추가</button>
+        </div>
+        <div id="inp-grp2-ranks" style="display:flex;flex-direction:column;gap:4px;"></div>
+      </div>
     </div>
   </div>
   <!-- 조회이력 -->
@@ -2745,40 +2765,254 @@ var AWARD_DEFAULT={
     {cond:'순증 30만원↑',prize:'120% 지급'},
     {cond:'순증 50만원↑',prize:'150% 지급'}
   ],
+  rateRanks:[
+    {rank:'1위',prize:'30만원'},
+    {rank:'2~3위',prize:'20만원'},
+    {rank:'4~10위',prize:'주유권 5만원'}
+  ],
+  amtRanks:[
+    {rank:'1위',prize:'50만원'},
+    {rank:'2~3위',prize:'30만원'},
+    {rank:'4~10위',prize:'주유권 10만원'}
+  ],
+  grp1:{cond:'5만원 순증',prize:'5만원',note:'전원 참여시 전원 지급'},
+  grp2:[
+    {cond:'5%↑',prize:'3만원'},
+    {cond:'15%↑',prize:'7만원'},
+    {cond:'25%↑',prize:'15만원'}
+  ],
   rate:'<strong>📈 신장률 TOP10:</strong> 1위 30만원 / 2~3위 20만원 / 4~10위 주유권 5만원',
   amt:'<strong>💰 신장액 TOP10:</strong> 1위 50만원 / 2~3위 30만원 / 4~10위 주유권 10만원',
   crit:'⚠️ 개인 시상 기준조건 : 기준 인보험 실적 대비 <strong>순증 30만원 이상</strong> 달성자에 한함',
   dup:'※ 신장률·신장액 TOP10 중복시상 없음 — 두 항목 모두 해당 시 높은 시상금 1회 지급 (동점이면 순위 높은 곳)',
   exc:'※ 환산실적 80만원 미만 시상제외 | 합산 하이캡 배수 15 미만시 50% 지급'
 };
+
+// 옛 rate/amt 텍스트에서 rateRanks/amtRanks 자동 파싱 (백워드 호환)
+function parseRanksFromText(text){
+  if(!text) return [];
+  // <strong>...</strong> 태그 제거
+  var cleaned = text.replace(/<strong>[^<]*<\/strong>\s*/, '').replace(/<[^>]+>/g,'');
+  // "/" 로 분할 후 각 항목에서 첫 단어=등수, 나머지=시상
+  var items = cleaned.split('/').map(function(s){return s.trim();}).filter(Boolean);
+  return items.map(function(item){
+    var m = item.match(/^(\S+)\s+(.+)$/);
+    return m ? {rank:m[1].trim(), prize:m[2].trim()} : {rank:item, prize:''};
+  });
+}
+
+// rateRanks/amtRanks 를 표시용 HTML로 조립
+function buildRanksHtml(prefix, ranks){
+  if(!ranks || !ranks.length) return '';
+  var parts = ranks.map(function(r){return r.rank+' '+r.prize;});
+  return '<strong>'+prefix+'</strong> '+parts.join(' / ');
+}
+
+// 홈 화면 시상안 박스의 Tier 영역을 동적으로 렌더링
+function renderTierRow(tiers){
+  var el = document.getElementById('aw-tiers');
+  if(!el) return;
+  if(!tiers || !tiers.length){el.innerHTML=''; return;}
+  el.innerHTML = tiers.map(function(t,i){
+    return '<div class="tier"><div class="tc">'+(t.cond||'')+'</div><div class="tn">'+(t.prize||'')+'</div></div>';
+  }).join('');
+}
+
 function applyAwardToDisplay(a){
   if(!a)return;
   var set=function(id,val){var el=document.getElementById(id);if(el&&val!=null)el.innerHTML=val;};
   set('aw-title',a.title);
-  if(a.tiers&&a.tiers.length){
-    for(var i=0;i<5;i++){
-      if(a.tiers[i]){set('aw-t'+(i+1)+'-cond',a.tiers[i].cond);set('aw-t'+(i+1)+'-prize',a.tiers[i].prize);}
-    }
-  }
-  set('aw-rate',a.rate);set('aw-amt',a.amt);set('aw-crit',a.crit);set('aw-dup',a.dup);set('aw-exc',a.exc);
+  // Tier 동적 렌더링
+  renderTierRow(a.tiers||[]);
+  // 신장률/신장액 — rateRanks/amtRanks 우선, 없으면 옛 rate/amt 텍스트
+  var rateText = (a.rateRanks && a.rateRanks.length) ? buildRanksHtml('📈 신장률 TOP10:',a.rateRanks) : a.rate;
+  var amtText = (a.amtRanks && a.amtRanks.length) ? buildRanksHtml('💰 신장액 TOP10:',a.amtRanks) : a.amt;
+  set('aw-rate',rateText);
+  set('aw-amt',amtText);
+  set('aw-crit',a.crit);set('aw-dup',a.dup);set('aw-exc',a.exc);
+  // 그룹시상 홈 화면 반영
+  applyGrpAwardToDisplay(a);
+  // 시상금 계산 함수가 사용할 글로벌 변수 갱신 (Tier 기반)
+  CURRENT_AWARD = a;
 }
+// 현재 적용된 시상안 (시상금 계산용)
+var CURRENT_AWARD = AWARD_DEFAULT;
+
+// ── 동적 입력란 빌더 ──
+function _mkRow(group, idx, val1, val2, ph1, ph2){
+  return '<div class="aw-dyn-row" data-group="'+group+'" data-idx="'+idx+'" style="display:grid;grid-template-columns:1fr 1fr 32px;gap:4px;align-items:center;">'
+    +'<input type="text" class="aw-dyn-f1" placeholder="'+ph1+'" value="'+(val1||'').replace(/"/g,'&quot;')+'" style="padding:5px 7px;font-size:10px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;">'
+    +'<input type="text" class="aw-dyn-f2" placeholder="'+ph2+'" value="'+(val2||'').replace(/"/g,'&quot;')+'" style="padding:5px 7px;font-size:10px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;">'
+    +'<button onclick="delDynRow(\''+group+'\','+idx+')" title="삭제" style="background:#cc4444;color:#fff;border:none;border-radius:4px;font-size:13px;cursor:pointer;font-weight:700;">🗑</button>'
+    +'</div>';
+}
+function renderDynList(group, items){
+  var el = document.getElementById('inp-'+group);
+  if(!el) return;
+  var ph = group==='tiers' ? ['예: 순증 5만원↑','예: 5만원 지급']
+         : group==='rate-ranks' ? ['예: 1위','예: 30만원']
+         : ['예: 1위','예: 50만원'];
+  if(!items || !items.length){
+    el.innerHTML = '<div style="text-align:center;padding:8px;color:#888;font-size:10px;">등록된 항목이 없습니다. [＋ 추가] 버튼으로 추가하세요.</div>';
+    return;
+  }
+  el.innerHTML = items.map(function(item, i){
+    var v1 = group==='tiers' ? item.cond : item.rank;
+    var v2 = group==='tiers' ? item.prize : item.prize;
+    return _mkRow(group, i, v1, v2, ph[0], ph[1]);
+  }).join('');
+}
+function readDynList(group){
+  var el = document.getElementById('inp-'+group);
+  if(!el) return [];
+  var rows = el.querySelectorAll('.aw-dyn-row');
+  var out = [];
+  rows.forEach(function(r){
+    var v1 = r.querySelector('.aw-dyn-f1').value.trim();
+    var v2 = r.querySelector('.aw-dyn-f2').value.trim();
+    if(!v1 && !v2) return; // 둘 다 비면 스킵
+    if(group==='tiers') out.push({cond:v1, prize:v2});
+    else out.push({rank:v1, prize:v2});
+  });
+  return out;
+}
+function addGrp2Rank(){
+  var cur=readGrp2List();
+  cur.push({cond:'',prize:''});
+  renderGrp2List(cur);
+}
+function renderGrp2List(items){
+  var el=document.getElementById('inp-grp2-ranks');
+  if(!el)return;
+  if(!items||!items.length){
+    el.innerHTML='<div style="text-align:center;padding:8px;color:#888;font-size:10px;">등록된 구간이 없습니다.</div>';
+    return;
+  }
+  el.innerHTML=items.map(function(item,i){
+    return '<div class="aw-dyn-row" data-group="grp2" data-idx="'+i+'" style="display:grid;grid-template-columns:1fr 1fr 32px;gap:4px;align-items:center;">'
+      +'<input type="text" class="aw-dyn-f1" placeholder="예: 5%↑" value="'+(item.cond||'').replace(/"/g,'&quot;')+'" style="padding:5px 7px;font-size:10px;border:1px solid #f0c8a0;border-radius:4px;font-family:inherit;">'
+      +'<input type="text" class="aw-dyn-f2" placeholder="예: 3만원" value="'+(item.prize||'').replace(/"/g,'&quot;')+'" style="padding:5px 7px;font-size:10px;border:1px solid #f0c8a0;border-radius:4px;font-family:inherit;">'
+      +'<button onclick="delGrp2Row('+i+')" title="삭제" style="background:#cc4444;color:#fff;border:none;border-radius:4px;font-size:13px;cursor:pointer;font-weight:700;">🗑</button>'
+      +'</div>';
+  }).join('');
+}
+function readGrp2List(){
+  var el=document.getElementById('inp-grp2-ranks');
+  if(!el)return[];
+  var rows=el.querySelectorAll('.aw-dyn-row');
+  var out=[];
+  rows.forEach(function(r){
+    var v1=r.querySelector('.aw-dyn-f1').value.trim();
+    var v2=r.querySelector('.aw-dyn-f2').value.trim();
+    if(!v1&&!v2)return;
+    out.push({cond:v1,prize:v2});
+  });
+  return out;
+}
+function delGrp2Row(idx){
+  var cur=readGrp2List();
+  if(!confirm('이 구간을 삭제하시겠습니까?'))return;
+  cur.splice(idx,1);
+  renderGrp2List(cur);
+}
+// 그룹시상 홈 화면 동적 반영
+function applyGrpAwardToDisplay(a){
+  if(!a)return;
+  // 그룹시상1 박스 갱신
+  var g1cond=document.getElementById('disp-grp1-cond');
+  var g1prize=document.getElementById('disp-grp1-prize');
+  var g1note=document.getElementById('disp-grp1-note');
+  if(a.grp1){
+    if(g1cond)g1cond.textContent=a.grp1.cond||'5만원 순증';
+    if(g1prize)g1prize.textContent=a.grp1.prize||'5만원';
+    if(g1note)g1note.textContent='('+(a.grp1.note||'전원 참여시 전원 지급')+')';
+  }
+  // 그룹시상2 박스 갱신
+  var g2box=document.getElementById('disp-grp2-rows');
+  if(g2box&&a.grp2&&a.grp2.length){
+    var colors=['#1e7e3a','#1a5cb0','#cc5500'];
+    g2box.innerHTML=a.grp2.map(function(r,i){
+      var col=colors[i%colors.length];
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;'+(i<a.grp2.length-1?'border-bottom:1px solid #f0d8c0;':'')+'">'
+        +'<div style="font-size:11px;font-weight:700;color:#1a3a6b;">'+(r.cond||'')+'</div>'
+        +'<div style="font-size:16px;font-weight:900;color:'+col+';">'+(r.prize||'')+'<span style="font-size:10px;color:#555;font-weight:600;"> 인당</span></div>'
+        +'</div>';
+    }).join('');
+  }
+  // g1Prize·g2Prize 함수 동적 재정의
+  if(a.grp2&&a.grp2.length){
+    var ranks=a.grp2.slice().reverse(); // 높은 조건부터
+    window.g1Prize=function(r){
+      for(var i=0;i<ranks.length;i++){
+        var pct=parseFloat(ranks[i].cond);
+        if(!isNaN(pct)&&r>=pct)return{lbl:ranks[i].cond,prize:ranks[i].prize,ok:true};
+      }
+      return{lbl:'미달',prize:'-',ok:false};
+    };
+  }
+  if(a.grp1){
+    var g1thresh=parseFloat(a.grp1.cond)||50;
+    var g1prz=a.grp1.prize||'5만원';
+    window.g2Prize=function(base,cur){
+      var ok=base.length>0&&cur.every(function(c,i){return c-base[i]>=g1thresh;});
+      return ok?{lbl:'✅전원달성',prize:g1prz,ok:true}:{lbl:'미달',prize:'-',ok:false};
+    };
+  }
+}
+function addTier(){
+  var cur = readDynList('tiers');
+  cur.push({cond:'',prize:''});
+  renderDynList('tiers', cur);
+}
+function addRateRank(){
+  var cur = readDynList('rate-ranks');
+  cur.push({rank:'',prize:''});
+  renderDynList('rate-ranks', cur);
+}
+function addAmtRank(){
+  var cur = readDynList('amt-ranks');
+  cur.push({rank:'',prize:''});
+  renderDynList('amt-ranks', cur);
+}
+function delDynRow(group, idx){
+  var cur = readDynList(group);
+  if(!confirm('이 항목을 삭제하시겠습니까?')) return;
+  cur.splice(idx, 1);
+  renderDynList(group, cur);
+}
+
 function applyAwardToInputs(a){
   if(!a)return;
   var setV=function(id,val){var el=document.getElementById(id);if(el&&val!=null)el.value=val;};
   setV('inp-aw-title',a.title);
-  if(a.tiers&&a.tiers.length){
-    for(var i=0;i<5;i++){
-      if(a.tiers[i]){setV('inp-aw-t'+(i+1)+'-cond',a.tiers[i].cond);setV('inp-aw-t'+(i+1)+'-prize',a.tiers[i].prize);}
-    }
-  }
-  setV('inp-aw-rate',a.rate);setV('inp-aw-amt',a.amt);setV('inp-aw-crit',a.crit);setV('inp-aw-dup',a.dup);setV('inp-aw-exc',a.exc);
+  // Tier 동적 입력란
+  renderDynList('tiers', a.tiers||[]);
+  // 신장률 TOP10 — rateRanks 우선, 없으면 옛 rate 텍스트 파싱
+  var rRanks = (a.rateRanks && a.rateRanks.length) ? a.rateRanks : parseRanksFromText(a.rate);
+  renderDynList('rate-ranks', rRanks);
+  // 신장액 TOP10
+  var aRanks = (a.amtRanks && a.amtRanks.length) ? a.amtRanks : parseRanksFromText(a.amt);
+  renderDynList('amt-ranks', aRanks);
+  setV('inp-aw-crit',a.crit);setV('inp-aw-dup',a.dup);setV('inp-aw-exc',a.exc);
+  // 그룹시상 입력란
+  if(a.grp1){setV('inp-grp1-cond',a.grp1.cond);setV('inp-grp1-prize',a.grp1.prize);setV('inp-grp1-note',a.grp1.note);}
+  renderGrp2List(a.grp2||[]);
 }
 function saveAward(){
   var getV=function(id){var el=document.getElementById(id);return el?el.value:'';};
+  var tiers = readDynList('tiers');
+  var rateRanks = readDynList('rate-ranks');
+  var amtRanks = readDynList('amt-ranks');
   var a={
     title:getV('inp-aw-title'),
-    tiers:[1,2,3,4,5].map(function(n){return{cond:getV('inp-aw-t'+n+'-cond'),prize:getV('inp-aw-t'+n+'-prize')};}),
-    rate:getV('inp-aw-rate'),amt:getV('inp-aw-amt'),
+    tiers:tiers,
+    rateRanks:rateRanks,
+    amtRanks:amtRanks,
+    grp1:{cond:getV('inp-grp1-cond'),prize:getV('inp-grp1-prize'),note:getV('inp-grp1-note')},
+    grp2:readGrp2List(),
+    // 백워드 호환: rate/amt 텍스트도 자동 조립
+    rate: rateRanks.length ? buildRanksHtml('📈 신장률 TOP10:',rateRanks) : '',
+    amt: amtRanks.length ? buildRanksHtml('💰 신장액 TOP10:',amtRanks) : '',
     crit:getV('inp-aw-crit'),dup:getV('inp-aw-dup'),exc:getV('inp-aw-exc'),
     t:Date.now()
   };
@@ -2815,6 +3049,8 @@ function loadAward(){
     }
   });
 }
+// 페이지 로드 시 기본 시상안을 즉시 표시 (Firebase 연결 전)
+applyAwardToDisplay(AWARD_DEFAULT);
 setTimeout(loadAward,900);
 
 // ── 본인 실적 확인 ──
