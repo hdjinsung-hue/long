@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>현대해상 본부 통합 대시보드</title>
+<title>현대해상 통합 대시보드</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{
@@ -52,16 +52,18 @@ body{
   position:relative;z-index:1;
 }
 .hdr-stats{
-  display:flex;justify-content:center;gap:14px;
+  display:flex;justify-content:center;gap:8px;
   margin-top:14px;position:relative;z-index:1;
+  flex-wrap:wrap;
 }
 .hdr-stat{
   background:rgba(0,0,0,.18);
   border:1px solid rgba(255,215,0,.25);
   border-radius:9px;
-  padding:6px 12px;
+  padding:6px 10px;
   font-size:10px;color:#FFE0C0;
   display:flex;align-items:center;gap:5px;
+  white-space:nowrap;
 }
 .hdr-stat b{color:#FFD700;font-size:13px;font-weight:900;}
 
@@ -162,6 +164,28 @@ body{
 }
 .rcard.active .rcard-info{color:#FFE0C0;}
 
+/* 카드 인원·실적 영역 */
+.rcard-stats{
+  margin-top:6px;
+  padding-top:6px;
+  border-top:1px dashed rgba(232,85,0,.25);
+  display:flex;flex-direction:column;gap:1px;
+}
+.rcard.active .rcard-stats{
+  border-top-color:rgba(255,255,255,.3);
+}
+.rcard-stat-row{
+  font-size:9.5px;font-weight:700;color:#7A2500;
+  letter-spacing:-0.2px;
+}
+.rcard-stat-row b{
+  font-size:11px;color:#5A1500;font-weight:900;
+}
+.rcard.active .rcard-stat-row{color:#fff;text-shadow:0 1px 2px rgba(90,21,0,.4);}
+.rcard.active .rcard-stat-row b{color:#FFD700;}
+.rcard.disabled .rcard-stat-row{color:#999;}
+.rcard.disabled .rcard-stat-row b{color:#777;}
+
 /* 안내 박스 */
 .notice{
   background:linear-gradient(90deg,#FFF7E8,#FFEBC8);
@@ -197,18 +221,56 @@ body{
   padding:2px 8px;border-radius:10px;
   font-weight:700;font-size:10px;
 }
+/* 비밀번호 화면 */
+#pwScreen{display:flex;position:fixed;inset:0;background:linear-gradient(135deg,#5A1500 0%,#C04020 50%,#FF6B00 100%);z-index:9999;align-items:center;justify-content:center;}
+.pw-box{background:#fff;border-radius:20px;padding:36px 28px 28px;text-align:center;width:320px;max-width:90vw;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+.pw-logo{font-size:48px;margin-bottom:12px;}
+.pw-title{font-size:18px;font-weight:900;color:#1a2744;margin-bottom:4px;}
+.pw-sub{font-size:12px;color:#888;margin-bottom:20px;}
+.pw-input{width:100%;padding:14px;font-size:24px;letter-spacing:8px;text-align:center;border:2px solid #e0e8f0;border-radius:10px;outline:none;font-family:inherit;margin-bottom:14px;box-sizing:border-box;}
+.pw-input:focus{border-color:#E85500;}
+.pw-btn{width:100%;padding:14px;background:linear-gradient(135deg,#C04020,#FF6B00);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit;transition:opacity .2s;}
+.pw-btn:hover{opacity:0.9;}
+.pw-err{color:#cc4444;font-size:12px;margin-top:10px;display:none;font-weight:700;}
+#mainContent{display:none;}
 </style>
 </head>
 <body>
 
+<!-- 비밀번호 화면 -->
+<div id="pwScreen">
+  <div class="pw-box">
+    <div class="pw-logo">🏢</div>
+    <div class="pw-title">현대해상 통합 대시보드</div>
+    <div class="pw-sub">관리자 비밀번호를 입력하세요</div>
+    <input class="pw-input" type="password" id="pwInput" maxlength="20" placeholder="••••"
+      onkeydown="if(event.key==='Enter')checkHqPw()">
+    <button class="pw-btn" onclick="checkHqPw()">확인</button>
+    <div class="pw-err" id="pwErr">❌ 비밀번호가 틀렸습니다</div>
+    <div style="margin-top:16px;padding-top:12px;border-top:1px solid #eee;font-size:10px;color:#aaa;">
+      비밀번호를 잊으셨나요?<br>
+      <span style="color:#E85500;font-weight:700;">마스터 복구코드</span>로 접속 후 비밀번호를 변경하세요.<br>
+      <span style="color:#888;">(복구코드는 관리자에게 문의)</span>
+    </div>
+  </div>
+</div>
+
+<!-- 메인 콘텐츠 (비밀번호 통과 후 표시) -->
+<div id="mainContent">
+
 <div class="hdr">
   <div class="hdr-brand">⚡ HYUNDAI MARINE ⚡</div>
-  <h1><em>🏢 현대해상 </em>본부 통합 대시보드</h1>
+  <h1><em>🏢 현대해상 </em>통합 대시보드</h1>
   <div class="hdr-sub">전국 17개 지역단 종합 현황 시스템</div>
+  <div style="position:absolute;top:10px;right:12px;display:flex;gap:6px;">
+    <button onclick="changePw()" style="display:inline-flex;align-items:center;gap:3px;padding:5px 10px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.4);border-radius:16px;font-size:11px;font-weight:800;color:#fff;cursor:pointer;font-family:inherit;transition:all 0.18s;" onmouseover="this.style.background='rgba(255,255,255,0.28)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">🔑 비밀번호 변경</button>
+    <button onclick="hqLogout()" style="display:inline-flex;align-items:center;gap:3px;padding:5px 10px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);border-radius:16px;font-size:11px;font-weight:800;color:#fff;cursor:pointer;font-family:inherit;transition:all 0.18s;" onmouseover="this.style.background='rgba(255,255,255,0.22)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">🚪 로그아웃</button>
+  </div>
   <div class="hdr-stats">
     <div class="hdr-stat">📍 <b id="stat-total">17</b>개 지역단</div>
-    <div class="hdr-stat">✅ <b id="stat-active">1</b>개 운영중</div>
-    <div class="hdr-stat">⏳ <b id="stat-pending">16</b>개 준비중</div>
+    <div class="hdr-stat">✅ <b id="stat-active">17</b>개 운영중</div>
+    <div class="hdr-stat">👥 전국 <b id="stat-people">486</b>명</div>
+    <div class="hdr-stat">💰 합계 <b id="stat-base">2.92</b>억</div>
   </div>
 </div>
 
@@ -223,10 +285,60 @@ body{
     <!-- JS로 동적 생성 -->
   </div>
 
-  <div class="kpi-placeholder">
-    <div class="kpi-placeholder-icon">📊</div>
-    <div class="kpi-placeholder-text">본부 통합 KPI</div>
-    <div class="kpi-placeholder-sub">17개 지역단 종합 분석 (Stage 3 예정)</div>
+  <!-- ── 통합 KPI 대시보드 ── -->
+  <div style="margin-top:24px;">
+    <div class="sec-title">
+      <span class="sec-title-icon">📊</span>
+      <span class="sec-title-text">전국 통합 KPI <span id="kpi-sync-badge" style="font-size:10px;font-weight:600;color:#888;margin-left:8px;">⏳ 불러오는 중...</span></span>
+    </div>
+
+    <!-- 상단 요약 카드 4개 -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;">
+      <div style="background:#fff;border-radius:12px;padding:16px 12px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.08);border-top:4px solid #1a5cb0;">
+        <div style="font-size:11px;color:#888;font-weight:700;margin-bottom:6px;">👥 전국 인원</div>
+        <div id="kpi-total-ppl" style="font-size:26px;font-weight:900;color:#1a5cb0;">486명</div>
+        <div style="font-size:10px;color:#aaa;margin-top:4px;">17개 지역단</div>
+      </div>
+      <div style="background:#fff;border-radius:12px;padding:16px 12px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.08);border-top:4px solid #1e7e3a;">
+        <div style="font-size:11px;color:#888;font-weight:700;margin-bottom:6px;">💰 기준실적 합계</div>
+        <div id="kpi-total-base" style="font-size:26px;font-weight:900;color:#1e7e3a;">-</div>
+        <div style="font-size:10px;color:#aaa;margin-top:4px;">전국 월납 목표</div>
+      </div>
+      <div style="background:#fff;border-radius:12px;padding:16px 12px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.08);border-top:4px solid #E85500;">
+        <div style="font-size:11px;color:#888;font-weight:700;margin-bottom:6px;">📈 현재실적 합계</div>
+        <div id="kpi-total-cur" style="font-size:26px;font-weight:900;color:#E85500;">-</div>
+        <div style="font-size:10px;color:#aaa;margin-top:4px;">전국 월납 현황</div>
+      </div>
+      <div style="background:#fff;border-radius:12px;padding:16px 12px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.08);border-top:4px solid #7c3aed;">
+        <div style="font-size:11px;color:#888;font-weight:700;margin-bottom:6px;">✅ 전국 달성률</div>
+        <div id="kpi-total-rate" style="font-size:26px;font-weight:900;color:#7c3aed;">-</div>
+        <div style="font-size:10px;color:#aaa;margin-top:4px;">기준 대비 현재</div>
+      </div>
+    </div>
+
+    <!-- 지역단별 달성률 순위 표 -->
+    <div style="background:#fff;border-radius:12px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:900;color:#1a2744;margin-bottom:12px;">🏆 지역단별 달성률 순위</div>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:11px;">
+          <thead>
+            <tr style="background:#f0f4fa;">
+              <th style="padding:8px 6px;text-align:center;font-weight:800;color:#1a2744;border-bottom:2px solid #d0dcea;">순위</th>
+              <th style="padding:8px 6px;text-align:left;font-weight:800;color:#1a2744;border-bottom:2px solid #d0dcea;">지역단</th>
+              <th style="padding:8px 6px;text-align:right;font-weight:800;color:#1a2744;border-bottom:2px solid #d0dcea;">인원</th>
+              <th style="padding:8px 6px;text-align:right;font-weight:800;color:#1a2744;border-bottom:2px solid #d0dcea;">기준실적</th>
+              <th style="padding:8px 6px;text-align:right;font-weight:800;color:#1a2744;border-bottom:2px solid #d0dcea;">현재실적</th>
+              <th style="padding:8px 6px;text-align:right;font-weight:800;color:#1a2744;border-bottom:2px solid #d0dcea;">달성률</th>
+              <th style="padding:8px 6px;text-align:right;font-weight:800;color:#1a2744;border-bottom:2px solid #d0dcea;">순증</th>
+              <th style="padding:8px 6px;text-align:left;font-weight:800;color:#1a2744;border-bottom:2px solid #d0dcea;min-width:100px;">진도</th>
+            </tr>
+          </thead>
+          <tbody id="kpi-rank-tbody">
+            <tr><td colspan="8" style="text-align:center;padding:20px;color:#aaa;">⏳ Firebase에서 데이터 불러오는 중...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
   <div class="notice">
@@ -237,32 +349,129 @@ body{
   </div>
 
   <div class="ftr">
-    현대해상 본부 통합 대시보드 · <span class="ftr-ver">v2.0 (17개 지역단 전체 활성화)</span>
-  </div>
-</div>
+    현대해상 통합 대시보드 · <span class="ftr-ver">v1.007</span>
+</div><!-- /wrap -->
+</div><!-- /mainContent -->
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+// ── 통합 KPI Firebase 연동 ──
+var FB_CFG={apiKey:"AIzaSyB1yFZ4HKLIhUihjqOJkQy2XIC-CrZqmQM",authDomain:"master-itv.firebaseapp.com",databaseURL:"https://master-itv-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"master-itv"};
+var KPI_REGIONS=[
+  {name:'호남',icon:'🌾',path:'master_dashboard_v1',count:43},
+  {name:'강북',icon:'🏙️',path:'master_강북_dashboard_v1',count:26},
+  {name:'강서',icon:'🌉',path:'master_강서_dashboard_v1',count:29},
+  {name:'북부',icon:'🌲',path:'master_북부_dashboard_v1',count:29},
+  {name:'강남',icon:'🏢',path:'master_강남_dashboard_v1',count:25},
+  {name:'중부',icon:'🏛️',path:'master_중부_dashboard_v1',count:30},
+  {name:'경기',icon:'🌳',path:'master_경기_dashboard_v1',count:29},
+  {name:'성남',icon:'🏘️',path:'master_성남_dashboard_v1',count:23},
+  {name:'경인',icon:'🏗️',path:'master_경인_dashboard_v1',count:32},
+  {name:'강원',icon:'🏔️',path:'master_강원_dashboard_v1',count:33},
+  {name:'충청',icon:'🌻',path:'master_충청_dashboard_v1',count:27},
+  {name:'전북',icon:'🌾',path:'master_전북_dashboard_v1',count:30},
+  {name:'영남',icon:'🌊',path:'master_영남_dashboard_v1',count:31},
+  {name:'경남',icon:'⛰️',path:'master_경남_dashboard_v1',count:23},
+  {name:'대경',icon:'🏯',path:'master_대경_dashboard_v1',count:26},
+  {name:'부산',icon:'⚓',path:'master_부산_dashboard_v1',count:30},
+  {name:'제주',icon:'🌴',path:'master_제주_dashboard_v1',count:20}
+];
+var kpiData={}, kpiLoaded=0;
+
+function fmtMoney(v){
+  if(Math.abs(v)>=100000000)return(v/100000000).toFixed(2)+'억';
+  if(Math.abs(v)>=10000)return Math.round(v/10000)+'만원';
+  return v.toLocaleString()+'원';
+}
+
+function renderKpi(){
+  var totalBase=0,totalCur=0,totalPpl=0;
+  KPI_REGIONS.forEach(function(r){var d=kpiData[r.name];if(d){totalBase+=d.base;totalCur+=d.cur;totalPpl+=d.ppl;}});
+  var totalRate=totalBase>0?totalCur/totalBase*100:0;
+  var set=function(id,v){var el=document.getElementById(id);if(el)el.textContent=v;};
+  set('kpi-total-ppl',totalPpl+'명');
+  set('kpi-total-base',fmtMoney(totalBase));
+  set('kpi-total-cur',fmtMoney(totalCur));
+  set('kpi-total-rate',totalRate.toFixed(1)+'%');
+
+  var rows=KPI_REGIONS.map(function(r){
+    var d=kpiData[r.name]||{base:0,cur:0,ppl:r.count,rate:0,net:0};
+    return {name:r.name,icon:r.icon,base:d.base,cur:d.cur,ppl:d.ppl,rate:d.rate,net:d.net};
+  }).sort(function(a,b){return b.rate-a.rate;});
+
+  var tb=document.getElementById('kpi-rank-tbody');
+  if(!tb)return;
+  tb.innerHTML=rows.map(function(r,i){
+    var rc=r.rate>=120?'#E85500':r.rate>=100?'#1e7e3a':'#cc4444';
+    var bc=r.rate>=120?'#E85500':r.rate>=100?'#1e7e3a':'#1a5cb0';
+    var nc=r.net>=0?'#1e7e3a':'#cc4444';
+    var md=i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)+'위';
+    var bw=Math.min(r.rate/150*100,100);
+    return '<tr style="border-bottom:1px solid #f0f4fa;">'
+      +'<td style="padding:8px 6px;text-align:center;font-size:'+(i<3?'16':'12')+'px;font-weight:900;">'+md+'</td>'
+      +'<td style="padding:8px 6px;font-weight:800;color:#1a2744;white-space:nowrap;">'+r.icon+' '+r.name+'</td>'
+      +'<td style="padding:8px 6px;text-align:right;color:#555;font-size:11px;">'+r.ppl+'명</td>'
+      +'<td style="padding:8px 6px;text-align:right;color:#555;font-size:11px;">'+fmtMoney(r.base)+'</td>'
+      +'<td style="padding:8px 6px;text-align:right;font-weight:700;font-size:11px;">'+fmtMoney(r.cur)+'</td>'
+      +'<td style="padding:8px 6px;text-align:right;font-weight:900;font-size:13px;color:'+rc+';">'+r.rate.toFixed(1)+'%</td>'
+      +'<td style="padding:8px 6px;text-align:right;font-weight:700;font-size:11px;color:'+nc+';">'+(r.net>=0?'+':'')+fmtMoney(r.net)+'</td>'
+      +'<td style="padding:8px 6px;min-width:80px;">'
+        +'<div style="background:#eee;border-radius:4px;height:10px;overflow:hidden;">'
+          +'<div style="background:'+bc+';height:100%;width:'+bw+'%;border-radius:4px;transition:width 0.8s;"></div>'
+        +'</div>'
+      +'</td>'
+      +'</tr>';
+  }).join('');
+
+  var badge=document.getElementById('kpi-sync-badge');
+  if(badge)badge.textContent='✅ '+kpiLoaded+'/17 · '+new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
+}
+
+function loadKpi(){
+  try{
+    if(!firebase.apps.length)firebase.initializeApp(FB_CFG);
+    var db=firebase.database();
+    KPI_REGIONS.forEach(function(r){
+      db.ref(r.path).once('value').then(function(snap){
+        var val=snap.val();
+        if(val&&val.D&&Array.isArray(val.D)){
+          var base=0,cur=0,ppl=0;
+          val.D.forEach(function(row){if(row&&row[8]!=null){base+=Number(row[8])||0;cur+=Number(row[9])||0;ppl++;}});
+          kpiData[r.name]={base:base,cur:cur,ppl:ppl,rate:base>0?cur/base*100:0,net:cur-base};
+        } else {
+          kpiData[r.name]={base:0,cur:0,ppl:r.count,rate:0,net:0};
+        }
+        kpiLoaded++;renderKpi();
+      }).catch(function(){kpiData[r.name]={base:0,cur:0,ppl:r.count,rate:0,net:0};kpiLoaded++;renderKpi();});
+    });
+  }catch(e){console.log('KPI Firebase 오류:',e.message);}
+}
+window.addEventListener('load',function(){setTimeout(loadKpi,800);});
+</script>
 
 <script>
 // 17개 지역단 정보
 // status: 'active' = 운영중, 'pending' = 준비중
 // link: 운영중일 때 이동할 URL
 var REGIONS = [
-  {name:'호남', icon:'🌾', status:'active', link:'index.html', desc:'광주·전남 (43명)'},
-  {name:'강북', icon:'🏙️', status:'active', link:'강북지역단.html', desc:'서울 강북 (26명)'},
-  {name:'강서', icon:'🌉', status:'active', link:'강서지역단.html', desc:'서울 강서 (29명)'},
-  {name:'북부', icon:'🌲', status:'active', link:'북부지역단.html', desc:'서울 북부 (29명)'},
-  {name:'강남', icon:'🌆', status:'active', link:'강남지역단.html', desc:'서울 강남 (25명)'},
-  {name:'중부', icon:'🏛️', status:'active', link:'중부지역단.html', desc:'서울 중부 (30명)'},
-  {name:'경기', icon:'🌳', status:'active', link:'경기지역단.html', desc:'경기도 (29명)'},
-  {name:'성남', icon:'🏘️', status:'active', link:'성남지역단.html', desc:'성남·분당 (23명)'},
-  {name:'경인', icon:'🏗️', status:'active', link:'경인지역단.html', desc:'인천·경기 (32명)'},
-  {name:'강원', icon:'🏔️', status:'active', link:'강원지역단.html', desc:'강원특별자치도 (33명)'},
-  {name:'충청', icon:'🌻', status:'active', link:'충청지역단.html', desc:'충청권 (27명)'},
-  {name:'전북', icon:'🌾', status:'active', link:'전북지역단.html', desc:'전라북도 (30명)'},
-  {name:'영남', icon:'🌊', status:'active', link:'영남지역단.html', desc:'영남권 (31명)'},
-  {name:'경남', icon:'⛰️', status:'active', link:'경남지역단.html', desc:'경상남도 (23명)'},
-  {name:'대경', icon:'🏯', status:'active', link:'대경지역단.html', desc:'대구·경북 (26명)'},
-  {name:'부산', icon:'⚓', status:'active', link:'부산지역단.html', desc:'부산광역시 (30명)'},
-  {name:'제주', icon:'🌴', status:'active', link:'제주사업부.html', desc:'제주사업부 (20명)'}
+  {name:'호남', icon:'🌾', status:'active', link:'index.html',         desc:'광주·전남',         count:43, base:34214521},
+  {name:'강북', icon:'🏙️', status:'active', link:'강북지역단.html',     desc:'서울 강북',         count:26, base:12939172},
+  {name:'강서', icon:'🌉', status:'active', link:'강서지역단.html',     desc:'서울 강서',         count:29, base:19005658},
+  {name:'북부', icon:'🌲', status:'active', link:'북부지역단.html',     desc:'서울 북부',         count:29, base:15764265},
+  {name:'강남', icon:'🌆', status:'active', link:'강남지역단.html',     desc:'서울 강남',         count:25, base:13004148},
+  {name:'중부', icon:'🏛️', status:'active', link:'중부지역단.html',     desc:'서울 중부',         count:30, base:18880158},
+  {name:'경기', icon:'🌳', status:'active', link:'경기지역단.html',     desc:'경기도',            count:29, base:27097425},
+  {name:'성남', icon:'🏘️', status:'active', link:'성남지역단.html',     desc:'성남·분당',         count:23, base:11512057},
+  {name:'경인', icon:'🏗️', status:'active', link:'경인지역단.html',     desc:'인천·경기',         count:32, base:14368849},
+  {name:'강원', icon:'🏔️', status:'active', link:'강원지역단.html',     desc:'강원특별자치도',     count:33, base:20010603},
+  {name:'충청', icon:'🌻', status:'active', link:'충청지역단.html',     desc:'충청권',            count:27, base:16910029},
+  {name:'전북', icon:'🌾', status:'active', link:'전북지역단.html',     desc:'전라북도',          count:30, base:11731180},
+  {name:'영남', icon:'🌊', status:'active', link:'영남지역단.html',     desc:'영남권',            count:31, base:17936977},
+  {name:'경남', icon:'⛰️', status:'active', link:'경남지역단.html',     desc:'경상남도',          count:23, base:20881543},
+  {name:'대경', icon:'🏯', status:'active', link:'대경지역단.html',     desc:'대구·경북',         count:26, base:11611848},
+  {name:'부산', icon:'⚓', status:'active', link:'부산지역단.html',     desc:'부산광역시',        count:30, base:14703621},
+  {name:'제주', icon:'🌴', status:'active', link:'제주사업부.html',     desc:'제주사업부',        count:20, base:11007134}
 ];
 
 function renderRegions(){
@@ -272,11 +481,21 @@ function renderRegions(){
     var badge = isActive 
       ? '<span class="rcard-badge">✅ 운영중</span>'
       : '<span class="rcard-badge">⏳ 준비중</span>';
+    // 인원·실적 정보
+    var statsHtml = '';
+    if(r.count){
+      var baseStr = r.base ? '💰 ' + r.base.toLocaleString() + '원' : '';
+      statsHtml = '<div class="rcard-stats">'
+        + '<div class="rcard-stat-row">👥 <b>' + r.count + '</b>명</div>'
+        + (baseStr ? '<div class="rcard-stat-row">' + baseStr + '</div>' : '')
+        + '</div>';
+    }
     var inner = 
       '<div class="rcard-icon">' + r.icon + '</div>'
       + '<div class="rcard-name">' + r.name + '</div>'
       + badge
-      + (r.desc ? '<div class="rcard-info">' + r.desc + '</div>' : '');
+      + (r.desc ? '<div class="rcard-info">' + r.desc + '</div>' : '')
+      + statsHtml;
     if(isActive && r.link){
       return '<a class="' + cls + '" href="' + r.link + '" title="' + r.name + '지역단으로 이동">' + inner + '</a>';
     } else {
@@ -286,9 +505,16 @@ function renderRegions(){
   document.getElementById('region-grid').innerHTML = html;
   // 통계 업데이트
   var actCount = REGIONS.filter(function(r){return r.status==='active';}).length;
+  var totalPpl = REGIONS.reduce(function(s,r){return s+(r.count||0);},0);
+  var totalBase = REGIONS.reduce(function(s,r){return s+(r.base||0);},0);
   document.getElementById('stat-total').textContent = REGIONS.length;
   document.getElementById('stat-active').textContent = actCount;
   document.getElementById('stat-pending').textContent = REGIONS.length - actCount;
+  // 전국 인원·실적
+  var pplEl = document.getElementById('stat-people');
+  var baseEl = document.getElementById('stat-base');
+  if(pplEl) pplEl.textContent = totalPpl;
+  if(baseEl) baseEl.textContent = (totalBase/100000000).toFixed(2);
 }
 
 function onPendingClick(name){
@@ -296,6 +522,90 @@ function onPendingClick(name){
 }
 
 renderRegions();
+</script>
+
+<script>
+// ── 통합 대시보드 비밀번호 시스템 ──
+var HQ_PW_KEY = 'hq_master_pw';
+var HQ_AUTH_KEY = 'hq_auth_time';
+var MASTER_RECOVERY = 'hyundai2026'; // 마스터 복구 코드 (절대 잊지 마세요!)
+var AUTH_HOURS = 24; // 로그인 유지 시간 (시간)
+
+// 저장된 비밀번호 가져오기 (없으면 기본값 1234)
+function getStoredPw(){
+  return localStorage.getItem(HQ_PW_KEY) || '1234';
+}
+
+// 로그인 처리
+function checkHqPw(){
+  var input = document.getElementById('pwInput').value.trim();
+  var err = document.getElementById('pwErr');
+  if(input === getStoredPw() || input === MASTER_RECOVERY){
+    // localStorage에 24시간 유지
+    localStorage.setItem(HQ_AUTH_KEY, Date.now().toString());
+    showDashboard();
+    document.getElementById('pwInput').value='';
+  } else {
+    err.textContent='❌ 비밀번호가 틀렸습니다';
+    err.style.display='block';
+    document.getElementById('pwInput').value='';
+    document.getElementById('pwInput').focus();
+    setTimeout(function(){err.style.display='none';},2500);
+  }
+}
+
+// 대시보드 표시
+function showDashboard(){
+  document.getElementById('pwScreen').style.display='none';
+  document.getElementById('mainContent').style.display='block';
+}
+
+// 비밀번호 변경
+function changePw(){
+  var cur = prompt('현재 비밀번호를 입력하세요:');
+  if(cur === null) return;
+  if(cur !== getStoredPw() && cur !== MASTER_RECOVERY){
+    alert('❌ 현재 비밀번호가 틀렸습니다.');
+    return;
+  }
+  var newPw = prompt('새 비밀번호를 입력하세요 (4자리):');
+  if(newPw === null || newPw.trim() === '') return;
+  var confirm = prompt('새 비밀번호를 다시 입력하세요:');
+  if(newPw !== confirm){
+    alert('❌ 비밀번호가 일치하지 않습니다.');
+    return;
+  }
+  localStorage.setItem(HQ_PW_KEY, newPw.trim());
+  alert('✅ 비밀번호가 변경되었습니다!\n새 비밀번호: ' + newPw.trim());
+}
+
+// 로그아웃
+function hqLogout(){
+  if(!confirm('로그아웃 하시겠습니까?')) return;
+  localStorage.removeItem(HQ_AUTH_KEY);
+  document.getElementById('pwScreen').style.display='flex';
+  document.getElementById('mainContent').style.display='none';
+  document.getElementById('pwInput').value='';
+  setTimeout(function(){document.getElementById('pwInput').focus();},300);
+}
+
+// 페이지 로드 시 인증 확인
+(function(){
+  var authTime = localStorage.getItem(HQ_AUTH_KEY);
+  if(authTime){
+    var elapsed = (Date.now() - parseInt(authTime)) / 3600000; // 시간 단위
+    if(elapsed < AUTH_HOURS){
+      showDashboard();
+      return;
+    } else {
+      // 24시간 초과 — 재로그인 필요
+      localStorage.removeItem(HQ_AUTH_KEY);
+    }
+  }
+  setTimeout(function(){
+    document.getElementById('pwInput').focus();
+  },300);
+})();
 </script>
 </body>
 </html>
