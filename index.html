@@ -287,9 +287,47 @@ body.theme-c2 .sbtn{background:#FFE8D0;border-color:#FFA060;color:#7A2500;}
 /* 합계행 / 강조 */
 body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
 /* 인쇄/출력 버튼류는 그대로 */
+/* ── 로그인 화면 ── */
+#loginScreen{display:flex;position:fixed;inset:0;background:linear-gradient(135deg,#1A2744 0%,#2C3F6E 60%,#E8651A 100%);z-index:9999;align-items:center;justify-content:center;}
+.login-box{background:#fff;border-radius:20px;padding:36px 28px 28px;text-align:center;width:340px;max-width:92vw;box-shadow:0 24px 64px rgba(0,0,0,.35);}
+.login-logo{font-size:44px;margin-bottom:10px;}
+.login-title{font-size:17px;font-weight:900;color:#1A2744;margin-bottom:3px;}
+.login-sub{font-size:11px;color:#888;margin-bottom:22px;}
+.login-label{text-align:left;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;}
+.login-inp{width:100%;padding:12px 14px;font-size:14px;border:2px solid #e0e8f0;border-radius:10px;outline:none;font-family:inherit;box-sizing:border-box;margin-bottom:12px;transition:border-color .2s;}
+.login-inp:focus{border-color:#E8651A;}
+.login-btn{width:100%;padding:14px;background:linear-gradient(135deg,#1A2744,#E8651A);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:900;cursor:pointer;font-family:inherit;transition:opacity .2s;margin-top:4px;}
+.login-btn:hover{opacity:0.88;}
+.login-err{color:#cc4444;font-size:11px;margin-top:10px;display:none;font-weight:700;}
+.login-hint{margin-top:16px;padding-top:12px;border-top:1px solid #eee;font-size:10px;color:#bbb;}
+#mainDashboard{display:none;}
 </style>
 </head>
 <body>
+
+<!-- ── 로그인 화면 ── -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">🌾</div>
+    <div class="login-title">현대해상 호남 지역단</div>
+    <div class="login-sub">고객컨설팅 마스터과정 현황판</div>
+    <div class="login-label">사번 <span style="font-size:9px;color:#bbb;">(관리자는 빈칸)</span></div>
+    <input class="login-inp" type="text" id="loginId" placeholder="사번 입력 (예: 1B1312)"
+      onkeydown="if(event.key==='Enter')document.getElementById('loginPw').focus()">
+    <div class="login-label">비밀번호 <span style="font-size:9px;color:#bbb;">(초기: 1111)</span></div>
+    <input class="login-inp" type="password" id="loginPw" placeholder="비밀번호 입력"
+      onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">✅ 로그인</button>
+    <div class="login-err" id="loginErr">❌ 사번 또는 비밀번호가 틀렸습니다</div>
+    <div class="login-hint">
+      최초 비밀번호는 <b style="color:#E8651A;">1111</b> 입니다<br>
+      로그인 후 비밀번호 변경 가능
+    </div>
+  </div>
+</div>
+
+<!-- ── 메인 대시보드 (로그인 후 표시) ── -->
+<div id="mainDashboard">
 
 <!-- 비밀번호 화면 -->
 <div id="pwScreen" style="display:none;">
@@ -316,7 +354,7 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
     <span id="todayLabel">2026년 4월 20일</span><span>|</span>
     <span><span class="dot"></span> 전일마감 기준</span>
     <span id="syncStatus" style="font-size:10px;margin-left:6px;color:#888;">연결중...</span>
-    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.010</span>
+    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.013</span>
   </div>
   <div class="tab-nav">
     <button class="tb on" id="tb-home" onclick="goTab('home',this)">🏠 홈 대시보드</button>
@@ -3572,5 +3610,146 @@ function applyGroups(){
 }
 
 </script>
+<script>
+// ── 호남 지역단 로그인 시스템 (사번+비밀번호) ──
+var LOGIN_KEY    = 'honam_login_v1';
+var PW_PREFIX    = 'honam_pw_';
+var MASTER_PW_KEY = 'honam_master_pw';
+var DEFAULT_PW   = '1111';
+var MASTER_PW_DEFAULT = 'honam2026'; // 최초 관리자 비밀번호
+var LOGIN_HOURS  = 24;
+
+// 사번별 저장된 비밀번호 (없으면 기본 1111)
+function getUserPw(sabun){
+  return localStorage.getItem(PW_PREFIX + sabun) || DEFAULT_PW;
+}
+// 관리자 비밀번호 (없으면 기본 honam2026)
+function getMasterPw(){
+  return localStorage.getItem(MASTER_PW_KEY) || MASTER_PW_DEFAULT;
+}
+
+function doLogin(){
+  var id  = document.getElementById('loginId').value.trim();
+  var pw  = document.getElementById('loginPw').value;
+  var err = document.getElementById('loginErr');
+
+  // ── 관리자 로그인 (사번 빈칸 + 관리자 비밀번호) ──
+  if(id === '' && pw === getMasterPw()){
+    saveLoginAndShow({id:'admin', name:'관리자', isAdmin:true});
+    return;
+  }
+
+  // ── 일반 사원 로그인 ──
+  // 1) D 배열에서 사번 확인
+  var matched = D.find(function(d){ return String(d[3]).trim() === id; });
+  if(!matched){
+    showLoginErr('❌ 등록되지 않은 사번입니다');
+    return;
+  }
+
+  // 2) 비밀번호 확인
+  var storedPw = getUserPw(id);
+  if(pw !== storedPw){
+    showLoginErr('❌ 비밀번호가 틀렸습니다');
+    return;
+  }
+
+  saveLoginAndShow({id:id, name:matched[5], isAdmin:false});
+}
+
+function showLoginErr(msg){
+  var err = document.getElementById('loginErr');
+  err.textContent = msg;
+  err.style.display = 'block';
+  setTimeout(function(){ err.style.display='none'; }, 3000);
+  document.getElementById('loginPw').value = '';
+  document.getElementById('loginPw').focus();
+}
+
+function saveLoginAndShow(user){
+  localStorage.setItem(LOGIN_KEY, JSON.stringify({user:user, time:Date.now()}));
+  applyLogin(user);
+}
+
+function applyLogin(user){
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('mainDashboard').style.display = 'block';
+
+  // 헤더에 사용자 이름 + 비밀번호 변경 + 로그아웃 버튼
+  var hdrOrg = document.getElementById('hdr-org');
+  if(hdrOrg){
+    var changePwBtn = user.isAdmin
+      ? '<button onclick="changeAdminPw()" style="margin-left:8px;padding:3px 9px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.35);border-radius:12px;font-size:10px;font-weight:700;color:#fff;cursor:pointer;font-family:inherit;">🔑 관리자 비밀번호 변경</button>'
+      : '<button onclick="changeMyPw(\''+user.id+'\')" style="margin-left:8px;padding:3px 9px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.35);border-radius:12px;font-size:10px;font-weight:700;color:#fff;cursor:pointer;font-family:inherit;">🔑 비밀번호 변경</button>';
+    hdrOrg.innerHTML = '현대해상 호남 지역단'
+      + '<span style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.85);margin-left:10px;">👤 '+user.name+'님</span>'
+      + changePwBtn
+      + '<button onclick="doLogout()" style="margin-left:6px;padding:3px 9px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);border-radius:12px;font-size:10px;font-weight:700;color:#fff;cursor:pointer;font-family:inherit;">🚪 로그아웃</button>';
+  }
+}
+
+// 관리자 비밀번호 변경
+function changeAdminPw(){
+  var cur = prompt('현재 관리자 비밀번호를 입력하세요:');
+  if(cur === null) return;
+  if(cur !== getMasterPw()){
+    alert('❌ 현재 비밀번호가 틀렸습니다.');
+    return;
+  }
+  var newPw = prompt('새 관리자 비밀번호를 입력하세요:');
+  if(!newPw || !newPw.trim()){ alert('비밀번호를 입력해주세요.'); return; }
+  var confirm = prompt('새 비밀번호를 다시 입력하세요:');
+  if(newPw !== confirm){ alert('❌ 비밀번호가 일치하지 않습니다.'); return; }
+  localStorage.setItem(MASTER_PW_KEY, newPw.trim());
+  alert('✅ 관리자 비밀번호가 변경되었습니다!\n안전한 곳에 보관하세요.\n\n복구 불가 시 파일 내 MASTER_PW_DEFAULT 값을 사용하세요.');
+}
+
+// 일반 비밀번호 변경
+function changeMyPw(sabun){
+  var cur = prompt('현재 비밀번호를 입력하세요:');
+  if(cur === null) return;
+  if(cur !== getUserPw(sabun)){
+    alert('❌ 현재 비밀번호가 틀렸습니다.');
+    return;
+  }
+  var newPw = prompt('새 비밀번호를 입력하세요:');
+  if(!newPw || !newPw.trim()){ alert('비밀번호를 입력해주세요.'); return; }
+  var confirm = prompt('새 비밀번호를 다시 입력하세요:');
+  if(newPw !== confirm){ alert('❌ 비밀번호가 일치하지 않습니다.'); return; }
+  localStorage.setItem(PW_PREFIX + sabun, newPw.trim());
+  alert('✅ 비밀번호가 변경되었습니다!\n다음 로그인부터 새 비밀번호를 사용하세요.');
+}
+
+function doLogout(){
+  if(!confirm('로그아웃 하시겠습니까?')) return;
+  localStorage.removeItem(LOGIN_KEY);
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('mainDashboard').style.display = 'none';
+  document.getElementById('loginId').value = '';
+  document.getElementById('loginPw').value = '';
+  setTimeout(function(){ document.getElementById('loginId').focus(); }, 300);
+}
+
+// 페이지 로드 시 저장된 로그인 확인
+(function(){
+  try{
+    var raw = localStorage.getItem(LOGIN_KEY);
+    if(raw){
+      var data = JSON.parse(raw);
+      var elapsed = (Date.now() - data.time) / 3600000;
+      if(elapsed < LOGIN_HOURS && data.user){
+        applyLogin(data.user);
+        return;
+      } else {
+        localStorage.removeItem(LOGIN_KEY);
+      }
+    }
+  } catch(e){}
+  document.getElementById('loginScreen').style.display = 'flex';
+  setTimeout(function(){ document.getElementById('loginId').focus(); }, 300);
+})();
+</script>
+
+</div><!-- /mainDashboard -->
 </body>
 </html>
