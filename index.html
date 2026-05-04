@@ -353,12 +353,12 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
     <span id="todayLabel">2026년 4월 20일</span><span>|</span>
     <span><span class="dot"></span> 전일마감 기준</span>
     <span id="syncStatus" style="font-size:10px;margin-left:6px;color:#888;">연결중...</span>
-    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.015</span>
+    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.017</span>
   </div>
   <div class="tab-nav">
     <button class="tb on" id="tb-home" onclick="goTab('home',this)">🏠 홈 대시보드</button>
     <button class="tb" id="tb-admin" onclick="goTab('admin',this)">⚙️ 관리자</button>
-    <a href="headquarters.html" id="hq-home-btn" class="tb" style="text-decoration:none;font-size:10px;padding:6px 8px;opacity:0.8;" title="통합 대시보드로 이동">🏢 통합</a>
+    <a href="headquarters.html?auth=region" id="hq-home-btn" class="tb" style="text-decoration:none;font-size:10px;padding:6px 8px;opacity:0.8;" title="통합 대시보드로 이동">🏢 통합</a>
   </div>
 </div>
 
@@ -445,7 +445,7 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
   </div>
   <div id="vperf" style="display:none">
     <div class="kpi-row" id="kpi-perf"></div>
-    <div class="sec"><div class="stitle">📊 개인별 실적 진도<span class="ssub">신장금액 내림차순</span><button class="sbtn" id="extraBtn" onclick="toggleExtra()">시상·순위 숨기기</button><button class="print-btn" onclick="printSection('vperf')">🖨️ 인쇄</button></div>
+    <div class="sec"><div class="stitle">📊 개인별 실적 진도<span class="ssub">신장금액 내림차순</span><button class="sbtn" id="extraBtn" onclick="toggleExtra()">시상·순위 숨기기</button><button class="print-btn" onclick="printSection('vperf')">🖨️ 인쇄</button><button class="print-btn" onclick="downloadExcel('vperf')" style="margin-left:4px;background:#1e7e3a;border-color:#1e7e3a;">📥 엑셀</button></div>
     <div class="tbl"><table><thead>
       <tr class="hd1"><th rowspan="2">순위</th><th rowspan="2">성명</th><th rowspan="2" class="col-extra">기준실적</th><th colspan="3">26.4월 실적</th><th rowspan="2" class="col-extra">달성시상</th><th rowspan="2" class="col-extra">신장률순위</th><th rowspan="2" class="col-extra">신장액순위</th><th rowspan="2" class="col-extra">인품순위</th></tr>
       <tr class="hd2"><th class="col-extra">현재실적</th><th>달성률</th><th>순증(원)</th></tr>
@@ -453,7 +453,7 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
   </div>
   <div id="vrate" style="display:none">
     <div class="crit">⚠️ 개인 시상 기준조건 : 기준 인보험 실적 대비 <strong>순증 30만원 이상</strong> 달성자에 한함</div>
-    <div class="sec"><div class="stitle">📈 최고 신장률 TOP 10<span class="ssub">전체 대상</span><button class="print-btn" onclick="printSection('vrate')">🖨️ 인쇄</button></div>
+    <div class="sec"><div class="stitle">📈 최고 신장률 TOP 10<span class="ssub">전체 대상</span><button class="print-btn" onclick="printSection('vrate')">🖨️ 인쇄</button><button class="print-btn" onclick="downloadExcel('vrate')" style="margin-left:4px;background:#1e7e3a;border-color:#1e7e3a;">📥 엑셀</button></div>
     <div class="abar">
       <div class="ab gd"><div class="ab-rank">🥇 1위</div><div class="ab-prize">30만원</div></div>
       <div class="ab sv"><div class="ab-rank">🥈 2~3위</div><div class="ab-prize">20만원</div></div>
@@ -467,7 +467,7 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
   </div>
   <div id="vamt" style="display:none">
     <div class="crit">⚠️ 개인 시상 기준조건 : 기준 인보험 실적 대비 <strong>순증 30만원 이상</strong> 달성자에 한함</div>
-    <div class="sec"><div class="stitle">💰 최고 신장액 TOP 10<span class="ssub">전체 대상</span><button class="print-btn" onclick="printSection('vamt')">🖨️ 인쇄</button></div>
+    <div class="sec"><div class="stitle">💰 최고 신장액 TOP 10<span class="ssub">전체 대상</span><button class="print-btn" onclick="printSection('vamt')">🖨️ 인쇄</button><button class="print-btn" onclick="downloadExcel('vamt')" style="margin-left:4px;background:#1e7e3a;border-color:#1e7e3a;">📥 엑셀</button></div>
     <div class="abar">
       <div class="ab gd"><div class="ab-rank">🥇 1위</div><div class="ab-prize">50만원</div></div>
       <div class="ab sv"><div class="ab-rank">🥈 2~3위</div><div class="ab-prize">30만원</div></div>
@@ -480,14 +480,14 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
     </div>
   </div>
   <div id="vipum" style="display:none">
-    <div class="sec"><div class="stitle">✨ 인품왕 TOP 10<span class="ssub">신상품 판매액 기준</span><button class="print-btn" onclick="printSection('vipum')">🖨️ 인쇄</button></div>
+    <div class="sec"><div class="stitle">✨ 인품왕 TOP 10<span class="ssub">신상품 판매액 기준</span><button class="print-btn" onclick="printSection('vipum')">🖨️ 인쇄</button><button class="print-btn" onclick="downloadExcel('vipum')" style="margin-left:4px;background:#1e7e3a;border-color:#1e7e3a;">📥 엑셀</button></div>
     <div class="ig" id="ipumPodium"></div>
     <div class="rlbl" style="margin-top:9px">📋 4위 ~ 10위</div>
     <div class="tbl" style="margin-top:6px"><table><thead><tr class="hd1"><th>순위</th><th>지점</th><th>성명</th><th>신상품실적(원)</th><th>계약건</th></tr></thead><tbody id="ipumRest"></tbody></table></div>
     </div>
   </div>
   <div id="vgroup" style="display:none">
-    <div class="sec"><div class="stitle">📋 조별 시상 현황<button class="print-btn" onclick="printSection('vgroup')" style="margin-left:8px;">🖨️ 인쇄</button></div><div id="grpSummary"></div></div>
+    <div class="sec"><div class="stitle">📋 조별 시상 현황<button class="print-btn" onclick="printSection('vgroup')" style="margin-left:8px;">🖨️ 인쇄</button><button class="print-btn" onclick="downloadExcel('vgroup')" style="margin-left:4px;background:#1e7e3a;border-color:#1e7e3a;">📥 엑셀</button></div><div id="grpSummary"></div></div>
     <div class="sec"><div class="stitle">👥 그룹 순증 시상 안내</div>
     <div style="display:flex;gap:8px;align-items:stretch;">
 
@@ -1160,6 +1160,40 @@ function toggleExtra(){extraOn=!extraOn;document.querySelectorAll('.col-extra').
 
 function g1Prize(r){if(r>=25)return{lbl:'25%↑',prize:'15만원',ok:true};if(r>=15)return{lbl:'15%↑',prize:'7만원',ok:true};if(r>=5)return{lbl:'5%↑',prize:'3만원',ok:true};return{lbl:'미달',prize:'-',ok:false};}
 function g2Prize(base,cur){const ok=base.length>0&&cur.every((c,i)=>c-base[i]>=50);return ok?{lbl:'✅전원달성',prize:'5만원',ok:true}:{lbl:'미달',prize:'-',ok:false};}
+
+// ── 엑셀(CSV) 다운로드 ──
+function downloadExcel(viewId){
+  var titles={vperf:'개인별실적진도',vrate:'신장률TOP10',vamt:'신장액TOP10',vipum:'인품왕TOP10',vgroup:'조별시상현황'};
+  var title=titles[viewId]||viewId;
+  var el=document.getElementById(viewId);
+  if(!el){alert(title+' 화면을 먼저 탭에서 열어주세요.');return;}
+  var wasHidden=(el.style.display==='none'||el.style.display==='');
+  if(wasHidden)el.style.display='block';
+  var rows=[];
+  var tables=el.querySelectorAll('table');
+  if(tables.length===0){if(wasHidden)el.style.display='none';alert('테이블 데이터가 없습니다.');return;}
+  tables.forEach(function(tbl){
+    tbl.querySelectorAll('tr').forEach(function(tr){
+      var row=[];
+      tr.querySelectorAll('th,td').forEach(function(td){
+        var txt=(td.innerText||td.textContent||'').replace(/[\r\n]+/g,' ').replace(/"/g,'""').trim();
+        row.push('"'+txt+'"');
+      });
+      if(row.length>0)rows.push(row.join(','));
+    });
+    rows.push('');
+  });
+  if(wasHidden)el.style.display='none';
+  var today=new Date();
+  var ds=today.getFullYear()+''+String(today.getMonth()+1).padStart(2,'0')+String(today.getDate()).padStart(2,'0');
+  var csv='\uFEFF'+rows.join('\r\n');
+  var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;a.download='호남_'+title+'_'+ds+'.csv';
+  document.body.appendChild(a);a.click();
+  document.body.removeChild(a);URL.revokeObjectURL(url);
+}
 
 function printSection(viewId){
   var titles={vperf:'실적 진도 현황',vrate:'최고 신장률 TOP10',vamt:'최고 신장액 TOP10',vipum:'인품왕 TOP10',vgroup:'조별 시상 현황'};
