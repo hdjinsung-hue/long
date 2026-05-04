@@ -353,7 +353,7 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
     <span id="todayLabel">2026년 4월 20일</span><span>|</span>
     <span><span class="dot"></span> 전일마감 기준</span>
     <span id="syncStatus" style="font-size:10px;margin-left:6px;color:#888;">연결중...</span>
-    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.014</span>
+    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.015</span>
   </div>
   <div class="tab-nav">
     <button class="tb on" id="tb-home" onclick="goTab('home',this)">🏠 홈 대시보드</button>
@@ -2989,7 +2989,10 @@ function applyGrpAwardToDisplay(a){
     };
   }
   if(a.grp1){
-    var g1thresh=parseFloat(a.grp1.cond)||50;
+    // ⭐ 만원 단위 정확 추출: '5만원 순증' → 50(천원), '10만원↑' → 100
+    var _cond=String(a.grp1.cond||'');
+    var _m=_cond.match(/(\d+\.?\d*)\s*만원/);
+    var g1thresh=_m ? parseFloat(_m[1])*10 : (parseFloat(_cond)||50);
     var g1prz=a.grp1.prize||'5만원';
     window.g2Prize=function(base,cur){
       var ok=base.length>0&&cur.every(function(c,i){return c-base[i]>=g1thresh;});
