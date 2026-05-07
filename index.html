@@ -353,7 +353,7 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
     <span id="todayLabel">2026년 4월 20일</span><span>|</span>
     <span><span class="dot"></span> 전일마감 기준</span>
     <span id="syncStatus" style="font-size:10px;margin-left:6px;color:#888;">연결중...</span>
-    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.018</span>
+    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.019</span>
   </div>
   <div class="tab-nav">
     <button class="tb on" id="tb-home" onclick="goTab('home',this)">🏠 홈 대시보드</button>
@@ -674,7 +674,7 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
   </div>
   <!-- 시상안 편집 -->
   <div class="sec" id="sec-award" style="display:none;">
-    <div class="stitle">🏆 시상안 편집 <span style="font-size:10px;font-weight:600;color:#888;">(홈 시상안 박스 실시간 반영)</span>
+    <div class="stitle">🏆 시상안 편집 <span id="award-course-badge" style="font-size:10px;font-weight:800;color:#E85500;background:#FFF0E0;padding:2px 8px;border-radius:10px;margin-left:4px;">Master Ⅰ</span> <span style="font-size:10px;font-weight:600;color:#888;">(홈 시상안 박스 실시간 반영)</span>
       <button class="sbtn" onclick="saveAward()" style="background:#1a5cb0;color:#fff;border-color:#1a5cb0;">💾 저장</button>
       <button class="sbtn" onclick="resetAward()" style="background:#888;color:#fff;border-color:#888;margin-left:4px;">↺ 기본값</button>
       <span id="awardMsg" style="font-size:10px;color:#1a8a40;display:none;margin-left:6px;">✅ 저장완료</span>
@@ -2764,6 +2764,9 @@ function reloadFirebaseForCourse(){
   // meta·award 리스너도 재바인딩
   if(typeof loadMeta==='function')loadMeta();
   if(typeof loadAward==='function')loadAward();
+  // 시상안 편집 과정 배지 갱신
+  var badge=document.getElementById('award-course-badge');
+  if(badge)badge.textContent=CURRENT_COURSE==='2'?'Master Ⅱ':'Master Ⅰ';
 }
 // 페이지 시작 시 탭 상태 반영 (compare 모드면 비교 화면 자동 진입)
 setTimeout(function(){
@@ -2950,9 +2953,17 @@ function readDynList(group){
   return out;
 }
 function addGrp2Rank(){
+  // sec-award가 숨겨져 있어도 데이터 읽기 가능하게 임시 표시
+  var sec=document.getElementById('sec-award');
+  var wasHidden=sec&&sec.style.display==='none';
+  if(wasHidden)sec.style.display='block';
   var cur=readGrp2List();
   cur.push({cond:'',prize:'',note:''});
   renderGrp2List(cur);
+  if(wasHidden)sec.style.display='block'; // 계속 보이게
+  // 마지막 추가된 행으로 스크롤
+  var el=document.getElementById('inp-grp2-ranks');
+  if(el)setTimeout(function(){el.lastElementChild&&el.lastElementChild.scrollIntoView({behavior:'smooth',block:'nearest'});},100);
 }
 function renderGrp2List(items){
   var el=document.getElementById('inp-grp2-ranks');
@@ -2962,14 +2973,14 @@ function renderGrp2List(items){
     return;
   }
   el.innerHTML=items.map(function(item,i){
-    return '<div class="aw-dyn-row" data-group="grp2" data-idx="'+i+'" style="display:grid;grid-template-columns:1fr 1fr 1.5fr 32px;gap:4px;align-items:center;margin-bottom:2px;">'
-      +'<input type="text" class="aw-dyn-f1" placeholder="예: 5%↑" value="'+(item.cond||'').replace(/"/g,'&quot;')+'" style="padding:5px 7px;font-size:10px;border:1px solid #f0c8a0;border-radius:4px;font-family:inherit;">'
-      +'<input type="text" class="aw-dyn-f2" placeholder="예: 3만원" value="'+(item.prize||'').replace(/"/g,'&quot;')+'" style="padding:5px 7px;font-size:10px;border:1px solid #f0c8a0;border-radius:4px;font-family:inherit;">'
-      +'<input type="text" class="aw-dyn-f3" placeholder="안내문구 (선택)" value="'+(item.note||'').replace(/"/g,'&quot;')+'" style="padding:5px 7px;font-size:10px;border:1px solid #e0e8f0;border-radius:4px;font-family:inherit;">'
-      +'<button onclick="delGrp2Row('+i+')" title="삭제" style="background:#cc4444;color:#fff;border:none;border-radius:4px;font-size:13px;cursor:pointer;font-weight:700;">🗑</button>'
+    return '<div class="aw-dyn-row" style="display:grid;grid-template-columns:1fr 1fr 1.5fr 32px;gap:4px;align-items:center;margin-bottom:4px;">'
+      +'<input type="text" class="aw-dyn-f1" placeholder="예: 5%↑" value="'+(item.cond||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;')+'" style="padding:6px 7px;font-size:10px;border:1px solid #f0c8a0;border-radius:4px;font-family:inherit;">'
+      +'<input type="text" class="aw-dyn-f2" placeholder="예: 3만원" value="'+(item.prize||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;')+'" style="padding:6px 7px;font-size:10px;border:1px solid #f0c8a0;border-radius:4px;font-family:inherit;">'
+      +'<input type="text" class="aw-dyn-f3" placeholder="안내문구 (선택)" value="'+(item.note||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;')+'" style="padding:6px 7px;font-size:10px;border:1px solid #e0e8f0;border-radius:4px;font-family:inherit;">'
+      +'<button type="button" onclick="delGrp2Row(this)" title="삭제" style="background:#cc4444;color:#fff;border:none;border-radius:4px;font-size:13px;cursor:pointer;font-weight:700;height:28px;">🗑</button>'
       +'</div>';
   }).join('')
-    +'<div style="font-size:10px;color:#aaa;margin-top:4px;">컬럼: 신장률 구간 | 시상금 | 안내문구(선택)</div>';
+    +'<div style="font-size:10px;color:#aaa;margin-top:4px;text-align:center;">신장률 구간 | 시상금 | 안내문구(선택)</div>';
 }
 function readGrp2List(){
   var el=document.getElementById('inp-grp2-ranks');
@@ -2979,17 +2990,23 @@ function readGrp2List(){
   rows.forEach(function(r){
     var v1=r.querySelector('.aw-dyn-f1').value.trim();
     var v2=r.querySelector('.aw-dyn-f2').value.trim();
-    var v3=r.querySelector('.aw-dyn-f3') ? r.querySelector('.aw-dyn-f3').value.trim() : '';
+    var v3=r.querySelector('.aw-dyn-f3')?r.querySelector('.aw-dyn-f3').value.trim():'';
     if(!v1&&!v2)return;
     out.push({cond:v1,prize:v2,note:v3});
   });
   return out;
 }
-function delGrp2Row(idx){
-  var cur=readGrp2List();
+function delGrp2Row(btn){
+  // btn은 클릭된 버튼 element
+  var row=btn.closest('.aw-dyn-row');
+  if(!row)return;
   if(!confirm('이 구간을 삭제하시겠습니까?'))return;
-  cur.splice(idx,1);
-  renderGrp2List(cur);
+  row.remove();
+  // 남은 항목 없으면 안내 표시
+  var el=document.getElementById('inp-grp2-ranks');
+  if(el&&el.querySelectorAll('.aw-dyn-row').length===0){
+    el.innerHTML='<div style="text-align:center;padding:8px;color:#888;font-size:10px;">등록된 구간이 없습니다. 아래 [＋ 구간 추가] 버튼을 눌러주세요.</div>';
+  }
 }
 // 그룹시상 홈 화면 동적 반영
 function applyGrpAwardToDisplay(a){
@@ -3010,12 +3027,15 @@ function applyGrpAwardToDisplay(a){
   // 그룹시상2 박스 갱신
   var g2box=document.getElementById('disp-grp2-rows');
   if(g2box&&a.grp2&&a.grp2.length){
-    var colors=['#1e7e3a','#1a5cb0','#cc5500'];
+    var colors=['#1e7e3a','#1a5cb0','#cc5500','#7c3aed','#c04020'];
     g2box.innerHTML=a.grp2.map(function(r,i){
       var col=colors[i%colors.length];
-      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;'+(i<a.grp2.length-1?'border-bottom:1px solid #f0d8c0;':'')+'">'
-        +'<div style="font-size:11px;font-weight:700;color:#1a3a6b;">'+(r.cond||'')+'</div>'
-        +'<div style="font-size:16px;font-weight:900;color:'+col+';">'+(r.prize||'')+'<span style="font-size:10px;color:#555;font-weight:600;"> 인당</span></div>'
+      return '<div style="padding:6px 0;'+(i<a.grp2.length-1?'border-bottom:1px solid #f0d8c0;':'')+'">'
+        +'<div style="display:flex;justify-content:space-between;align-items:center;">'
+          +'<div style="font-size:11px;font-weight:700;color:#1a3a6b;">'+(r.cond||'')+'</div>'
+          +'<div style="font-size:16px;font-weight:900;color:'+col+';">'+(r.prize||'')+'<span style="font-size:10px;color:#555;font-weight:600;"> 인당</span></div>'
+        +'</div>'
+        +(r.note?'<div style="font-size:10px;color:#888;margin-top:2px;">※ '+r.note+'</div>':'')
         +'</div>';
     }).join('');
   }
