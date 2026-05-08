@@ -261,14 +261,14 @@ body{
 <div class="hdr">
   <div class="hdr-brand">⚡ HYUNDAI MARINE ⚡</div>
   <h1><em>🏢 현대해상 </em>통합 대시보드</h1>
-  <div class="hdr-sub">전국 17개 지역단 종합 현황 시스템</div>
+  <div class="hdr-sub">전국 18개 지역단 종합 현황 시스템</div>
   <div style="position:absolute;top:10px;right:12px;display:flex;gap:6px;">
     <button onclick="changePw()" style="display:inline-flex;align-items:center;gap:3px;padding:5px 10px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.4);border-radius:16px;font-size:11px;font-weight:800;color:#fff;cursor:pointer;font-family:inherit;transition:all 0.18s;" onmouseover="this.style.background='rgba(255,255,255,0.28)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">🔑 비밀번호 변경</button>
     <button onclick="hqLogout()" style="display:inline-flex;align-items:center;gap:3px;padding:5px 10px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);border-radius:16px;font-size:11px;font-weight:800;color:#fff;cursor:pointer;font-family:inherit;transition:all 0.18s;" onmouseover="this.style.background='rgba(255,255,255,0.22)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">🚪 로그아웃</button>
   </div>
   <div class="hdr-stats">
-    <div class="hdr-stat">📍 <b id="stat-total">17</b>개 지역단</div>
-    <div class="hdr-stat">✅ <b id="stat-active">17</b>개 운영중</div>
+    <div class="hdr-stat">📍 <b id="stat-total">18</b>개 지역단</div>
+    <div class="hdr-stat">✅ <b id="stat-active">18</b>개 운영중</div>
     <div class="hdr-stat">👥 전국 <b id="stat-people">486</b>명</div>
     <div class="hdr-stat">💰 합계 <b id="stat-base">2.92</b>억</div>
   </div>
@@ -349,7 +349,7 @@ body{
   </div>
 
   <div class="ftr">
-    현대해상 통합 대시보드 · <span class="ftr-ver">v1.007</span>
+    현대해상 통합 대시보드 · <span class="ftr-ver">v1.009</span>
 </div><!-- /wrap -->
 </div><!-- /mainContent -->
 
@@ -375,6 +375,7 @@ var KPI_REGIONS=[
   {name:'경남',icon:'⛰️',path:'master_경남_dashboard_v1',count:23},
   {name:'대경',icon:'🏯',path:'master_대경_dashboard_v1',count:26},
   {name:'부산',icon:'⚓',path:'master_부산_dashboard_v1',count:30},
+  {name:'순천',icon:'🏞️',path:'master_순천_dashboard_v1',count:0},
   {name:'제주',icon:'🌴',path:'master_제주_dashboard_v1',count:20}
 ];
 var kpiData={}, kpiLoaded=0;
@@ -471,6 +472,7 @@ var REGIONS = [
   {name:'경남', icon:'⛰️', status:'active', link:'경남지역단.html',     desc:'경상남도',          count:23, base:20881543},
   {name:'대경', icon:'🏯', status:'active', link:'대경지역단.html',     desc:'대구·경북',         count:26, base:11611848},
   {name:'부산', icon:'⚓', status:'active', link:'부산지역단.html',     desc:'부산광역시',        count:30, base:14703621},
+  {name:'순천', icon:'🏞️', status:'active', link:'순천권.html',     desc:'전남 순천권',          count:0,  base:0},
   {name:'제주', icon:'🌴', status:'active', link:'제주사업부.html',     desc:'제주사업부',        count:20, base:11007134}
 ];
 
@@ -591,6 +593,14 @@ function hqLogout(){
 
 // 페이지 로드 시 인증 확인
 (function(){
+  // ⭐ URL 파라미터로 자동 인증 (지역단 → 통합 이동 시)
+  var params = new URLSearchParams(window.location.search);
+  if(params.get('auth') === 'region'){
+    localStorage.setItem(HQ_AUTH_KEY, Date.now().toString());
+    // URL에서 파라미터 제거 (보안)
+    history.replaceState({}, '', window.location.pathname);
+  }
+
   var authTime = localStorage.getItem(HQ_AUTH_KEY);
   if(authTime){
     var elapsed = (Date.now() - parseInt(authTime)) / 3600000; // 시간 단위
