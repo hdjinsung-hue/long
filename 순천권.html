@@ -358,7 +358,7 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
     <span id="todayLabel">2026년 5월</span><span>|</span>
     <span><span class="dot"></span> 전일마감 기준</span>
     <span id="syncStatus" style="font-size:10px;margin-left:6px;color:#888;">연결중...</span>
-    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.036</span>
+    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.037</span>
   </div>
   <div class="tab-nav">
     <button class="tb on" id="tb-home" onclick="goTab('home',this)">🏠 홈 대시보드</button>
@@ -3123,24 +3123,39 @@ function saveAward(){
     amtRanks:amtRanks,
     grp1:{cond:getV('inp-grp1-cond'),prize:getV('inp-grp1-prize'),note:getV('inp-grp1-note')},
     grp2:readGrp2List(),
-    // 백워드 호환: rate/amt 텍스트도 자동 조립
     rate: rateRanks.length ? buildRanksHtml('📈 신장률 TOP10:',rateRanks) : '',
     amt: amtRanks.length ? buildRanksHtml('💰 신장액 TOP10:',amtRanks) : '',
     crit:getV('inp-aw-crit'),dup:getV('inp-aw-dup'),exc:getV('inp-aw-exc'),
     t:Date.now()
   };
   applyAwardToDisplay(a);
+  try{localStorage.setItem('award_backup_suncheon', JSON.stringify(a));}catch(e){}
   var msg=document.getElementById('awardMsg');
+  function _showMsg(txt, color){
+    if(!msg)return;
+    msg.textContent=txt; msg.style.color=color; msg.style.display='inline';
+    setTimeout(function(){msg.style.display='none';},3000);
+  }
   if(fb_ready&&typeof firebase!=='undefined'){
+    try{firebase.database().goOnline();}catch(e){}
     firebase.database().ref(fbPath('master_순천_award')).set(a,function(err){
-      if(!msg)return;
-      msg.textContent=err?'❌ 저장실패':'✅ 저장완료';msg.style.color=err?'#cc0000':'#1a8a40';msg.style.display='inline';
-      setTimeout(function(){msg.style.display='none';},2500);
+      if(err){
+        _showMsg('⚠️ 서버 저장 실패 — 로컬 백업 완료 (재연결 후 자동 반영)', '#cc5500');
+        setTimeout(function(){
+          firebase.database().ref(fbPath('master_순천_award')).set(a,function(err2){
+            if(!err2){_showMsg('✅ 재시도 저장 성공!', '#1a8a40');try{localStorage.removeItem('award_backup_suncheon');}catch(e){}}
+          });
+        }, 5000);
+      } else {
+        _showMsg('✅ 시상안 저장완료', '#1a8a40');
+        try{localStorage.removeItem('award_backup_suncheon');}catch(e){}
+      }
     });
   } else {
-    if(msg){msg.textContent='⚠ 로컬만 반영 (Firebase 미연결)';msg.style.color='#cc5500';msg.style.display='inline';setTimeout(function(){msg.style.display='none';},2500);}
+    _showMsg('⚠️ 로컬 백업 완료 — Firebase 연결 후 [저장] 다시 클릭', '#cc5500');
   }
 }
+
 function resetAward(){
   if(!confirm('시상안을 기본값으로 되돌리시겠습니까?\n(저장 버튼을 눌러야 Firebase에도 반영됩니다)'))return;
   applyAwardToInputs(AWARD_DEFAULT);
