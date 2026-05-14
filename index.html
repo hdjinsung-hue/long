@@ -309,7 +309,7 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
 <div id="loginScreen">
   <div class="login-box">
     <div class="login-logo">🌾</div>
-    <div class="login-title">현대해상 호남 지역단</div>
+    <div class="login-title">현대해상 순천권</div>
     <div class="login-sub">고객컨설팅 마스터과정 현황판</div>
     <div class="login-label">사번 <span style="font-size:9px;color:#bbb;">(관리자는 빈칸)</span></div>
     <input class="login-inp" type="text" id="loginId" placeholder="사번 입력 (예: 1B1312)"
@@ -324,6 +324,9 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
     <div class="login-hint">
       최초 비밀번호는 <b style="color:#E8651A;">1111</b> 입니다<br>
       로그인 후 비밀번호 변경 가능
+      <div style="margin-top:8px;padding-top:8px;border-top:1px dashed #ddd;color:#999;">
+        👨‍💼 <b style="color:#1a5cb0;">관리자</b>: 사번 <b>1111</b> / 비밀번호 <b>1111</b>
+      </div>
     </div>
   </div>
 </div>
@@ -344,7 +347,7 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
 </div>
 
 <div class="hdr" style="position:relative;">
-  <div class="org" id="hdr-org">현대해상 호남 지역단</div>
+  <div class="org" id="hdr-org">현대해상 순천권</div>
   <div id="course-tabs" style="display:flex;gap:6px;justify-content:center;margin:8px auto 10px;max-width:480px;">
     <button id="ctab-1" onclick="switchCourse('1')" style="flex:1;padding:9px 10px;font-size:12px;font-weight:900;border-radius:9px;border:2px solid #ffe066;background:#ffe066;color:#7a5000;cursor:pointer;transition:all 0.18s;font-family:inherit;box-shadow:0 2px 8px rgba(255,224,102,.4);">📘 Master Ⅰ</button>
     <button id="ctab-2" onclick="switchCourse('2')" style="flex:1;padding:9px 10px;font-size:12px;font-weight:900;border-radius:9px;border:2px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.08);color:#cce0ff;cursor:pointer;transition:all 0.18s;font-family:inherit;">📗 Master Ⅱ</button>
@@ -460,7 +463,7 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
       <div class="ab gd"><div class="ab-rank">🥇 1위</div><div class="ab-prize">30만원</div></div>
       <div class="ab sv"><div class="ab-rank">🥈 2~3위</div><div class="ab-prize">20만원</div></div>
       <div class="ab bz"><div class="ab-rank">4~10위</div><div class="ab-prize">주유권 5만원</div></div>
-      <div class="ab nt"><div class="ab-rank">⚠️ 중복시상</div><div class="ab-prize">높은금액 1회</div><div class="ab-note">동점시 순위순</div></div>
+      <div class="ab nt"><div class="ab-rank">⚠️ 중복시상</div><div class="ab-prize">높은금액 1회</div><div class="ab-note">신장액 우선</div></div>
     </div>
     <div class="podium" id="ratePodium"></div>
     <table id="rateTop3Table" style="display:none;width:100%;border-collapse:collapse;font-size:11px;margin-bottom:6px;">
@@ -478,7 +481,7 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
       <div class="ab gd"><div class="ab-rank">🥇 1위</div><div class="ab-prize">50만원</div></div>
       <div class="ab sv"><div class="ab-rank">🥈 2~3위</div><div class="ab-prize">30만원</div></div>
       <div class="ab bz"><div class="ab-rank">4~10위</div><div class="ab-prize">주유권 10만원</div></div>
-      <div class="ab nt"><div class="ab-rank">⚠️ 중복시상</div><div class="ab-prize">높은금액 1회</div><div class="ab-note">동점시 순위순</div></div>
+      <div class="ab nt"><div class="ab-rank">⚠️ 중복시상</div><div class="ab-prize">높은금액 1회</div><div class="ab-note">신장액 우선</div></div>
     </div>
     <div class="podium" id="amtPodium"></div>
     <table id="amtTop3Table" style="display:none;width:100%;border-collapse:collapse;font-size:11px;margin-bottom:6px;">
@@ -584,7 +587,7 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
   <div class="ag">
     <div class="ac"><h3>📌 과정 기본 정보 <button class="sbtn" onclick="saveMeta()" style="background:#1a5cb0;color:#fff;border-color:#1a5cb0;">💾 저장</button><span id="metaMsg" style="font-size:9px;color:#1a8a40;display:none;margin-left:4px;">✅ 저장완료</span></h3>
       <div class="ar"><span class="al">과정명</span><input type="text" id="meta-title" class="av" value="고객컨설팅 Master Ⅰ" style="width:60%;padding:3px 6px;font-size:11px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;text-align:right;"></div>
-      <div class="ar"><span class="al">지역단</span><input type="text" id="meta-org" class="av" value="현대해상 호남 지역단" style="width:60%;padding:3px 6px;font-size:11px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;text-align:right;"></div>
+      <div class="ar"><span class="al">지역단</span><input type="text" id="meta-org" class="av" value="현대해상 순천권" style="width:60%;padding:3px 6px;font-size:11px;border:1px solid #b8cce0;border-radius:4px;font-family:inherit;text-align:right;"></div>
       <div class="ar"><span class="al">기준일</span><span class="av" id="meta-date">-</span></div>
       <div class="ar"><span class="al">총 인원</span><span class="av" id="adm-total">-</span></div>
     </div>
@@ -612,36 +615,6 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
     <button class="adm-btn" id="btn-sec-roster" onclick="adminShow('sec-roster',this)"><span class="ab-icon">📋</span><div class="ab-tx"><div class="ab-title">개별 명단 관리</div><div class="ab-sub">일괄 내보내기·입력 (사번 매칭)</div></div><span class="ab-arr">›</span></button>
     <button class="adm-btn" id="btn-sec-groups" onclick="adminShow('sec-groups',this)"><span class="ab-icon">🏅</span><div class="ab-tx"><div class="ab-title">조별 명단 관리</div><div class="ab-sub">조 구성 일괄 교체</div></div><span class="ab-arr">›</span></button>
     <button class="adm-btn" id="btn-sec-verify" onclick="adminShow('sec-verify',this);initVerifyExport();"><span class="ab-icon">🔎</span><div class="ab-tx"><div class="ab-title">실적 합계 검증</div><div class="ab-sub">원본 vs 현재값 비교·누락 확인</div></div><span class="ab-arr">›</span></button>
-    <button class="adm-btn" id="btn-sec-totals" onclick="adminShow('sec-totals',this);renderPrizeTotals();" style="background:linear-gradient(135deg,#1a8a40,#0a5a25);color:#fff;border-color:#0a5a25;"><span class="ab-icon">💰</span><div class="ab-tx"><div class="ab-title" style="color:#fff;">시상금 전체 합계</div><div class="ab-sub" style="color:#cfe;">개인별·전체 합계 (중복 제외 자동 적용)</div></div><span class="ab-arr" style="color:#fff;">›</span></button>
-  </div>
-  <div class="sec" id="sec-totals" style="display:none;">
-    <div class="stitle">💰 시상금 전체 합계 <span class="ssub">중복 제외 자동 적용 (1~10등 모두)</span>
-      <button class="print-btn" onclick="printPrizeTotals()">🖨️ 인쇄</button>
-      <button class="print-btn" onclick="downloadAllPrizes()" style="margin-left:4px;background:#1e7e3a;border-color:#1e7e3a;">📥 엑셀</button>
-    </div>
-    <div style="padding:8px 10px;background:#fff8f0;border-left:3px solid #E85500;border-radius:4px;font-size:10px;color:#7a3500;font-weight:700;margin-bottom:10px;">
-      ⚠️ <b>신장률·신장액 중복 시상은 자동 제외</b>되어 실제 지급 금액만 표시됩니다.<br>
-      <span style="font-size:9px;font-weight:600;color:#999;">규칙: 두 항목 모두 해당 시 높은 시상금 1회 지급 (동점이면 순위 높은 쪽)</span>
-    </div>
-    <div id="totals-summary" style="margin-bottom:12px;"></div>
-    <div class="tbl" style="overflow-x:auto;">
-      <table id="totals-table" style="width:100%;border-collapse:collapse;font-size:11px;">
-        <thead>
-          <tr class="hd1">
-            <th>순위</th>
-            <th>성명</th>
-            <th class="td-r">달성시상</th>
-            <th class="td-r">신장률시상</th>
-            <th class="td-r">신장액시상</th>
-            <th class="td-r">조별시상</th>
-            <th class="td-r" style="background:#fff0e0;">합계</th>
-            <th>비고</th>
-          </tr>
-        </thead>
-        <tbody id="totals-tbody"></tbody>
-        <tfoot id="totals-tfoot"></tfoot>
-      </table>
-    </div>
   </div>
   <div class="sec" id="sec-edit" style="display:none;">
     <div class="stitle">✏️ 실적 데이터 편집</div>
@@ -714,8 +687,7 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
   </div>
   <!-- 시상안 편집 -->
   <div class="sec" id="sec-award" style="display:none;">
-    <div class="stitle">🏆 시상안 편집 <span id="award-course-badge" style="font-size:10px;font-weight:800;color:#E85500;background:#FFF0E0;padding:2px 8px;border-radius:10px;margin-left:4px;">Master Ⅰ</span> <span style="font-size:10px;font-weight:600;color:#888;">(현재 과정만 반영 · 다른 과정 무영향)</span>
-    <div style="margin-top:6px;padding:6px 9px;background:#fff8f0;border-left:3px solid #E85500;border-radius:4px;font-size:10px;color:#7a3500;font-weight:700;">⚠️ 이 시상안은 <span id="award-course-name" style="color:#E85500;">Master Ⅰ</span> 과정에만 적용됩니다. 다른 과정의 시상안은 별도 저장됩니다.</div>
+    <div class="stitle">🏆 시상안 편집 <span id="award-course-badge" style="font-size:10px;font-weight:800;color:#E85500;background:#FFF0E0;padding:2px 8px;border-radius:10px;margin-left:4px;">Master Ⅰ</span> <span style="font-size:10px;font-weight:600;color:#888;">(홈 시상안 박스 실시간 반영)</span>
       <button class="sbtn" onclick="saveAward()" style="background:#1a5cb0;color:#fff;border-color:#1a5cb0;">💾 저장</button>
       <button class="sbtn" onclick="resetAward()" style="background:#888;color:#fff;border-color:#888;margin-left:4px;">↺ 기본값</button>
       <span id="awardMsg" style="font-size:10px;color:#1a8a40;display:none;margin-left:6px;">✅ 저장완료</span>
@@ -979,118 +951,14 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
 <script>
 
 let D = [
-  ["호남지역단","동광주비전센터","광주제일지점","1B1312",    "",              "윤정화", 62,"영업팀장",  622738,  709820, 114.0,  87083,1, 315350],
-  ["호남지역단","동광주비전센터","광주제일지점","986037",    "",              "정경화",205,"",         1450413, 2193493,151.2,  743081, 2, 387620],
-  ["호남지역단","동광주비전센터","광주제일지점","9A1520",    "엔젯대리점",    "신경애",274,"",         2595038, 1954840, 75.3, -640198, 1, 155950],
-  ["호남지역단","동광주비전센터","광주제일지점","9A1766",    "김승미대리점",  "김승미",113,"",         2751720, 1698820, 61.7,-1052900, 6, 994950],
-  ["호남지역단","동광주비전센터","새광주지점",  "127322",    "",              "김성자",213,"SM",        718713,  608420, 84.7, -110293, 1, 230580],
-  ["호남지역단","동광주비전센터","광주제일지점","132458",    "",              "박순자",197,"SM",        450250,  213940, 47.5, -236310, 1, 213940],
-  ["호남지역단","동광주비전센터","새광주지점",  "1C0027",    "",              "이병훈", 38,"영업팀장",  833045,  718300, 86.2, -114745, 2, 306960],
-  ["호남지역단","동광주비전센터","새광주지점",  "1C6888",    "",              "김애덕", 23,"",          395610,  353810, 89.4,  -41800, 1, 214420],
-  ["호남지역단","동광주비전센터","새광주지점",  "979377",    "빛가람보험",    "나대수",200,"영업팀장",  596923,  522790, 87.6,  -74133, 1, 307320],
-  ["호남지역단","동광주비전센터","새광주지점",  "9A0460",    "강경희",        "강경희",232,"",          427308,  231790, 54.2, -195518, 1, 101960],
-  ["호남지역단","동광주비전센터","상무중앙지점","137553",    "",              "윤진희",182,"SM팀장",   1080960, 1572910,145.5,  491950, 3,1187720],
-  ["호남지역단","동광주비전센터","상무중앙지점","144470",    "",              "김인자",140,"SM",        327153,  100810, 30.8, -226343, 1,  63490],
-  ["호남지역단","동광주비전센터","상무중앙지점","154822",    "",              "송정량",165,"",          307398,  262240, 85.3,  -45158, 0,      0],
-  ["호남지역단","동광주비전센터","상무중앙지점","949966",    "양산총괄",      "조은아",296,"",         1634200, 1891750,115.8,  257550, 0,      200000],
-  ["호남지역단","동광주비전센터","상무중앙지점","965034",    "새름",          "유해순",218,"코칭리더",  604360,  593930, 98.3,  -10430, 3, 422730],
-  ["호남지역단","동광주비전센터","상무중앙지점","984627",    "무건길",        "박점희",351,"영업팀장",  782148,  397140, 50.8, -385008, 0,      0],
-  ["호남지역단","동광주비전센터","상무제일지점","190467",    "",              "송지연",121,"영업팀장",  391835,   108230, 27.6, -283605, 1,      58230],
-  ["호남지역단","동광주비전센터","상무제일지점","1A0856",    "",              "강성원", 90,"영업팀장",  491378,  321290, 65.4, -170088, 2, 321290],
-  ["호남지역단","동광주비전센터","상무제일지점","1D0562",    "",              "이종열", 15,"SM팀장",    365128,  327230, 89.6,  -37898, 1, 327230],
-  ["호남지역단","동광주비전센터","광주TC지점",  "129731",    "",              "서혜경",205,"",          672583,  546450, 81.2, -126133, 2, 307400],
-  ["호남지역단","동광주비전센터","동광주TC지점","1A2040",    "",              "정명순", 87,"",          345248,  504060,146.0,  158813, 3, 373280],
-  ["호남지역단","동광주비전센터","동광주TC지점","1B8497",    "",              "류민희", 43,"SM",        354203,  391360,110.5,   37158, 1, 205190],
-  ["호남지역단","동광주비전센터","광주TC지점",  "9A0450",    "재명",          "갈재명",227,"",          564070,  334570, 59.3, -229500, 1, 209230],
-  ["호남지역단","광주비전센터",  "광주지점",    "153239",    "",              "서영란",168,"SM팀장",    819623,  726990, 88.7,  -92633, 2, 324980],
-  ["호남지역단","광주비전센터",  "광주지점",    "1A1080",    "",              "모상민", 89,"영업팀장", 1021960,  868460, 85.0, -153500, 1, 387380],
-  ["호남지역단","광주비전센터",  "광주지점",    "1B0395",    "",              "이두성", 64,"영업팀장",  700950,  419090, 59.8, -281860, 2, 336290],
-  ["호남지역단","광주비전센터",  "광주지점",    "1C3909",    "",              "허용순", 30,"SM",        675153,  123050, 18.2, -552103, 0,      0],
-  ["호남지역단","광주비전센터",  "광주지점",    "1C8703",    "",              "심은영", 19,"",          498788,  547950, 109.9,  49163, 3, 301200],
-  ["호남지역단","광주비전센터",  "광주미래지점","967424",    "최미선",        "최미선",284,"",          796578,  501640, 63.0, -294938, 2, 310870],
-  ["호남지역단","광주비전센터",  "광주직할지점","158408",    "",              "이진혁",157,"",         1989960,  805130, 40.5,-1184830, 1,  77650],
-  ["호남지역단","광주비전센터",  "광주직할지점","1C2459",    "",              "김미영", 33,"영업팀장",  584938,  577570, 98.7,  -7368, 1, 200110],
-  ["호남지역단","광주비전센터",  "신광주지점",  "1B1166",    "",              "박은주", 62,"영업팀장",  389823,  373100, 95.7,  -16723, 3, 223490],
-  ["호남지역단","광주비전센터",  "신광주지점",  "1C7250",    "",              "박진욱", 22,"",          464690,  211340, 45.5, -253350, 1, 114600],
-  ["호남지역단","광주비전센터",  "신광주지점",  "9A0445",    "지향",          "강지향",195,"영업팀장",  780530,  446350, 57.2, -334180, 2, 147980],
-  ["호남지역단","광주비전센터",  "신광주지점",  "9A0446",    "인동김정희",    "김정희",329,"",         1075330,  734580, 68.3, -340750, 5, 548010],
-  ["호남지역단","광주비전센터",  "신광주지점",  "9A0590",    "상무정인숙",    "정인숙",347,"",          401303,  331400, 82.6, -69903, 2, 206510],
-  ["호남지역단","광주비전센터",  "신광주지점",  "9A6499",    "해피유",        "유선은", 42,"",         1108133,  551460, 49.8, -556673, 1, 157320],
-  ["호남지역단","광주비전센터",  "신광주지점",  "9A6607",    "해피문",        "문효숙", 87,"SM팀장",    475905,  362530, 76.2, -113375, 2, 226830],
-  ["호남지역단","광주비전센터",  "신광주지점",  "9A6961",    "최길례",        "최길례",120,"영업팀장",  455133,  466190,102.4,   11058, 1, 237600],
-  ["호남지역단","광주비전센터",  "광주TC지점",  "107681",    "",              "박희자",259,"영업팀장",  681145,  195480, 28.7, -485665, 1, 138910],
-  ["호남지역단","광주비전센터",  "광주TC지점",  "1A2807",    "",              "문채원", 84,"영업팀장", 1486692,  564540, 38.0,-922152, 1, 241930],
-  ["호남지역단","광주비전센터",  "광주TC지점",  "1A4011",    "",              "김윤영", 81,"SM",        434500,  392710, 90.4,  -41790, 1, 116330],
-  ["호남지역단","광주비전센터",  "광주TC지점",  "1B9374",    "",              "천수정", 41,"",          610965,  720910,118.0,  109945, 1, 188020],
+  // 명단 미입력 상태입니다.
+  // 관리자 로그인 → 관리자 탭 → 개별 명단 관리에서 입력해주세요.
 ];
 // 헬퍼: GROUPS 멤버의 base를 D[8]/1000과 동기화 (D 우선, 없으면 GROUPS 폴백)
 function memberBase(m){var f=D.find(function(d){return d[5]===m.name;});return f?Math.round(f[8]/1000):m.base;}
 const GROUPS = [
-  // ── 광주비전센터 ──
-  {id:1, center:'광주비전센터', members:[
-    {name:'문채원', branch:'광주TC지점',  base:1318},
-    {name:'박희자', branch:'광주TC지점',  base:735},
-    {name:'천수정', branch:'광주TC지점',  base:613},
-    {name:'김윤영', branch:'광주TC지점',  base:476},
-  ]},
-  {id:2, center:'광주비전센터', members:[
-    {name:'모상민', branch:'광주지점',    base:1010},
-    {name:'서영란', branch:'광주지점',    base:773},
-    {name:'이두성', branch:'광주지점',    base:720},
-    {name:'허용순', branch:'광주지점',    base:644},
-    {name:'심은영', branch:'광주지점',    base:468},
-  ]},
-  {id:3, center:'광주비전센터', members:[
-    {name:'이진혁', branch:'광주직할지점', base:1984},
-    {name:'김미영', branch:'광주직할지점', base:621},
-    {name:'최미선', branch:'광주미래지점', base:868},
-  ]},
-  {id:4, center:'광주비전센터', members:[
-    {name:'김정희', branch:'신광주지점',  base:1104},
-    {name:'강지향', branch:'신광주지점',  base:765},
-    {name:'박은주', branch:'신광주지점',  base:418},
-    {name:'유선은', branch:'신광주지점',  base:1251},
-  ]},
-  {id:5, center:'광주비전센터', members:[
-    {name:'문효숙', branch:'신광주지점',  base:567},
-    {name:'정인숙', branch:'신광주지점',  base:379},
-    {name:'박진욱', branch:'신광주지점',  base:500},
-    {name:'최길례', branch:'신광주지점',  base:471},
-  ]},
-  // ── 동광주비전센터 ──
-  {id:6, center:'동광주비전센터', members:[
-    {name:'김승미', branch:'광주제일지점', base:2878},
-    {name:'신경애', branch:'광주제일지점', base:2645},
-    {name:'정경화', branch:'광주제일지점', base:1471},
-    {name:'윤정화', branch:'광주제일지점', base:597},
-  ]},
-  {id:7, center:'동광주비전센터', members:[
-    {name:'조은아', branch:'상무중앙지점', base:1747},
-    {name:'김인자', branch:'상무중앙지점', base:328},
-    {name:'유해순', branch:'상무중앙지점', base:618},
-  ]},
-  {id:8, center:'동광주비전센터', members:[
-    {name:'윤진희', branch:'상무중앙지점', base:1073},
-    {name:'박점희', branch:'상무중앙지점', base:975},
-    {name:'송정량', branch:'상무중앙지점', base:300},
-  ]},
-  {id:9, center:'동광주비전센터', members:[
-    {name:'강성원', branch:'상무제일지점', base:481},
-    {name:'송지연', branch:'상무제일지점', base:426},
-    {name:'이종열', branch:'상무제일지점', base:382},
-    {name:'서혜경', branch:'동광주TC지점', base:583},
-    {name:'갈재명', branch:'동광주TC지점', base:564},
-    {name:'정명순', branch:'동광주TC지점', base:388},
-    {name:'류민희', branch:'동광주TC지점', base:380},
-  ]},
-  {id:10, center:'동광주비전센터', members:[
-    {name:'김성자', branch:'새광주지점',  base:785},
-    {name:'나대수', branch:'새광주지점',  base:735},
-    {name:'박순자', branch:'새광주지점',  base:468},
-    {name:'이병훈', branch:'새광주지점',  base:784},
-    {name:'강경희', branch:'새광주지점',  base:522},
-    {name:'김애덕', branch:'새광주지점',  base:419},
-  ]},
+  // 조별 명단 미입력 상태입니다.
+  // 관리자 로그인 → 관리자 탭 → 조별 명단 관리에서 입력해주세요.
 ];
 
 
@@ -1242,243 +1110,6 @@ function toggleExtra(){extraOn=!extraOn;document.querySelectorAll('.col-extra').
 function g1Prize(r){if(r>=25)return{lbl:'25%↑',prize:'15만원',ok:true};if(r>=15)return{lbl:'15%↑',prize:'7만원',ok:true};if(r>=5)return{lbl:'5%↑',prize:'3만원',ok:true};return{lbl:'미달',prize:'-',ok:false};}
 function g2Prize(base,cur){const ok=base.length>0&&cur.every((c,i)=>c-base[i]>=50);return ok?{lbl:'✅전원달성',prize:'5만원',ok:true}:{lbl:'미달',prize:'-',ok:false};}
 
-// ── 시상금 합계 계산 (downloadAllPrizes와 공유 로직) ──
-function calcAllPrizes(){
-  if(!D||D.length===0)return null;
-
-  // 1. 시상 풀 정렬
-  var byRate=D.map(function(d,i){return{i:i,d:d};}).filter(function(x){return x.d[8]>0;}).sort(function(a,b){return (b.d[11]/b.d[8])-(a.d[11]/a.d[8]);});
-  var byAmt =D.map(function(d,i){return{i:i,d:d};}).filter(function(x){return x.d[8]>0;}).sort(function(a,b){return b.d[11]-a.d[11];});
-  var byRateSorted=byRate.filter(function(x){return x.d[11]>=300000;}).concat(byRate.filter(function(x){return x.d[11]<300000;}));
-  var byAmtSorted =byAmt.filter(function(x){return x.d[11]>=300000;}).concat(byAmt.filter(function(x){return x.d[11]<300000;}));
-  var rRankIdx={};byRateSorted.forEach(function(x,k){rRankIdx[x.i]=k;});
-  var aRankIdx={};byAmtSorted.forEach(function(x,k){aRankIdx[x.i]=k;});
-
-  var rPrizeAmt=function(k){return k===0?300000:k<=2?200000:k<10?50000:0;};
-  var aPrizeAmt=function(k){return k===0?500000:k<=2?300000:k<10?100000:0;};
-
-  // 2. 중복 시상자 결정
-  var aExcludeIds=new Set(),rExcludeIds=new Set(),dupList=[];
-  D.forEach(function(d,i){
-    if(d[11]<300000)return;
-    var rk=rRankIdx[i],ak=aRankIdx[i];
-    if(rk!==undefined&&rk<10&&ak!==undefined&&ak<10)dupList.push({i:i,rk:rk,ak:ak});
-  });
-  dupList.sort(function(a,b){
-    var aP_a=aPrizeAmt(a.ak),aP_b=aPrizeAmt(b.ak);if(aP_a!==aP_b)return aP_b-aP_a;
-    var rP_a=rPrizeAmt(a.rk),rP_b=rPrizeAmt(b.rk);if(rP_a!==rP_b)return rP_b-rP_a;
-    return a.ak-b.ak;
-  });
-  dupList.forEach(function(item){
-    var i=item.i;
-    var rTemp=byRateSorted.filter(function(x){return !aExcludeIds.has(x.i);});
-    var aTemp=byAmtSorted.filter(function(x){return !rExcludeIds.has(x.i);});
-    var reK=-1,aeK=-1,re=0,ae=0;
-    for(var rti=0;rti<rTemp.length&&re<10;rti++){if(rTemp[rti].d[11]>=300000){if(rTemp[rti].i===i)reK=re;re++;}}
-    for(var ati=0;ati<aTemp.length&&ae<10;ati++){if(aTemp[ati].d[11]>=300000){if(aTemp[ati].i===i)aeK=ae;ae++;}}
-    if(reK<0||aeK<0)return;
-    var rP=rPrizeAmt(reK),aP=aPrizeAmt(aeK);
-    if(aP>rP)aExcludeIds.add(i);
-    else if(rP>aP)rExcludeIds.add(i);
-    else{ if(reK<=aeK)rExcludeIds.add(i); else aExcludeIds.add(i); }
-  });
-
-  // 3. 효과 시상 인덱스
-  var rEffMap={},aEffMap={},rEff=0,aEff=0;
-  for(var ri=0;ri<byRateSorted.length&&rEff<10;ri++){
-    var rid=byRateSorted[ri].i;
-    if(byRateSorted[ri].d[11]>=300000&&!aExcludeIds.has(rid)){rEffMap[rid]=rEff++;}
-  }
-  for(var ai=0;ai<byAmtSorted.length&&aEff<10;ai++){
-    var aid=byAmtSorted[ai].i;
-    if(byAmtSorted[ai].d[11]>=300000&&!rExcludeIds.has(aid)){aEffMap[aid]=aEff++;}
-  }
-
-  // 4. 달성시상
-  function getAchievePrize(net){
-    if(net>=500000)return 500000;
-    if(net>=300000)return 300000;
-    if(net>=200000)return 200000;
-    if(net>=100000)return 100000;
-    if(net>=50000)return 50000;
-    return 0;
-  }
-
-  // 5. 조별시상
-  var groupPrizeMap={};
-  if(typeof GROUPS!=='undefined'&&GROUPS&&GROUPS.length){
-    GROUPS.forEach(function(g){
-      var members=g.members||[];
-      if(members.length===0)return;
-      var totalBase=0,totalCur=0;
-      members.forEach(function(m){
-        var person=D.find(function(d){return d[5]===m.name;});
-        if(person&&person[8]>0){totalBase+=person[8];totalCur+=person[9];}
-      });
-      var groupRate=totalBase>0?((totalCur-totalBase)/totalBase)*100:0;
-      var grp2Prize=0;
-      if(groupRate>=25)grp2Prize=150000;
-      else if(groupRate>=15)grp2Prize=70000;
-      else if(groupRate>=5)grp2Prize=30000;
-      var allOver5=members.every(function(m){
-        var person=D.find(function(d){return d[5]===m.name;});
-        return person&&(person[9]-person[8])>=50000;
-      });
-      var grp1Prize=allOver5?50000:0;
-      members.forEach(function(m){
-        var person=D.find(function(d){return d[5]===m.name;});
-        if(person)groupPrizeMap[D.indexOf(person)]=grp2Prize+grp1Prize;
-      });
-    });
-  }
-
-  // 6. 결과 계산
-  var allPrizes=D.map(function(d,i){
-    var ach=getAchievePrize(d[11]);
-    var rateP=rEffMap[i]!==undefined?rPrizeAmt(rEffMap[i]):0;
-    var amtP =aEffMap[i]!==undefined?aPrizeAmt(aEffMap[i]):0;
-    var grpP =groupPrizeMap[i]||0;
-    var total=ach+rateP+amtP+grpP;
-    var note='';
-    if(rateP>0&&amtP>0){note='⚠️중복!';}
-    else if(rateP>0){note='신장률 적용';}
-    else if(amtP>0){note='신장액 적용';}
-    return {
-      idx:i,name:d[5],branch:d[2]||'',
-      ach:ach,rateP:rateP,amtP:amtP,grpP:grpP,
-      total:total,note:note
-    };
-  }).sort(function(a,b){return b.total-a.total;});
-
-  return allPrizes;
-}
-
-// ── 화면에 시상금 합계 렌더링 ──
-function renderPrizeTotals(){
-  var allPrizes=calcAllPrizes();
-  if(!allPrizes||allPrizes.length===0){
-    document.getElementById('totals-summary').innerHTML='<div style="padding:20px;text-align:center;color:#888;">명단 데이터가 없습니다.</div>';
-    document.getElementById('totals-tbody').innerHTML='';
-    document.getElementById('totals-tfoot').innerHTML='';
-    return;
-  }
-
-  // 합계 계산
-  var totAch=0,totRate=0,totAmt=0,totGrp=0,totAll=0;
-  var receivedCount=0;
-  allPrizes.forEach(function(p){
-    totAch+=p.ach;totRate+=p.rateP;totAmt+=p.amtP;totGrp+=p.grpP;totAll+=p.total;
-    if(p.total>0)receivedCount++;
-  });
-
-  var fmt=function(v){return v>0?v.toLocaleString():'-';};
-
-  // 요약 박스
-  var summary='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;">'+
-    '<div class="kpi sky"><div class="kl">전체 인원</div><div class="kv">'+allPrizes.length+'명</div></div>'+
-    '<div class="kpi g"><div class="kl">시상 수령자</div><div class="kv" style="color:#005030">'+receivedCount+'명</div></div>'+
-    '<div class="kpi gd"><div class="kl">달성시상</div><div class="kv" style="color:#7a5000;font-size:13px;">'+totAch.toLocaleString()+'</div></div>'+
-    '<div class="kpi"><div class="kl">신장률시상</div><div class="kv" style="color:#0040b0;font-size:13px;">'+totRate.toLocaleString()+'</div></div>'+
-    '<div class="kpi"><div class="kl">신장액시상</div><div class="kv" style="color:#aa0080;font-size:13px;">'+totAmt.toLocaleString()+'</div></div>'+
-    '<div class="kpi"><div class="kl">조별시상</div><div class="kv" style="color:#5a20c0;font-size:13px;">'+totGrp.toLocaleString()+'</div></div>'+
-    '<div class="kpi gd" style="background:linear-gradient(135deg,#fff0e0,#ffe0c0);"><div class="kl" style="font-weight:900;">전체 합계</div><div class="kv" style="color:#E85500;font-size:14px;font-weight:900;">'+totAll.toLocaleString()+'원</div></div>'+
-    '</div>';
-  document.getElementById('totals-summary').innerHTML=summary;
-
-  // 본문 (개인별)
-  var rows=allPrizes.map(function(p,k){
-    var totalCls=p.total>0?'style="background:#fff8f0;font-weight:900;color:#E85500;text-align:right;"':'style="text-align:right;color:#aaa;"';
-    var noteCls='';
-    if(p.note==='⚠️중복!')noteCls='color:#cc0000;font-weight:900;';
-    else if(p.note==='신장률 적용')noteCls='color:#0040b0;font-size:10px;';
-    else if(p.note==='신장액 적용')noteCls='color:#aa0080;font-size:10px;';
-    return '<tr>'+
-      '<td style="text-align:center;color:#888;">'+(k+1)+'</td>'+
-      '<td class="td-name">'+p.name+'</td>'+
-      '<td class="td-r">'+fmt(p.ach)+'</td>'+
-      '<td class="td-r" style="color:#0040b0;">'+fmt(p.rateP)+'</td>'+
-      '<td class="td-r" style="color:#aa0080;">'+fmt(p.amtP)+'</td>'+
-      '<td class="td-r" style="color:#5a20c0;">'+fmt(p.grpP)+'</td>'+
-      '<td '+totalCls+'>'+(p.total>0?p.total.toLocaleString():'-')+'</td>'+
-      '<td style="font-size:10px;'+noteCls+'">'+p.note+'</td>'+
-    '</tr>';
-  }).join('');
-  document.getElementById('totals-tbody').innerHTML=rows;
-
-  // 합계 행
-  var tfoot='<tr style="background:#fff8f0;font-weight:900;border-top:2px solid #E85500;">'+
-    '<td colspan="2" style="text-align:center;font-size:12px;">전체 합계 ('+allPrizes.length+'명)</td>'+
-    '<td class="td-r">'+totAch.toLocaleString()+'</td>'+
-    '<td class="td-r" style="color:#0040b0;">'+totRate.toLocaleString()+'</td>'+
-    '<td class="td-r" style="color:#aa0080;">'+totAmt.toLocaleString()+'</td>'+
-    '<td class="td-r" style="color:#5a20c0;">'+totGrp.toLocaleString()+'</td>'+
-    '<td style="text-align:right;color:#E85500;font-size:13px;">'+totAll.toLocaleString()+'</td>'+
-    '<td></td>'+
-  '</tr>';
-  document.getElementById('totals-tfoot').innerHTML=tfoot;
-}
-
-// ── 시상금 합계 인쇄 ──
-function printPrizeTotals(){
-  renderPrizeTotals();  // 최신 데이터로 갱신
-  var el=document.getElementById('sec-totals');
-  if(!el){alert('화면을 먼저 표시해주세요.');return;}
-  var styleText='';try{styleText=document.querySelector('style').innerHTML;}catch(e){}
-  var w=window.open('','_blank','width=1100,height=800');
-  if(!w){alert('팝업 차단을 해제해주세요.');return;}
-  w.document.open();
-  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>시상금 전체 합계 - '+_courseLabel()+'</title>');
-  w.document.write('<style>'+styleText);
-  w.document.write('body{background:#fff!important;padding:14px;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;}');
-  w.document.write('.print-btn,.sbtn,.sbtn2,.back-btn,.snav,.overlay,.mtoggle,.stitle button{display:none!important;}');
-  w.document.write('table{width:100%;border-collapse:collapse;font-size:10px;}th,td{padding:5px 7px;border:1px solid #ccc;}');
-  w.document.write('.sec{background:#fff!important;box-shadow:none!important;border:1px solid #ddd!important;}');
-  w.document.write('@media print{@page{size:A4 landscape;}body{padding:6px;}}</style></head><body>');
-  w.document.write('<div style="background:#0a2050;color:#fff;padding:10px 14px;border-radius:8px;margin-bottom:14px;">');
-  w.document.write('<div style="font-size:13px;font-weight:700;">고객컨설팅 '+_courseLabel()+' 과정</div>');
-  w.document.write('<div style="font-size:17px;font-weight:900;margin-top:2px;">💰 시상금 전체 합계 (중복 제외 자동 적용)</div>');
-  w.document.write('<div style="font-size:10px;font-weight:600;margin-top:4px;color:#cfe;">출력일: '+new Date().toLocaleDateString('ko-KR')+'</div></div>');
-  w.document.write(el.innerHTML);
-  w.document.write('</body></html>');
-  w.document.close();
-  setTimeout(function(){try{w.focus();w.print();}catch(e){}},900);
-}
-
-// ── 전체 시상 합계 다운로드 (1~10등 중복 제외 자동 적용) ──
-function downloadAllPrizes(){
-  var allPrizes=calcAllPrizes();
-  if(!allPrizes||allPrizes.length===0){alert('명단 데이터가 없습니다.');return;}
-
-  var totAch=0,totRate=0,totAmt=0,totGrp=0,totAll=0;
-  allPrizes.forEach(function(p){totAch+=p.ach;totRate+=p.rateP;totAmt+=p.amtP;totGrp+=p.grpP;totAll+=p.total;});
-
-  var rows=[];
-  rows.push('"순위","성명","달성시상","신장률시상","신장액시상","조별시상","합계","비고"');
-  var fmt=function(v){return v>0?v.toLocaleString():'-';};
-  allPrizes.forEach(function(p,k){
-    rows.push('"'+(k+1)+'","'+p.name+'","'+fmt(p.ach)+'","'+fmt(p.rateP)+'","'+fmt(p.amtP)+'","'+fmt(p.grpP)+'","'+(p.total>0?p.total.toLocaleString():'-')+'","'+p.note+'"');
-  });
-  rows.push('');
-  rows.push('"전체 합계","'+allPrizes.length+'명","'+totAch.toLocaleString()+'","'+totRate.toLocaleString()+'","'+totAmt.toLocaleString()+'","'+totGrp.toLocaleString()+'","'+totAll.toLocaleString()+'",""');
-
-  var today=new Date();
-  var ds=today.getFullYear()+''+String(today.getMonth()+1).padStart(2,'0')+String(today.getDate()).padStart(2,'0');
-  var filename='호남_'+_courseLabel().replace(/\s/g,'')+'_시상금합계_'+ds+'.csv';
-  var csv='\uFEFF'+rows.join('\r\n');
-  try{
-    var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
-    if(window.navigator&&window.navigator.msSaveOrOpenBlob){
-      window.navigator.msSaveOrOpenBlob(blob,filename);
-    } else {
-      var url=URL.createObjectURL(blob);
-      var a=document.createElement('a');a.href=url;a.download=filename;a.style.display='none';
-      document.body.appendChild(a);a.click();
-      setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url);},100);
-    }
-    showDownloadNotice(filename);
-  }catch(e){alert('다운로드 실패: '+e.message);}
-}
-
 // ── 엑셀(CSV) 다운로드 ──
 function downloadExcel(viewId){
   var titles={vperf:'개인별실적진도',vrate:'신장률TOP10',vamt:'신장액TOP10',vipum:'인품왕TOP10',vgroup:'조별시상현황'};
@@ -1488,15 +1119,19 @@ function downloadExcel(viewId){
   var wasHidden=(el.style.display==='none'||el.style.display==='');
   if(wasHidden)el.style.display='block';
 
-  // querySelectorAll은 display:none 요소도 탐색하므로 별도 토글 불필요
+  // 신장률/신장액는 1~3위 숨김 table도 임시 표시
+  var top3TableId = viewId==='vrate'?'rateTop3Table':viewId==='vamt'?'amtTop3Table':null;
+  var top3Table = top3TableId ? document.getElementById(top3TableId) : null;
+  if(top3Table) top3Table.style.display='table';
+
   var rows=[];
   var tables=el.querySelectorAll('table');
   if(tables.length===0){
     if(wasHidden)el.style.display='none';
+    if(top3Table)top3Table.style.display='none';
     alert('테이블 데이터가 없습니다.');return;
   }
   tables.forEach(function(tbl){
-    if(tbl.querySelectorAll('tbody tr').length===0&&tbl.querySelectorAll('thead tr').length>0){return;}
     tbl.querySelectorAll('tr').forEach(function(tr){
       var row=[];
       tr.querySelectorAll('th,td').forEach(function(td){
@@ -1509,58 +1144,17 @@ function downloadExcel(viewId){
   });
 
   if(wasHidden)el.style.display='none';
+  if(top3Table)top3Table.style.display='none';
 
-  // ── 안전한 파일명 (한글 + 영문 병기) ──
   var today=new Date();
   var ds=today.getFullYear()+''+String(today.getMonth()+1).padStart(2,'0')+String(today.getDate()).padStart(2,'0');
-  // 한글 파일명이 깨질 경우 대비 — 영문 매핑 추가
-  var titleEn={vperf:'PerfList',vrate:'RateTop10',vamt:'AmtTop10',vipum:'IpumTop10',vgroup:'GroupAward'}[viewId]||viewId;
-  var filename = '호남_'+title+'_'+ds+'.csv';
-
-  // CSV 데이터
   var csv='\uFEFF'+rows.join('\r\n');
-
-  // ── 다운로드 (브라우저별 호환 처리) ──
-  try{
-    var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
-    // IE/구 Edge 호환
-    if(window.navigator&&window.navigator.msSaveOrOpenBlob){
-      window.navigator.msSaveOrOpenBlob(blob, filename);
-    } else {
-      var url=URL.createObjectURL(blob);
-      var a=document.createElement('a');
-      a.href=url;
-      a.download=filename;
-      a.style.display='none';
-      document.body.appendChild(a);
-      a.click();
-      // 약간의 지연 후 정리 (모바일 브라우저 호환)
-      setTimeout(function(){
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      }, 100);
-    }
-    // 다운로드 완료 알림 — 어디서 찾을지 안내
-    showDownloadNotice(filename);
-  } catch(e){
-    alert('다운로드 실패: '+e.message+'\n\n브라우저 설정을 확인해주세요.');
-  }
-}
-
-// 다운로드 완료 안내 (5초간 화면 상단에 표시)
-function showDownloadNotice(filename){
-  var existing=document.getElementById('dl-notice');
-  if(existing)existing.remove();
-  var notice=document.createElement('div');
-  notice.id='dl-notice';
-  notice.style.cssText='position:fixed;top:14px;left:50%;transform:translateX(-50%);background:#1a8a40;color:#fff;padding:12px 20px;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.25);z-index:10000;font-size:13px;font-weight:700;font-family:inherit;max-width:90vw;';
-  notice.innerHTML='✅ 다운로드 시작됨<br><span style="font-size:11px;font-weight:600;display:block;margin-top:4px;opacity:0.95;">파일명: '+filename+'</span><span style="font-size:10px;font-weight:500;display:block;margin-top:3px;opacity:0.85;">📂 브라우저의 <b>다운로드 폴더</b>에서 확인하세요</span><span style="font-size:9px;font-weight:500;display:block;margin-top:2px;opacity:0.75;">(Chrome: 우측 상단 ↓ / 파일 탐색기: Downloads)</span>';
-  document.body.appendChild(notice);
-  setTimeout(function(){
-    notice.style.transition='opacity 0.4s';
-    notice.style.opacity='0';
-    setTimeout(function(){if(notice.parentNode)notice.remove();},500);
-  }, 5500);
+  var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;a.download='호남_'+title+'_'+ds+'.csv';
+  document.body.appendChild(a);a.click();
+  document.body.removeChild(a);URL.revokeObjectURL(url);
 }
 
 function printSection(viewId){
@@ -1569,42 +1163,36 @@ function printSection(viewId){
   var el=document.getElementById(viewId);
   if(!el){alert(title+' 화면을 먼저 탭에서 열어주세요.');return;}
   var wasHidden=(el.style.display==='none'||el.style.display==='');
-  var top3Table=null,podiumEl=null,podiumPrev='';
-  try{
-    if(wasHidden)el.style.display='block';
-    // 신장률/신장액: top3 table 표시, 포디움 숨기기
-    var top3Id=viewId==='vrate'?'rateTop3Table':viewId==='vamt'?'amtTop3Table':null;
-    var podId=viewId==='vrate'?'ratePodium':viewId==='vamt'?'amtPodium':null;
-    top3Table=top3Id?document.getElementById(top3Id):null;
-    podiumEl=podId?document.getElementById(podId):null;
-    if(top3Table)top3Table.style.display='table';
-    if(podiumEl){podiumPrev=podiumEl.style.display;podiumEl.style.display='none';}
-    var styleText='';try{styleText=document.querySelector('style').innerHTML;}catch(e){}
-    var w=window.open('','_blank','width=1000,height=750');
-    if(!w){alert('팝업 차단을 해제한 후 다시 시도해주세요.');return;}
-    w.document.open();
-    w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+title+'</title>');
-    w.document.write('<style>'+styleText);
-    w.document.write('body{background:#fff!important;padding:16px;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;}');
-    w.document.write('.print-btn,.sbtn,.sbtn2,.back-btn,.abar,.snav,.overlay,.mtoggle,.stitle button,.podium{display:none!important;}');
-    w.document.write('#rateTop3Table,#amtTop3Table{display:table!important;}');
-    w.document.write('.rlbl{display:block!important;}');
-    w.document.write('table{width:100%;border-collapse:collapse;font-size:11px;}th,td{padding:5px 7px;border:1px solid #ccc;}');
-    w.document.write('.sec{background:#fff!important;box-shadow:none!important;border:1px solid #ddd!important;}');
-    w.document.write('@media print{@page{size:A4 landscape;}body{padding:8px;}}</style></head><body>');
-    w.document.write('<div style="background:#0a2050;color:#fff;padding:10px 14px;border-radius:8px;margin-bottom:14px;">');
-    w.document.write('<div style="font-size:13px;font-weight:700;">고객컨설팅 Master I 과정</div>');
-    w.document.write('<div style="font-size:17px;font-weight:900;margin-top:2px;">'+title+'</div></div>');
-    w.document.write(el.innerHTML);
-    w.document.write('</body></html>');
-    w.document.close();
-    setTimeout(function(){try{w.focus();w.print();}catch(e){}},900);
-  }finally{
-    // 반드시 원래 상태로 복원
-    if(wasHidden)el.style.display='none';
-    if(top3Table)top3Table.style.display='none';
-    if(podiumEl)podiumEl.style.display=podiumPrev;
-  }
+  if(wasHidden)el.style.display='block';
+
+  // 신장률/신장액: 인쇄 전 1~3위 table 표시, 포디움 숨기기
+  var top3TableId = viewId==='vrate'?'rateTop3Table':viewId==='vamt'?'amtTop3Table':null;
+  var podiumId = viewId==='vrate'?'ratePodium':viewId==='vamt'?'amtPodium':null;
+  var top3Table = top3TableId?document.getElementById(top3TableId):null;
+  var podiumEl = podiumId?document.getElementById(podiumId):null;
+  if(top3Table)top3Table.style.display='table';
+  if(podiumEl)podiumEl.style.display='none';
+
+  var styleText='';try{styleText=document.querySelector('style').innerHTML;}catch(e){}
+  var w=window.open('','_blank','width=1000,height=750');
+  if(!w){alert('팝업 차단을 해제한 후 다시 시도해주세요.');if(wasHidden)el.style.display='none';return;}
+  w.document.open();
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+title+'</title>');
+  w.document.write('<style>'+styleText+'body{background:#fff!important;padding:16px;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;}');
+  w.document.write('.print-btn,.sbtn,.sbtn2,.back-btn,.abar,.snav,.overlay,.mtoggle,.stitle button{display:none!important;}');
+  w.document.write('table{width:100%;border-collapse:collapse;font-size:11px;}th,td{padding:5px 7px;border:1px solid #ccc;}');
+  w.document.write('.sec{background:#fff!important;box-shadow:none!important;border:1px solid #ddd!important;}');
+  w.document.write('@media print{@page{size:A4 landscape;}body{padding:8px;}}</style></head><body>');
+  w.document.write('<div style="background:#0a2050;color:#fff;padding:10px 14px;border-radius:8px;margin-bottom:14px;"><div style="font-size:13px;font-weight:700;">고객컨설팅 Master I 과정</div><div style="font-size:17px;font-weight:900;margin-top:2px;">'+title+'</div></div>');
+  w.document.write(el.innerHTML);
+  w.document.write('</body></html>');
+  w.document.close();
+
+  // 원래 상태로 복원
+  if(wasHidden)el.style.display='none';
+  if(top3Table)top3Table.style.display='none';
+  if(podiumEl)podiumEl.style.display='';
+  setTimeout(function(){try{w.focus();w.print();}catch(e){}},900);
 }
 
 function printAll(){
@@ -1870,8 +1458,8 @@ function renderAll(){
   const _avgBase=D.reduce((s,d)=>s+(d[8]||0),0);const _avgCur=D.reduce((s,d)=>s+(d[9]||0),0);const avgR=_avgBase>0?(_avgCur/_avgBase*100):0;
   const over5=D.filter(d=>d[11]>=50000).length;
   const elig=D.filter(d=>d[11]>=300000);
-  const byRate=D.map((d,i)=>({i,d})).filter(x=>x.d[8]>0).sort((a,b)=>(b.d[11]/b.d[8])-(a.d[11]/a.d[8]));
-  const byAmt=D.map((d,i)=>({i,d})).filter(x=>x.d[8]>0).sort((a,b)=>b.d[11]-a.d[11]);
+  const byRate=D.map((d,i)=>({i,d})).filter(x=>x.d[11]>0&&x.d[8]>0).sort((a,b)=>(b.d[11]/b.d[8])-(a.d[11]/a.d[8]));
+  const byAmt=D.map((d,i)=>({i,d})).filter(x=>x.d[11]>0).sort((a,b)=>b.d[11]-a.d[11]);
   const byIpum=D.map((d,i)=>({i,d})).sort((a,b)=>b.d[13]-a.d[13]||b.d[12]-a.d[12]);
   const rRank={},aRank={},ipRank={};
   byRate.forEach((x,k)=>rRank[x.i]=k+1);byAmt.forEach((x,k)=>aRank[x.i]=k+1);
@@ -1929,7 +1517,7 @@ function renderAll(){
   const rTop=new Set(byRateSorted.slice(0,10).map(x=>x.i));
   const aTop=new Set(byAmtSorted.slice(0,10).map(x=>x.i));
   const dualIds=new Set([...rTop].filter(id=>aTop.has(id)));
-  // 신장률 실질 리스트 — 중복 시상자 제외 (한쪽 LIST에만 출현)
+  // 신장률 실질 리스트
   const rFinalList=byRateSorted.filter(x=>!aExcludeIds.has(x.i));
   const aFinalList=byAmtSorted.filter(x=>!rExcludeIds.has(x.i));
   let rEff=0;const rEffMap={};
@@ -1981,7 +1569,7 @@ function renderAll(){
   // 신장률 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
   if(rFinalList.length>=1)document.getElementById('ratePodium').innerHTML=makePod(rFinalList.slice(0,3),d=>((d[11]/d[8])*100).toFixed(1)+'%',d=>'순증 +'+Nf(d[11])+'원',ratePrizeFn);else document.getElementById('ratePodium').innerHTML='<div style="padding:30px;text-align:center;color:#888;font-size:13px;background:#f8f8f8;border-radius:10px;">📊 신장률 시상 대상자 없음<br><span style="font-size:11px;color:#aaa;">(순증 양수인 인원 필요)</span></div>';
   fillTop3Table('rateTop3Body',rFinalList.slice(0,3),d=>((d[11]/d[8])*100).toFixed(1)+'%',d=>'순증 +'+Nf(d[11])+'원',ratePrizeFn);
-  document.getElementById('rateRest').innerHTML=rFinalList.slice(3,10).map(({d},k)=>{var net=d[11]>=0?'+'+Nf(d[11]):Nf(d[11]);var rateClass=d[11]>=0?'c-over':'';return `<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td class="td-r net-p">${net}</td><td class="${rateClass}">${(d[11]/d[8]*100).toFixed(1)}%</td><td>${rAwardCell(d,k+3)}</td></tr>`;}).join('');
+  document.getElementById('rateRest').innerHTML=rFinalList.slice(3,10).map(({d},k)=>`<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td class="td-r net-p">+${Nf(d[11])}</td><td class="c-over">${(d[11]/d[8]*100).toFixed(1)}%</td><td>${rAwardCell(d,k+3)}</td></tr>`).join('');
   // 신장액 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
   if(aFinalList.length>=1)document.getElementById('amtPodium').innerHTML=makePod(aFinalList.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>((d[11]/d[8])*100).toFixed(1)+'% 신장',(k,d)=>{if(d[11]<300000)return'기준미달성 ('+aPrize(k)+')';const ek=aEffMap[D.indexOf(d)];return ek!==undefined?aPrize(ek):'기준미달성 ('+aPrize(k)+')';});else document.getElementById('amtPodium').innerHTML='<div style="padding:30px;text-align:center;color:#888;font-size:13px;background:#f8f8f8;border-radius:10px;">💰 신장액 시상 대상자 없음<br><span style="font-size:11px;color:#aaa;">(순증 양수인 인원 필요)</span></div>';
   fillTop3Table('amtTop3Body',aFinalList.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>((d[11]/d[8])*100).toFixed(1)+'% 신장',(k,d)=>{if(d[11]<300000)return'기준미달성 ('+aPrize(k)+')';const ek=aEffMap[D.indexOf(d)];return ek!==undefined?aPrize(ek):'기준미달성 ('+aPrize(k)+')';});
@@ -1992,10 +1580,7 @@ function renderAll(){
     if(d[11]<300000)badge='<span class="bdg b-ms">기준미달성 ('+aPrize(k+3)+')</span>';
     else if(ek===undefined)badge='<span class="bdg b-ms">기준미달성 ('+aPrize(k+3)+')</span>';
     else badge='<span class="bdg b-g">'+aPrize(ek)+'</span>';
-    var net=d[11]>=0?'+'+Nf(d[11]):Nf(d[11]);
-    var netCls=d[11]>=0?'net-p':'net-m';
-    var rateCls=d[11]>=0?'c-over':'';
-    return '<tr><td>'+RB(k+4)+'</td><td>'+d[2]+'</td><td class="td-name">'+d[5]+'</td><td class="td-r">'+Nf(d[8])+'</td><td class="td-r '+netCls+'">'+net+'</td><td class="'+rateCls+'">'+(d[11]/d[8]*100).toFixed(1)+'%</td><td>'+badge+'</td></tr>';
+    return '<tr><td>'+RB(k+4)+'</td><td>'+d[2]+'</td><td class="td-name">'+d[5]+'</td><td class="td-r">'+Nf(d[8])+'</td><td class="td-r net-p">+'+Nf(d[11])+'</td><td class="c-over">'+(d[11]/d[8]*100).toFixed(1)+'%</td><td>'+badge+'</td></tr>';
   }).join('');
   // 인품왕
   document.getElementById('ipumPodium').innerHTML=ipumTop.slice(0,3).map(({d},k)=>{const cls=['ip1','ip2','ip3'][k];const medals=['🌟','⭐','✨'][k];const ranks=['인품의 황제','인품의 제왕','인품의 왕'][k];return`<div class="ip ${cls}"><div class="ipmed">${medals}</div><div class="iprk">${ranks}</div><div class="ipname">${d[5]}</div><div class="ipbr">${d[2]}</div><div class="ipval">${Nf(d[13])}원</div><div class="ipsub">${d[12]}건</div></div>`;}).join('')||'<div style="padding:16px;text-align:center;color:#aaa;">관리자에서 입력하세요</div>';
@@ -2020,8 +1605,8 @@ function renderAll(){
   const _avgBase=D.reduce((s,d)=>s+(d[8]||0),0);const _avgCur=D.reduce((s,d)=>s+(d[9]||0),0);const avgR=_avgBase>0?(_avgCur/_avgBase*100):0;
   const over5=D.filter(d=>d[11]>=50000).length;
   const elig=D.filter(d=>d[11]>=300000);
-  const byRate=D.map((d,i)=>({i,d})).filter(x=>x.d[8]>0).sort((a,b)=>(b.d[11]/b.d[8])-(a.d[11]/a.d[8]));
-  const byAmt=D.map((d,i)=>({i,d})).filter(x=>x.d[8]>0).sort((a,b)=>b.d[11]-a.d[11]);
+  const byRate=D.map((d,i)=>({i,d})).filter(x=>x.d[11]>0&&x.d[8]>0).sort((a,b)=>(b.d[11]/b.d[8])-(a.d[11]/a.d[8]));
+  const byAmt=D.map((d,i)=>({i,d})).filter(x=>x.d[11]>0).sort((a,b)=>b.d[11]-a.d[11]);
   const byIpum=D.map((d,i)=>({i,d})).sort((a,b)=>b.d[13]-a.d[13]||b.d[12]-a.d[12]);
   const rRank={},aRank={},ipRank={};
   byRate.forEach((x,k)=>rRank[x.i]=k+1);byAmt.forEach((x,k)=>aRank[x.i]=k+1);
@@ -2079,7 +1664,7 @@ function renderAll(){
   const rTop=new Set(byRateSorted.slice(0,10).map(x=>x.i));
   const aTop=new Set(byAmtSorted.slice(0,10).map(x=>x.i));
   const dualIds=new Set([...rTop].filter(id=>aTop.has(id)));
-  // 신장률 실질 리스트 — 중복 시상자 제외 (한쪽 LIST에만 출현)
+  // 신장률 실질 리스트
   const rFinalList=byRateSorted.filter(x=>!aExcludeIds.has(x.i));
   const aFinalList=byAmtSorted.filter(x=>!rExcludeIds.has(x.i));
   let rEff=0;const rEffMap={};
@@ -2131,7 +1716,7 @@ function renderAll(){
   // 신장률 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
   if(rFinalList.length>=1)document.getElementById('ratePodium').innerHTML=makePod(rFinalList.slice(0,3),d=>((d[11]/d[8])*100).toFixed(1)+'%',d=>'순증 +'+Nf(d[11])+'원',ratePrizeFn);else document.getElementById('ratePodium').innerHTML='<div style="padding:30px;text-align:center;color:#888;font-size:13px;background:#f8f8f8;border-radius:10px;">📊 신장률 시상 대상자 없음<br><span style="font-size:11px;color:#aaa;">(순증 양수인 인원 필요)</span></div>';
   fillTop3Table('rateTop3Body',rFinalList.slice(0,3),d=>((d[11]/d[8])*100).toFixed(1)+'%',d=>'순증 +'+Nf(d[11])+'원',ratePrizeFn);
-  document.getElementById('rateRest').innerHTML=rFinalList.slice(3,10).map(({d},k)=>{var net=d[11]>=0?'+'+Nf(d[11]):Nf(d[11]);var rateClass=d[11]>=0?'c-over':'';return `<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td class="td-r net-p">${net}</td><td class="${rateClass}">${(d[11]/d[8]*100).toFixed(1)}%</td><td>${rAwardCell(d,k+3)}</td></tr>`;}).join('');
+  document.getElementById('rateRest').innerHTML=rFinalList.slice(3,10).map(({d},k)=>`<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td class="td-r net-p">+${Nf(d[11])}</td><td class="c-over">${(d[11]/d[8]*100).toFixed(1)}%</td><td>${rAwardCell(d,k+3)}</td></tr>`).join('');
   // 신장액 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
   if(aFinalList.length>=1)document.getElementById('amtPodium').innerHTML=makePod(aFinalList.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>((d[11]/d[8])*100).toFixed(1)+'% 신장',(k,d)=>{if(d[11]<300000)return'기준미달성 ('+aPrize(k)+')';const ek=aEffMap[D.indexOf(d)];return ek!==undefined?aPrize(ek):'기준미달성 ('+aPrize(k)+')';});else document.getElementById('amtPodium').innerHTML='<div style="padding:30px;text-align:center;color:#888;font-size:13px;background:#f8f8f8;border-radius:10px;">💰 신장액 시상 대상자 없음<br><span style="font-size:11px;color:#aaa;">(순증 양수인 인원 필요)</span></div>';
   fillTop3Table('amtTop3Body',aFinalList.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>((d[11]/d[8])*100).toFixed(1)+'% 신장',(k,d)=>{if(d[11]<300000)return'기준미달성 ('+aPrize(k)+')';const ek=aEffMap[D.indexOf(d)];return ek!==undefined?aPrize(ek):'기준미달성 ('+aPrize(k)+')';});
@@ -2142,10 +1727,7 @@ function renderAll(){
     if(d[11]<300000)badge='<span class="bdg b-ms">기준미달성 ('+aPrize(k+3)+')</span>';
     else if(ek===undefined)badge='<span class="bdg b-ms">기준미달성 ('+aPrize(k+3)+')</span>';
     else badge='<span class="bdg b-g">'+aPrize(ek)+'</span>';
-    var net=d[11]>=0?'+'+Nf(d[11]):Nf(d[11]);
-    var netCls=d[11]>=0?'net-p':'net-m';
-    var rateCls=d[11]>=0?'c-over':'';
-    return '<tr><td>'+RB(k+4)+'</td><td>'+d[2]+'</td><td class="td-name">'+d[5]+'</td><td class="td-r">'+Nf(d[8])+'</td><td class="td-r '+netCls+'">'+net+'</td><td class="'+rateCls+'">'+(d[11]/d[8]*100).toFixed(1)+'%</td><td>'+badge+'</td></tr>';
+    return '<tr><td>'+RB(k+4)+'</td><td>'+d[2]+'</td><td class="td-name">'+d[5]+'</td><td class="td-r">'+Nf(d[8])+'</td><td class="td-r net-p">+'+Nf(d[11])+'</td><td class="c-over">'+(d[11]/d[8]*100).toFixed(1)+'%</td><td>'+badge+'</td></tr>';
   }).join('');
   // 인품왕
   document.getElementById('ipumPodium').innerHTML=ipumTop.slice(0,3).map(({d},k)=>{const cls=['ip1','ip2','ip3'][k];const medals=['🌟','⭐','✨'][k];const ranks=['인품의 황제','인품의 제왕','인품의 왕'][k];return`<div class="ip ${cls}"><div class="ipmed">${medals}</div><div class="iprk">${ranks}</div><div class="ipname">${d[5]}</div><div class="ipbr">${d[2]}</div><div class="ipval">${Nf(d[13])}원</div><div class="ipsub">${d[12]}건</div></div>`;}).join('')||'<div style="padding:16px;text-align:center;color:#aaa;">관리자에서 입력하세요</div>';
@@ -2168,42 +1750,36 @@ function renderAll(){
 function printSection(viewId){
   var titles={vperf:'실적 진도 현황',vrate:'최고 신장률 TOP10',vamt:'최고 신장액 TOP10',vipum:'인품왕 TOP10',vgroup:'조별 시상 현황'};
   var title=titles[viewId]||viewId;
+  // 해당 뷰가 보이도록 임시 표시
   var el=document.getElementById(viewId);
   if(!el){alert(title+' 화면을 먼저 탭에서 열어주세요.');return;}
   var wasHidden=(el.style.display==='none'||el.style.display==='');
-  var top3Table=null,podiumEl=null,podiumPrev='';
-  try{
-    if(wasHidden)el.style.display='block';
-    var top3Id=viewId==='vrate'?'rateTop3Table':viewId==='vamt'?'amtTop3Table':null;
-    var podId=viewId==='vrate'?'ratePodium':viewId==='vamt'?'amtPodium':null;
-    top3Table=top3Id?document.getElementById(top3Id):null;
-    podiumEl=podId?document.getElementById(podId):null;
-    if(top3Table)top3Table.style.display='table';
-    if(podiumEl){podiumPrev=podiumEl.style.display;podiumEl.style.display='none';}
-    var styleText='';try{styleText=document.querySelector('style').innerHTML;}catch(e){}
-    var w=window.open('','_blank','width=1000,height=750');
-    if(!w){alert('팝업 차단을 해제한 후 다시 시도해주세요.');return;}
-    w.document.open();
-    w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+title+'</title>');
-    w.document.write('<style>'+styleText);
-    w.document.write('body{background:#fff!important;padding:16px;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;}');
-    w.document.write('.print-btn,.sbtn,.sbtn2,.back-btn,.abar,.snav,.overlay,.mtoggle,.stitle button,.podium{display:none!important;}');
-    w.document.write('#rateTop3Table,#amtTop3Table{display:table!important;}');
-    w.document.write('table{width:100%;border-collapse:collapse;font-size:11px;}th,td{padding:5px 7px;border:1px solid #ccc;}');
-    w.document.write('.sec{background:#fff!important;box-shadow:none!important;border:1px solid #ddd!important;}');
-    w.document.write('@media print{@page{size:A4 landscape;}body{padding:8px;}}</style></head><body>');
-    w.document.write('<div style="background:#0a2050;color:#fff;padding:10px 14px;border-radius:8px;margin-bottom:14px;">');
-    w.document.write('<div style="font-size:13px;font-weight:700;">고객컨설팅 Master I 과정</div>');
-    w.document.write('<div style="font-size:17px;font-weight:900;margin-top:2px;">'+title+'</div></div>');
-    w.document.write(el.innerHTML);
-    w.document.write('</body></html>');
-    w.document.close();
-    setTimeout(function(){try{w.focus();w.print();}catch(e){}},900);
-  }finally{
-    if(wasHidden)el.style.display='none';
-    if(top3Table)top3Table.style.display='none';
-    if(podiumEl)podiumEl.style.display=podiumPrev;
-  }
+  if(wasHidden)el.style.display='block';
+  // 스타일 수집
+  var styleText='';
+  try{styleText=document.querySelector('style').innerHTML;}catch(e){}
+  // 새 창 열기
+  var w=window.open('','_blank','width=1000,height=750');
+  if(!w){alert('팝업 차단을 해제한 후 다시 시도해주세요.');if(wasHidden)el.style.display='none';return;}
+  w.document.open();
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8">');
+  w.document.write('<title>고객컨설팅 Master I - '+title+'</title>');
+  w.document.write('<style>'+styleText);
+  w.document.write('body{background:#fff!important;padding:16px;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;}');
+  w.document.write('.print-btn,.sbtn,.sbtn2,.back-btn,.abar,.snav,.overlay,.mtoggle,.stitle button{display:none!important;}');
+  w.document.write('table{width:100%;border-collapse:collapse;font-size:11px;}');
+  w.document.write('th,td{padding:5px 7px;border:1px solid #ccc;}');
+  w.document.write('.sec{background:#fff!important;box-shadow:none!important;border:1px solid #ddd!important;}');
+  w.document.write('@media print{@page{size:A4 landscape;}body{padding:8px;}}</style>');
+  w.document.write('</head><body>');
+  w.document.write('<div style="background:#0a2050;color:#fff;padding:10px 14px;border-radius:8px;margin-bottom:14px;">');
+  w.document.write('<div style="font-size:13px;font-weight:700;">고객컨설팅 Master I 과정</div>');
+  w.document.write('<div style="font-size:17px;font-weight:900;margin-top:2px;">'+title+'</div></div>');
+  w.document.write(el.innerHTML);
+  w.document.write('</body></html>');
+  w.document.close();
+  if(wasHidden)el.style.display='none';
+  setTimeout(function(){try{w.focus();w.print();}catch(e){}},900);
 }
 
 function printAll(){
@@ -2368,8 +1944,8 @@ function renderAll(){
   const _avgBase=D.reduce((s,d)=>s+(d[8]||0),0);const _avgCur=D.reduce((s,d)=>s+(d[9]||0),0);const avgR=_avgBase>0?(_avgCur/_avgBase*100):0;
   const over5=D.filter(d=>d[11]>=50000).length;
   const elig=D.filter(d=>d[11]>=300000);
-  const byRate=D.map((d,i)=>({i,d})).filter(x=>x.d[8]>0).sort((a,b)=>(b.d[11]/b.d[8])-(a.d[11]/a.d[8]));
-  const byAmt=D.map((d,i)=>({i,d})).filter(x=>x.d[8]>0).sort((a,b)=>b.d[11]-a.d[11]);
+  const byRate=D.map((d,i)=>({i,d})).filter(x=>x.d[11]>0&&x.d[8]>0).sort((a,b)=>(b.d[11]/b.d[8])-(a.d[11]/a.d[8]));
+  const byAmt=D.map((d,i)=>({i,d})).filter(x=>x.d[11]>0).sort((a,b)=>b.d[11]-a.d[11]);
   const byIpum=D.map((d,i)=>({i,d})).sort((a,b)=>b.d[13]-a.d[13]||b.d[12]-a.d[12]);
   const rRank={},aRank={},ipRank={};
   byRate.forEach((x,k)=>rRank[x.i]=k+1);byAmt.forEach((x,k)=>aRank[x.i]=k+1);
@@ -2427,7 +2003,7 @@ function renderAll(){
   const rTop=new Set(byRateSorted.slice(0,10).map(x=>x.i));
   const aTop=new Set(byAmtSorted.slice(0,10).map(x=>x.i));
   const dualIds=new Set([...rTop].filter(id=>aTop.has(id)));
-  // 신장률 실질 리스트 — 중복 시상자 제외 (한쪽 LIST에만 출현)
+  // 신장률 실질 리스트
   const rFinalList=byRateSorted.filter(x=>!aExcludeIds.has(x.i));
   const aFinalList=byAmtSorted.filter(x=>!rExcludeIds.has(x.i));
   let rEff=0;const rEffMap={};
@@ -2497,7 +2073,7 @@ function renderAll(){
   // 신장률 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
   if(rFinalList.length>=1)document.getElementById('ratePodium').innerHTML=makePod(rFinalList.slice(0,3),d=>((d[11]/d[8])*100).toFixed(1)+'%',d=>'순증 +'+Nf(d[11])+'원',ratePrizeFn);else document.getElementById('ratePodium').innerHTML='<div style="padding:30px;text-align:center;color:#888;font-size:13px;background:#f8f8f8;border-radius:10px;">📊 신장률 시상 대상자 없음<br><span style="font-size:11px;color:#aaa;">(순증 양수인 인원 필요)</span></div>';
   fillTop3Table('rateTop3Body',rFinalList.slice(0,3),d=>((d[11]/d[8])*100).toFixed(1)+'%',d=>'순증 +'+Nf(d[11])+'원',ratePrizeFn);
-  document.getElementById('rateRest').innerHTML=rFinalList.slice(3,10).map(({d},k)=>{var net=d[11]>=0?'+'+Nf(d[11]):Nf(d[11]);var rateClass=d[11]>=0?'c-over':'';return `<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td class="td-r net-p">${net}</td><td class="${rateClass}">${(d[11]/d[8]*100).toFixed(1)}%</td><td>${rAwardCell(d,k+3)}</td></tr>`;}).join('');
+  document.getElementById('rateRest').innerHTML=rFinalList.slice(3,10).map(({d},k)=>`<tr><td>${RB(k+4)}</td><td>${d[2]}</td><td class="td-name">${d[5]}</td><td class="td-r">${Nf(d[8])}</td><td class="td-r net-p">+${Nf(d[11])}</td><td class="c-over">${(d[11]/d[8]*100).toFixed(1)}%</td><td>${rAwardCell(d,k+3)}</td></tr>`).join('');
   // 신장액 TOP10 — 전체 포함, 30만 미달은 기준미달성 표시
   if(aFinalList.length>=1)document.getElementById('amtPodium').innerHTML=makePod(aFinalList.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>((d[11]/d[8])*100).toFixed(1)+'% 신장',(k,d)=>{if(d[11]<300000)return'기준미달성 ('+aPrize(k)+')';const ek=aEffMap[D.indexOf(d)];return ek!==undefined?aPrize(ek):'기준미달성 ('+aPrize(k)+')';});else document.getElementById('amtPodium').innerHTML='<div style="padding:30px;text-align:center;color:#888;font-size:13px;background:#f8f8f8;border-radius:10px;">💰 신장액 시상 대상자 없음<br><span style="font-size:11px;color:#aaa;">(순증 양수인 인원 필요)</span></div>';
   fillTop3Table('amtTop3Body',aFinalList.slice(0,3),d=>'+'+Nf(d[11])+'원',d=>((d[11]/d[8])*100).toFixed(1)+'% 신장',(k,d)=>{if(d[11]<300000)return'기준미달성 ('+aPrize(k)+')';const ek=aEffMap[D.indexOf(d)];return ek!==undefined?aPrize(ek):'기준미달성 ('+aPrize(k)+')';});
@@ -2508,10 +2084,7 @@ function renderAll(){
     if(d[11]<300000)badge='<span class="bdg b-ms">기준미달성 ('+aPrize(k+3)+')</span>';
     else if(ek===undefined)badge='<span class="bdg b-ms">기준미달성 ('+aPrize(k+3)+')</span>';
     else badge='<span class="bdg b-g">'+aPrize(ek)+'</span>';
-    var net=d[11]>=0?'+'+Nf(d[11]):Nf(d[11]);
-    var netCls=d[11]>=0?'net-p':'net-m';
-    var rateCls=d[11]>=0?'c-over':'';
-    return '<tr><td>'+RB(k+4)+'</td><td>'+d[2]+'</td><td class="td-name">'+d[5]+'</td><td class="td-r">'+Nf(d[8])+'</td><td class="td-r '+netCls+'">'+net+'</td><td class="'+rateCls+'">'+(d[11]/d[8]*100).toFixed(1)+'%</td><td>'+badge+'</td></tr>';
+    return '<tr><td>'+RB(k+4)+'</td><td>'+d[2]+'</td><td class="td-name">'+d[5]+'</td><td class="td-r">'+Nf(d[8])+'</td><td class="td-r net-p">+'+Nf(d[11])+'</td><td class="c-over">'+(d[11]/d[8]*100).toFixed(1)+'%</td><td>'+badge+'</td></tr>';
   }).join('');
   // 인품왕
   document.getElementById('ipumPodium').innerHTML=ipumTop.slice(0,3).map(({d},k)=>{const cls=['ip1','ip2','ip3'][k];const medals=['🌟','⭐','✨'][k];const ranks=['인품의 황제','인품의 제왕','인품의 왕'][k];return`<div class="ip ${cls}"><div class="ipmed">${medals}</div><div class="iprk">${ranks}</div><div class="ipname">${d[5]}</div><div class="ipbr">${d[2]}</div><div class="ipval">${Nf(d[13])}원</div><div class="ipsub">${d[12]}건</div></div>`;}).join('')||'<div style="padding:16px;text-align:center;color:#aaa;">관리자에서 입력하세요</div>';
@@ -2534,42 +2107,36 @@ function renderAll(){
 function printSection(viewId){
   var titles={vperf:'실적 진도 현황',vrate:'최고 신장률 TOP10',vamt:'최고 신장액 TOP10',vipum:'인품왕 TOP10',vgroup:'조별 시상 현황'};
   var title=titles[viewId]||viewId;
+  // 해당 뷰가 보이도록 임시 표시
   var el=document.getElementById(viewId);
   if(!el){alert(title+' 화면을 먼저 탭에서 열어주세요.');return;}
   var wasHidden=(el.style.display==='none'||el.style.display==='');
-  var top3Table=null,podiumEl=null,podiumPrev='';
-  try{
-    if(wasHidden)el.style.display='block';
-    var top3Id=viewId==='vrate'?'rateTop3Table':viewId==='vamt'?'amtTop3Table':null;
-    var podId=viewId==='vrate'?'ratePodium':viewId==='vamt'?'amtPodium':null;
-    top3Table=top3Id?document.getElementById(top3Id):null;
-    podiumEl=podId?document.getElementById(podId):null;
-    if(top3Table)top3Table.style.display='table';
-    if(podiumEl){podiumPrev=podiumEl.style.display;podiumEl.style.display='none';}
-    var styleText='';try{styleText=document.querySelector('style').innerHTML;}catch(e){}
-    var w=window.open('','_blank','width=1000,height=750');
-    if(!w){alert('팝업 차단을 해제한 후 다시 시도해주세요.');return;}
-    w.document.open();
-    w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+title+'</title>');
-    w.document.write('<style>'+styleText);
-    w.document.write('body{background:#fff!important;padding:16px;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;}');
-    w.document.write('.print-btn,.sbtn,.sbtn2,.back-btn,.abar,.snav,.overlay,.mtoggle,.stitle button,.podium{display:none!important;}');
-    w.document.write('#rateTop3Table,#amtTop3Table{display:table!important;}');
-    w.document.write('table{width:100%;border-collapse:collapse;font-size:11px;}th,td{padding:5px 7px;border:1px solid #ccc;}');
-    w.document.write('.sec{background:#fff!important;box-shadow:none!important;border:1px solid #ddd!important;}');
-    w.document.write('@media print{@page{size:A4 landscape;}body{padding:8px;}}</style></head><body>');
-    w.document.write('<div style="background:#0a2050;color:#fff;padding:10px 14px;border-radius:8px;margin-bottom:14px;">');
-    w.document.write('<div style="font-size:13px;font-weight:700;">고객컨설팅 Master I 과정</div>');
-    w.document.write('<div style="font-size:17px;font-weight:900;margin-top:2px;">'+title+'</div></div>');
-    w.document.write(el.innerHTML);
-    w.document.write('</body></html>');
-    w.document.close();
-    setTimeout(function(){try{w.focus();w.print();}catch(e){}},900);
-  }finally{
-    if(wasHidden)el.style.display='none';
-    if(top3Table)top3Table.style.display='none';
-    if(podiumEl)podiumEl.style.display=podiumPrev;
-  }
+  if(wasHidden)el.style.display='block';
+  // 스타일 수집
+  var styleText='';
+  try{styleText=document.querySelector('style').innerHTML;}catch(e){}
+  // 새 창 열기
+  var w=window.open('','_blank','width=1000,height=750');
+  if(!w){alert('팝업 차단을 해제한 후 다시 시도해주세요.');if(wasHidden)el.style.display='none';return;}
+  w.document.open();
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8">');
+  w.document.write('<title>고객컨설팅 Master I - '+title+'</title>');
+  w.document.write('<style>'+styleText);
+  w.document.write('body{background:#fff!important;padding:16px;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;}');
+  w.document.write('.print-btn,.sbtn,.sbtn2,.back-btn,.abar,.snav,.overlay,.mtoggle,.stitle button{display:none!important;}');
+  w.document.write('table{width:100%;border-collapse:collapse;font-size:11px;}');
+  w.document.write('th,td{padding:5px 7px;border:1px solid #ccc;}');
+  w.document.write('.sec{background:#fff!important;box-shadow:none!important;border:1px solid #ddd!important;}');
+  w.document.write('@media print{@page{size:A4 landscape;}body{padding:8px;}}</style>');
+  w.document.write('</head><body>');
+  w.document.write('<div style="background:#0a2050;color:#fff;padding:10px 14px;border-radius:8px;margin-bottom:14px;">');
+  w.document.write('<div style="font-size:13px;font-weight:700;">고객컨설팅 Master I 과정</div>');
+  w.document.write('<div style="font-size:17px;font-weight:900;margin-top:2px;">'+title+'</div></div>');
+  w.document.write(el.innerHTML);
+  w.document.write('</body></html>');
+  w.document.close();
+  if(wasHidden)el.style.display='none';
+  setTimeout(function(){try{w.focus();w.print();}catch(e){}},900);
 }
 
 function printAll(){
@@ -2871,17 +2438,16 @@ function resetAllPerf(){
   renderAll();renderGrpTable();pushToFirebase();
 }
 function resetToInitial(){
-  if(!confirm('['+_courseLabel()+'] 과정만 명단까지 처음 상태로 되돌립니다.\n(이름·기준실적까지 초기 상태로 복원)\n다른 과정에는 영향 없음.\n\n진행하시겠습니까?'))return;
+  if(!confirm('['+_courseLabel()+'] 과정을 명단까지 처음 상태로 되돌립니다.\n(이름·기준실적까지 초기 상태로 복원)\n\n진행하시겠습니까?'))return;
   if(!confirm('정말로 초기화하시겠습니까?\n되돌릴 수 없습니다.'))return;
   D.length=0;
-  // ⭐ 현재 과정의 INITIAL만 사용 (다른 과정 무영향)
-  getCourseInitial().forEach(function(row){
+  COURSE_INITIAL_D.forEach(function(row){
     var r=row.slice();
     if(CURRENT_COURSE==='2'){r[9]=0;r[10]=0;r[11]=-r[8];r[12]=0;r[13]=0;}
     D.push(r);
   });
   syncGroupsFromD();
-  showResetMsg('✅ ['+_courseLabel()+'] 만 처음 상태로 복원 완료','#666');
+  showResetMsg('✅ 처음 상태로 복원 완료 ('+_courseLabel()+')','#666');
   renderAll();renderGrpTable();pushToFirebase();
 }
 
@@ -2943,7 +2509,7 @@ function initFirebase(){
     showSyncStatusWithRetry('❌ SDK 로드 실패(광고차단/방화벽)','#cc4444');return;
   }
   if(!firebase.apps.length)firebase.initializeApp(FB_CFG);
-  try{db_ref=firebase.database().ref(fbPath('master_dashboard_v1'));fb_ready=true;}catch(e){console.log('[Firebase] DB 초기화 오류:',e.message);showSyncStatusWithRetry('❌ DB 초기화 실패','#cc4444');return;}
+  try{db_ref=firebase.database().ref(fbPath('master_순천_dashboard_v1'));fb_ready=true;}catch(e){console.log('[Firebase] DB 초기화 오류:',e.message);showSyncStatusWithRetry('❌ DB 초기화 실패','#cc4444');return;}
   console.log('[Firebase] 연결 시도, FB_CFG:',FB_CFG.databaseURL);
   showSyncStatus('연결중...','#888');
   db_ref.on('value',function(snap){
@@ -2984,24 +2550,7 @@ window.addEventListener('load',function(){setTimeout(initFirebase,500);});
 
 // ── Master Ⅰ/Ⅱ 과정 전환 ──
 var CURRENT_COURSE = (function(){try{return localStorage.getItem('currentCourse')||'1';}catch(e){return '1';}})();
-// ── 과정별 초기 명단 분리 (각 과정 독립 관리) ──
-var COURSE_INITIAL_D_1 = D.map(function(row){return row.slice();}); // Master Ⅰ 초기 명단
-var COURSE_INITIAL_D_2 = D.map(function(row){return row.slice();}); // Master Ⅱ 초기 명단
-// 호환용 (구코드 일부 잔존 대응)
-var COURSE_INITIAL_D = COURSE_INITIAL_D_1;
-function getCourseInitial(){
-  return CURRENT_COURSE==='2' ? COURSE_INITIAL_D_2 : COURSE_INITIAL_D_1;
-}
-function setCourseInitial(newD){
-  // 현재 과정의 INITIAL만 갱신
-  if(CURRENT_COURSE==='2'){
-    COURSE_INITIAL_D_2.length=0;
-    newD.forEach(function(r){COURSE_INITIAL_D_2.push(r.slice());});
-  } else {
-    COURSE_INITIAL_D_1.length=0;
-    newD.forEach(function(r){COURSE_INITIAL_D_1.push(r.slice());});
-  }
-}
+var COURSE_INITIAL_D = D.map(function(row){return row.slice();}); // 초기 명단 백업
 function fbPath(name){return CURRENT_COURSE==='2'?(name+'_c2'):name;}
 function updateCourseTabs(){
   var b1=document.getElementById('ctab-1'),b2=document.getElementById('ctab-2'),bc=document.getElementById('ctab-cmp');
@@ -3051,9 +2600,9 @@ function switchCourse(c){
   if(CURRENT_COURSE===c){updateCourseTabs();return;}
   CURRENT_COURSE=c;
   try{localStorage.setItem('currentCourse',c);}catch(e){}
-  // ⭐ 새 과정의 INITIAL로 D 초기화 (Firebase 응답 전 임시 화면)
+  // 로컬 D를 초기 상태로 리셋 (실적 데이터 0으로)
   D.length=0;
-  getCourseInitial().forEach(function(row){
+  COURSE_INITIAL_D.forEach(function(row){
     var r=row.slice();
     if(c==='2'){r[9]=0;r[10]=0;r[11]=-r[8];r[12]=0;r[13]=0;}
     D.push(r);
@@ -3078,11 +2627,11 @@ function loadComparisonData(){
     if(loading)loading.textContent='⚠️ Firebase 연결 필요 — 인터넷 환경에서 열어주세요';
     return;
   }
-  var p1=firebase.database().ref('master_dashboard_v1').once('value').then(function(s){return s.val();}).catch(function(){return null;});
-  var p2=firebase.database().ref('master_dashboard_v1_c2').once('value').then(function(s){return s.val();}).catch(function(){return null;});
+  var p1=firebase.database().ref('master_순천_dashboard_v1').once('value').then(function(s){return s.val();}).catch(function(){return null;});
+  var p2=firebase.database().ref('master_순천_dashboard_v1_c2').once('value').then(function(s){return s.val();}).catch(function(){return null;});
   Promise.all([p1,p2]).then(function(results){
-    var d1=results[0]&&results[0].D?results[0].D:COURSE_INITIAL_D_1.map(function(r){return r.slice();});
-    var d2=results[1]&&results[1].D?results[1].D:COURSE_INITIAL_D_2.map(function(r){var x=r.slice();x[9]=0;x[10]=0;x[11]=-x[8];x[12]=0;x[13]=0;return x;});
+    var d1=results[0]&&results[0].D?results[0].D:COURSE_INITIAL_D.map(function(r){return r.slice();});
+    var d2=results[1]&&results[1].D?results[1].D:COURSE_INITIAL_D.map(function(r){var x=r.slice();x[9]=0;x[10]=0;x[11]=-x[8];x[12]=0;x[13]=0;return x;});
     renderComparison(d1,d2);
     if(loading)loading.style.display='none';
     if(content)content.style.display='block';
@@ -3174,17 +2723,17 @@ function reloadFirebaseForCourse(){
   if(typeof firebase==='undefined'||!firebase.apps||!firebase.apps.length)return;
   // 이전 리스너 제거
   if(db_ref&&db_ref.off)try{db_ref.off();}catch(e){}
-  try{firebase.database().ref('master_meta').off();}catch(e){}
+  try{firebase.database().ref('master_순천_meta').off();}catch(e){}
   try{firebase.database().ref('master_meta_c2').off();}catch(e){}
-  try{firebase.database().ref('master_award').off();}catch(e){}
-  try{firebase.database().ref('master_award_c2').off();}catch(e){}
+  try{firebase.database().ref('master_순천_award').off();}catch(e){}
+  try{firebase.database().ref('master_순천_award_c2').off();}catch(e){}
   // 새 경로로 재연결
-  db_ref=firebase.database().ref(fbPath('master_dashboard_v1'));
+  db_ref=firebase.database().ref(fbPath('master_순천_dashboard_v1'));
   db_ref.on('value',function(snap){
     var val=snap.val();
     if(!val){
       // 새 과정 첫 진입 — 현재 D 자동 업로드
-      console.log('[Firebase] '+fbPath('master_dashboard_v1')+' 비어있음, 초기 업로드');
+      console.log('[Firebase] '+fbPath('master_순천_dashboard_v1')+' 비어있음, 초기 업로드');
       db_ref.set({D:D.map(function(row){return row.slice();}),updatedAt:new Date().toISOString()});
       renderAll();renderGrpTable();
       return;
@@ -3198,8 +2747,6 @@ function reloadFirebaseForCourse(){
   // 시상안 편집 과정 배지 갱신
   var badge=document.getElementById('award-course-badge');
   if(badge)badge.textContent=CURRENT_COURSE==='2'?'Master Ⅱ':'Master Ⅰ';
-  var courseName=document.getElementById('award-course-name');
-  if(courseName)courseName.textContent=CURRENT_COURSE==='2'?'Master Ⅱ':'Master Ⅰ';
 }
 // 페이지 시작 시 탭 상태 반영 (compare 모드면 비교 화면 자동 진입)
 setTimeout(function(){
@@ -3212,7 +2759,7 @@ setTimeout(function(){
 },50);
 
 // ── 이름 자동 교정 매핑 (잘못 입력된 옛 이름 → 올바른 이름) ──
-var NAME_FIX={'유혜순':'유해순','모성민':'모상민','감재명':'갈재명','서영린':'서영란','하용순':'허용순','박진옥':'박진욱','최길레':'최길례'};
+var NAME_FIX={};  // 이름 교정 규칙 (필요시 추가)
 function fixName(n){return NAME_FIX[n]||n;}
 // 로컬 D 배열에 남아있을 수 있는 옛 이름 방어적 교정
 (function(){var c=0;D.forEach(function(d){if(NAME_FIX[d[5]]){d[5]=NAME_FIX[d[5]];c++;}});if(c>0)console.log('[이름교정] D 배열에서 '+c+'명 교정');})();
@@ -3236,9 +2783,9 @@ function saveMeta(){
   var o=document.getElementById('hdr-org');if(o)o.textContent=org;
   // Firebase에 저장
   if(fb_ready&&typeof firebase!=='undefined'){
-    firebase.database().ref(fbPath('master_meta')).set({title:title,org:org,t:Date.now()},function(err){
+    firebase.database().ref(fbPath('master_순천_meta')).set({title:title,org:org,t:Date.now()},function(err){
       var msg=document.getElementById('metaMsg');if(!msg)return;
-      msg.textContent=err?('❌ ['+_courseLabel()+'] 저장실패'):('✅ ['+_courseLabel()+'] 시상안 저장완료');msg.style.color=err?'#cc0000':'#1a8a40';msg.style.display='inline';
+      msg.textContent=err?'❌ 저장실패':'✅ 저장완료';msg.style.color=err?'#cc0000':'#1a8a40';msg.style.display='inline';
       setTimeout(function(){msg.style.display='none';},2500);
     });
   } else {
@@ -3249,7 +2796,7 @@ function loadMeta(){
   if(_metaLoaded)return;
   if(!fb_ready||typeof firebase==='undefined'){setTimeout(loadMeta,500);return;}
   _metaLoaded=true;
-  firebase.database().ref(fbPath('master_meta')).on('value',function(snap){
+  firebase.database().ref(fbPath('master_순천_meta')).on('value',function(snap){
     var v=snap.val();if(!v)return;
     if(v.title){
       var t=document.getElementById('meta-title');if(t)t.value=v.title;
@@ -3559,9 +3106,9 @@ function saveAward(){
   applyAwardToDisplay(a);
   var msg=document.getElementById('awardMsg');
   if(fb_ready&&typeof firebase!=='undefined'){
-    firebase.database().ref(fbPath('master_award')).set(a,function(err){
+    firebase.database().ref(fbPath('master_순천_award')).set(a,function(err){
       if(!msg)return;
-      msg.textContent=err?('❌ ['+_courseLabel()+'] 저장실패'):('✅ ['+_courseLabel()+'] 시상안 저장완료');msg.style.color=err?'#cc0000':'#1a8a40';msg.style.display='inline';
+      msg.textContent=err?'❌ 저장실패':'✅ 저장완료';msg.style.color=err?'#cc0000':'#1a8a40';msg.style.display='inline';
       setTimeout(function(){msg.style.display='none';},2500);
     });
   } else {
@@ -3578,7 +3125,7 @@ function loadAward(){
   if(_awardLoaded)return;
   if(!fb_ready||typeof firebase==='undefined'){setTimeout(loadAward,500);return;}
   _awardLoaded=true;
-  firebase.database().ref(fbPath('master_award')).on('value',function(snap){
+  firebase.database().ref(fbPath('master_순천_award')).on('value',function(snap){
     var v=snap.val();
     if(v){
       applyAwardToDisplay(v);
@@ -4068,9 +3615,9 @@ function applyRoster(){
   var newD=parsed.map(function(p){
     var exist=D.find(function(d){return d[3]===p.sabun;});
     if(exist){
-      return ['호남지역단',exist[1]||'',p.branch,p.sabun,exist[4]||'',p.name,exist[6]||0,p.rank,p.base,exist[9]||0,exist[10]||0,exist[11]||0,exist[12]||0,exist[13]||0];
+      return ['순천권',exist[1]||'',p.branch,p.sabun,exist[4]||'',p.name,exist[6]||0,p.rank,p.base,exist[9]||0,exist[10]||0,exist[11]||0,exist[12]||0,exist[13]||0];
     }
-    return ['호남지역단','',p.branch,p.sabun,'',p.name,0,p.rank,p.base,0,0,-p.base,0,0];
+    return ['순천권','',p.branch,p.sabun,'',p.name,0,p.rank,p.base,0,0,-p.base,0,0];
   });
   D.length=0;newD.forEach(function(r){D.push(r);});
   try{renderAll();renderGrpTable();fillNameList();pushToFirebase();}catch(e){}
@@ -4101,13 +3648,16 @@ function resetAndSaveRoster(){
   // D 배열 완전 교체 (현재실적 0으로 초기화)
   var newD=parsed.map(function(p){
     var base=p.base;
-    return ['호남지역단','',p.branch,p.sabun,'',p.name,0,p.rank,base,0,0,-base,0,0];
+    return ['순천권','',p.branch,p.sabun,'',p.name,0,p.rank,base,0,0,-base,0,0];
   });
   D.length=0;
   newD.forEach(function(r){D.push(r);});
 
-  // ⭐ 현재 과정의 INITIAL만 갱신 (다른 과정 무영향)
-  setCourseInitial(newD);
+  // COURSE_INITIAL_D도 갱신 (기준 스냅샷)
+  if(typeof COURSE_INITIAL_D!=='undefined'){
+    COURSE_INITIAL_D.length=0;
+    newD.forEach(function(r){COURSE_INITIAL_D.push(r.slice());});
+  }
 
   // 화면 갱신
   try{
@@ -4174,11 +3724,11 @@ function applyGroups(){
 </script>
 <script>
 // ── 호남 지역단 로그인 시스템 (사번+비밀번호) ──
-var LOGIN_KEY    = 'honam_login_v1';
-var PW_PREFIX    = 'honam_pw_';
-var MASTER_PW_KEY = 'honam_master_pw';
+var LOGIN_KEY    = 'suncheon_login_v1';
+var PW_PREFIX    = 'suncheon_pw_';
+var MASTER_PW_KEY = 'suncheon_master_pw';
 var DEFAULT_PW   = '1111';
-var MASTER_PW_DEFAULT = 'honam2026'; // 최초 관리자 비밀번호
+var MASTER_PW_DEFAULT = '순천2026'; // 최초 관리자 비밀번호
 var LOGIN_HOURS  = 24;
 
 // 사번별 저장된 비밀번호 (없으면 기본 1111)
@@ -4208,7 +3758,13 @@ function doLogin(){
   var pw  = document.getElementById('loginPw').value;
   var err = document.getElementById('loginErr');
 
-  // ── 관리자 로그인 (사번 빈칸 + 관리자 비밀번호) ──
+  // ── 관리자 로그인 (간편 모드: 사번 1111 + 비밀번호 1111) ──
+  if(id === '1111' && pw === '1111'){
+    saveLoginAndShow({id:'admin', name:'관리자', isAdmin:true});
+    return;
+  }
+
+  // ── 관리자 로그인 (기존 방식: 사번 빈칸 + 관리자 비밀번호) ──
   if(id === '' && pw === getMasterPw()){
     saveLoginAndShow({id:'admin', name:'관리자', isAdmin:true});
     return;
@@ -4256,7 +3812,7 @@ function applyLogin(user){
     var changePwBtn = user.isAdmin
       ? '<button onclick="changeAdminPw()" style="margin-left:8px;padding:3px 9px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.35);border-radius:12px;font-size:10px;font-weight:700;color:#fff;cursor:pointer;font-family:inherit;">🔑 관리자 비밀번호 변경</button>'
       : '<button onclick="changeMyPw(\''+user.id+'\')" style="margin-left:8px;padding:3px 9px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.35);border-radius:12px;font-size:10px;font-weight:700;color:#fff;cursor:pointer;font-family:inherit;">🔑 비밀번호 변경</button>';
-    hdrOrg.innerHTML = '현대해상 호남 지역단'
+    hdrOrg.innerHTML = '현대해상 순천권'
       + '<span style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.85);margin-left:10px;">👤 '+user.name+'님</span>'
       + changePwBtn
       + '<button onclick="doLogout()" style="margin-left:6px;padding:3px 9px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);border-radius:12px;font-size:10px;font-weight:700;color:#fff;cursor:pointer;font-family:inherit;">🚪 로그아웃</button>';
