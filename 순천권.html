@@ -358,7 +358,7 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
     <span id="todayLabel">2026년 5월</span><span>|</span>
     <span><span class="dot"></span> 전일마감 기준</span>
     <span id="syncStatus" style="font-size:10px;margin-left:6px;color:#888;">연결중...</span>
-    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.034</span>
+    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.036</span>
   </div>
   <div class="tab-nav">
     <button class="tb on" id="tb-home" onclick="goTab('home',this)">🏠 홈 대시보드</button>
@@ -3044,20 +3044,46 @@ function applyGrpAwardToDisplay(a){
     };
   }
 }
+function _readDynListAll(group){
+  // 빈 행 포함 전체 읽기 (+ 추가 버튼용)
+  var el = document.getElementById('inp-'+group);
+  if(!el) return [];
+  var rows = el.querySelectorAll('.aw-dyn-row');
+  var out = [];
+  rows.forEach(function(r){
+    var v1 = r.querySelector('.aw-dyn-f1').value.trim();
+    var v2 = r.querySelector('.aw-dyn-f2').value.trim();
+    if(group==='tiers') out.push({cond:v1, prize:v2});
+    else out.push({rank:v1, prize:v2});
+  });
+  return out;
+}
 function addTier(){
-  var cur = readDynList('tiers');
+  var cur = _readDynListAll('tiers');
   cur.push({cond:'',prize:''});
   renderDynList('tiers', cur);
+  setTimeout(function(){
+    var rows=document.querySelectorAll('#inp-tiers .aw-dyn-row');
+    if(rows.length>0){var inp=rows[rows.length-1].querySelector('.aw-dyn-f1');if(inp)inp.focus();}
+  },50);
 }
 function addRateRank(){
-  var cur = readDynList('rate-ranks');
+  var cur = _readDynListAll('rate-ranks');
   cur.push({rank:'',prize:''});
   renderDynList('rate-ranks', cur);
+  setTimeout(function(){
+    var rows=document.querySelectorAll('#inp-rate-ranks .aw-dyn-row');
+    if(rows.length>0){var inp=rows[rows.length-1].querySelector('.aw-dyn-f1');if(inp)inp.focus();}
+  },50);
 }
 function addAmtRank(){
-  var cur = readDynList('amt-ranks');
+  var cur = _readDynListAll('amt-ranks');
   cur.push({rank:'',prize:''});
   renderDynList('amt-ranks', cur);
+  setTimeout(function(){
+    var rows=document.querySelectorAll('#inp-amt-ranks .aw-dyn-row');
+    if(rows.length>0){var inp=rows[rows.length-1].querySelector('.aw-dyn-f1');if(inp)inp.focus();}
+  },50);
 }
 function delDynRow(group, idx){
   var cur = readDynList(group);
