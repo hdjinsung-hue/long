@@ -535,10 +535,13 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
               <div style="font-size:16px;font-weight:900;color:#cc5500;">15만원<span style="font-size:10px;color:#555;font-weight:600;"> 인당</span></div>
             </div>
           </div>
+          <div id="disp-grp2-notice" style="display:none;margin-top:6px;padding:5px 8px;background:#fff0e0;border-left:3px solid #cc5500;border-radius:4px;font-size:10px;color:#7a3500;font-weight:600;"></div>
         </div>
       </div>
 
     </div></div>
+    <!-- 추가 시상 항목 표시 영역 -->
+    <div id="disp-extra-groups" style="display:none;padding:0 14px 6px;"></div>
     <div class="sec">
       <div class="stitle">📊 조별 목표·현재실적·순증율 (달성률 순위)
         <button class="sbtn" onclick="saveGroupData()" style="background:#1a5cb0;color:#fff;border-color:#1a5cb0;">💾 저장</button>
@@ -776,6 +779,20 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
         </div>
         <div id="inp-grp2-ranks" style="display:flex;flex-direction:column;gap:4px;"></div>
         <button onclick="addGrp2Rank()" class="sbtn" style="width:100%;margin-top:6px;background:#fff8f0;color:#cc5500;border:1px dashed #cc5500;font-size:11px;padding:6px;">＋ 구간 추가</button>
+        <div style="margin-top:8px;">
+          <div style="font-size:11px;font-weight:700;color:#cc5500;margin-bottom:4px;">📌 그룹시상2 전체 안내문구 (선택)</div>
+          <input type="text" id="inp-grp2-notice" placeholder="예: 그룹 전체 순증율 기준 적용" style="width:100%;padding:7px 9px;font-size:11px;border:1px solid #f0c8a0;border-radius:6px;font-family:inherit;box-sizing:border-box;">
+        </div>
+      </div>
+
+      <!-- 추가 시상 항목 -->
+      <div style="margin-top:14px;border-top:2px dashed #c8d8ee;padding-top:12px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <div style="font-size:12px;font-weight:900;color:#1a5cb0;">➕ 추가 시상 항목</div>
+          <button onclick="addExtraGroup()" class="sbtn" style="background:#1a5cb0;color:#fff;border-color:#1a5cb0;font-size:10px;padding:3px 8px;">＋ 항목 추가</button>
+        </div>
+        <div id="inp-extra-groups" style="display:flex;flex-direction:column;gap:10px;"></div>
+        <button onclick="addExtraGroup()" class="sbtn" style="width:100%;margin-top:6px;background:#f0f5fc;color:#1a5cb0;border:1px dashed #1a5cb0;font-size:11px;padding:6px;">＋ 새 시상 항목 추가</button>
       </div>
     </div>
   </div>
@@ -3448,6 +3465,85 @@ function delGrp2Row(btnOrIdx){
     if(row)row.remove();
   }
 }
+
+// ── 추가 시상항목 전역 상태 ──
+var _extraGroups = [];
+
+function addExtraGroup(){
+  _extraGroups.push({title:'새 시상 항목',color:'#1a5cb0',notice:'',rows:[{cond:'',prize:'',note:''}]});
+  renderExtraGroups(_extraGroups);
+  setTimeout(function(){
+    var cards=document.querySelectorAll('#inp-extra-groups .extra-grp-card');
+    if(cards.length>0){
+      var inp=cards[cards.length-1].querySelector('input[data-eg-field="title"]');
+      if(inp)inp.focus();
+    }
+  },60);
+}
+
+function _egSync(gi,field,val){
+  if(_extraGroups[gi])_extraGroups[gi][field]=val;
+}
+function _egRowSync(gi,ri,field,val){
+  if(_extraGroups[gi]&&_extraGroups[gi].rows&&_extraGroups[gi].rows[ri])
+    _extraGroups[gi].rows[ri][field]=val;
+}
+function _egAddRow(gi){
+  if(!_extraGroups[gi])return;
+  _extraGroups[gi].rows.push({cond:'',prize:'',note:''});
+  renderExtraGroups(_extraGroups);
+}
+function _egDelRow(gi,ri){
+  if(!_extraGroups[gi]||!_extraGroups[gi].rows)return;
+  _extraGroups[gi].rows.splice(ri,1);
+  renderExtraGroups(_extraGroups);
+}
+function _egDel(gi){
+  if(!confirm('이 시상 항목 전체를 삭제하시겠습니까?'))return;
+  _extraGroups.splice(gi,1);
+  renderExtraGroups(_extraGroups);
+}
+
+function renderExtraGroups(items){
+  var el=document.getElementById('inp-extra-groups');
+  if(!el)return;
+  _extraGroups=items||[];
+  if(!_extraGroups.length){
+    el.innerHTML='<div style="text-align:center;padding:10px;color:#aaa;font-size:11px;border:1px dashed #c8d8ee;border-radius:6px;">추가된 시상 항목이 없습니다.</div>';
+    return;
+  }
+  var colorOptions=['#1a5cb0','#1e7e3a','#cc5500','#7c3aed','#c04020','#0a7a8a'];
+  el.innerHTML=_extraGroups.map(function(g,gi){
+    var rowsHtml=(g.rows||[]).map(function(r,ri){
+      var h=[];
+      h.push('<div style="display:grid;grid-template-columns:1fr 1fr 1.5fr 28px;gap:4px;align-items:center;margin-bottom:4px;">');
+      h.push('<input type="text" placeholder="조건" value="'+(r.cond||'').replace(/"/g,'&quot;')+'" oninput="_egRowSync('+gi+','+ri+',\'cond\',this.value)" style="padding:5px 7px;font-size:11px;border:1px solid #c8d8ee;border-radius:4px;font-family:inherit;">');
+      h.push('<input type="text" placeholder="시상금" value="'+(r.prize||'').replace(/"/g,'&quot;')+'" oninput="_egRowSync('+gi+','+ri+',\'prize\',this.value)" style="padding:5px 7px;font-size:11px;border:1px solid #c8d8ee;border-radius:4px;font-family:inherit;">');
+      h.push('<input type="text" placeholder="안내문구(선택)" value="'+(r.note||'').replace(/"/g,'&quot;')+'" oninput="_egRowSync('+gi+','+ri+',\'note\',this.value)" style="padding:5px 7px;font-size:11px;border:1px solid #dde8f0;border-radius:4px;font-family:inherit;">');
+      h.push('<button type="button" onclick="_egDelRow('+gi+','+ri+')" style="background:#cc4444;color:#fff;border:none;border-radius:4px;font-size:11px;cursor:pointer;height:28px;width:28px;">🗑</button>');
+      h.push('</div>');
+      return h.join('');
+    }).join('');
+    var selOpts=colorOptions.map(function(c){return '<option value="'+c+'"'+(g.color===c?' selected':'')+' style="background:'+c+';color:#fff;">'+c+'</option>';}).join('');
+    var h=[];
+    h.push('<div class="extra-grp-card" style="border:2px solid '+(g.color||'#1a5cb0')+';border-radius:10px;padding:10px;background:#f8faff;margin-bottom:8px;">');
+    h.push('<div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap;">');
+    h.push('<input type="text" data-eg-field="title" placeholder="시상 제목" value="'+(g.title||'').replace(/"/g,'&quot;')+'" oninput="_egSync('+gi+',\'title\',this.value)" style="flex:1;min-width:100px;padding:6px 8px;font-size:12px;font-weight:700;border:1px solid #c8d8ee;border-radius:6px;font-family:inherit;">');
+    h.push('<select oninput="_egSync('+gi+',\'color\',this.value)" style="padding:5px 7px;font-size:11px;border:1px solid #c8d8ee;border-radius:6px;font-family:inherit;">'+selOpts+'</select>');
+    h.push('<button type="button" onclick="_egDel('+gi+')" style="background:#cc2222;color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer;font-weight:700;">✕ 삭제</button>');
+    h.push('</div>');
+    h.push('<div style="font-size:10px;font-weight:700;color:#556688;margin-bottom:4px;">구간 설정 (조건 | 시상금 | 안내)</div>');
+    h.push(rowsHtml);
+    h.push('<button type="button" onclick="_egAddRow('+gi+')" style="width:100%;margin-top:4px;padding:5px;font-size:11px;background:#f0f5fc;color:#1a5cb0;border:1px dashed #1a5cb0;border-radius:5px;cursor:pointer;">＋ 구간 추가</button>');
+    h.push('<div style="margin-top:8px;"><div style="font-size:10px;font-weight:700;color:#556688;margin-bottom:3px;">📌 전체 안내문구 (선택)</div>');
+    h.push('<input type="text" placeholder="예: 기준조건 안내" value="'+(g.notice||'').replace(/"/g,'&quot;')+'" oninput="_egSync('+gi+',\'notice\',this.value)" style="width:100%;padding:6px 8px;font-size:11px;border:1px solid #dde8f0;border-radius:5px;font-family:inherit;box-sizing:border-box;"></div>');
+    h.push('</div>');
+    return h.join('');
+  }).join('');
+}
+function readExtraGroups(){
+  return _extraGroups.slice();
+}
 // 그룹시상 홈 화면 동적 반영
 function applyGrpAwardToDisplay(a){
   if(!a)return;
@@ -3470,14 +3566,59 @@ function applyGrpAwardToDisplay(a){
     var colors=['#1e7e3a','#1a5cb0','#cc5500','#7c3aed','#c04020'];
     g2box.innerHTML=a.grp2.map(function(r,i){
       var col=colors[i%colors.length];
-      return '<div style="padding:6px 0;'+(i<a.grp2.length-1?'border-bottom:1px solid #f0d8c0;':'')+'">'
-        +'<div style="display:flex;justify-content:space-between;align-items:center;">'
-          +'<div style="font-size:11px;font-weight:700;color:#1a3a6b;">'+(r.cond||'')+'</div>'
-          +'<div style="font-size:16px;font-weight:900;color:'+col+';">'+(r.prize||'')+'<span style="font-size:10px;color:#555;font-weight:600;"> 인당</span></div>'
-        +'</div>'
-        +(r.note?'<div style="font-size:10px;color:#888;margin-top:2px;">※ '+r.note+'</div>':'')
-        +'</div>';
+      var h=[];
+      h.push('<div style="padding:6px 0;'+(i<a.grp2.length-1?'border-bottom:1px solid #f0d8c0;':'')+'">' );
+      h.push('<div style="display:flex;justify-content:space-between;align-items:center;">');
+      h.push('<div style="font-size:11px;font-weight:700;color:#1a3a6b;">'+(r.cond||'')+'</div>');
+      h.push('<div style="font-size:16px;font-weight:900;color:'+col+';">'+(r.prize||'')+'<span style="font-size:10px;color:#555;font-weight:600;"> 인당</span></div>');
+      h.push('</div>');
+      if(r.note)h.push('<div style="font-size:10px;color:#888;margin-top:2px;">※ '+r.note+'</div>');
+      h.push('</div>');
+      return h.join('');
     }).join('');
+  }
+  // grp2 전체 안내문구
+  var g2notice=document.getElementById('disp-grp2-notice');
+  if(g2notice){
+    var nt=a.grp2Notice||'';
+    if(nt.trim()){g2notice.textContent='📌 '+nt;g2notice.style.display='';}
+    else{g2notice.style.display='none';}
+  }
+  // 추가 시상 항목 표시
+  var extraWrap=document.getElementById('disp-extra-groups');
+  if(extraWrap){
+    var eg=a.extraGroups||[];
+    if(eg.length){
+      extraWrap.style.display='';
+      var bgPalette=['#1a5cb0','#1e7e3a','#7c3aed','#c04020','#cc5500','#0a7a8a'];
+      var egHtml=['<div style="display:flex;flex-wrap:wrap;gap:12px;padding:6px 0 10px;">'];
+      eg.forEach(function(g,gi){
+        var bgC=g.color||bgPalette[gi%bgPalette.length];
+        var rowColors=['#1e7e3a','#1a5cb0','#cc5500','#7c3aed','#c04020'];
+        var rowsHtml=(g.rows||[]).map(function(r,ri){
+          var col=rowColors[ri%rowColors.length];
+          var h=[];
+          h.push('<div style="padding:6px 0;'+(ri<(g.rows.length-1)?'border-bottom:1px solid #e0e8f0;':'')+'">');
+          h.push('<div style="display:flex;justify-content:space-between;align-items:center;">');
+          h.push('<div style="font-size:11px;font-weight:700;color:#1a3a6b;">'+(r.cond||'')+'</div>');
+          h.push('<div style="font-size:15px;font-weight:900;color:'+col+';">'+(r.prize||'')+'</div>');
+          h.push('</div>');
+          if(r.note)h.push('<div style="font-size:10px;color:#888;margin-top:2px;">※ '+r.note+'</div>');
+          h.push('</div>');
+          return h.join('');
+        }).join('');
+        var noticeHtml=g.notice?'<div style="margin-top:6px;padding:5px 8px;background:#f0f5ff;border-left:3px solid '+bgC+';border-radius:4px;font-size:10px;color:#1a3a6b;font-weight:600;">📌 '+g.notice+'</div>':'';
+        egHtml.push('<div style="flex:1;min-width:200px;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.1);">');
+        egHtml.push('<div style="background:'+bgC+';color:#fff;text-align:center;padding:10px 6px;font-size:13px;font-weight:900;">'+(g.title||'추가시상')+'</div>');
+        egHtml.push('<div style="background:#f8faff;border:2px solid '+bgC+';border-top:none;border-radius:0 0 12px 12px;padding:10px 8px;">'+rowsHtml+noticeHtml+'</div>');
+        egHtml.push('</div>');
+      });
+      egHtml.push('</div>');
+      extraWrap.innerHTML=egHtml.join('');
+    } else {
+      extraWrap.style.display='none';
+      extraWrap.innerHTML='';
+    }
   }
   // g1Prize·g2Prize 함수 동적 재정의
   if(a.grp2&&a.grp2.length){
@@ -3569,6 +3710,11 @@ function applyAwardToInputs(a){
   // 그룹시상2 — 전역 배열로 초기화 후 렌더링
   _grp2List = (a.grp2 && a.grp2.length) ? a.grp2.slice() : [];
   renderGrp2List(_grp2List);
+  // 그룹시상2 전체 안내문구
+  setV('inp-grp2-notice', a.grp2Notice||'');
+  // 추가 시상 항목
+  _extraGroups = (a.extraGroups && a.extraGroups.length) ? a.extraGroups.slice() : [];
+  renderExtraGroups(_extraGroups);
 }
 function saveAward(){
   var getV=function(id){var el=document.getElementById(id);return el?el.value:'';};
@@ -3582,6 +3728,8 @@ function saveAward(){
     amtRanks:amtRanks,
     grp1:{cond:getV('inp-grp1-cond'),prize:getV('inp-grp1-prize'),note:getV('inp-grp1-note')},
     grp2:readGrp2List(),
+    grp2Notice:getV('inp-grp2-notice'),
+    extraGroups:readExtraGroups(),
     // 백워드 호환: rate/amt 텍스트도 자동 조립
     rate: rateRanks.length ? buildRanksHtml('📈 신장률 TOP10:',rateRanks) : '',
     amt: amtRanks.length ? buildRanksHtml('💰 신장액 TOP10:',amtRanks) : '',
