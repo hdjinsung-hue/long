@@ -358,7 +358,7 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
     <span id="todayLabel">2026년 5월</span><span>|</span>
     <span><span class="dot"></span> 전일마감 기준</span>
     <span id="syncStatus" style="font-size:10px;margin-left:6px;color:#888;">연결중...</span>
-    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.039</span>
+    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.040</span>
   </div>
   <div class="tab-nav">
     <button class="tb on" id="tb-home" onclick="goTab('home',this)">🏠 홈 대시보드</button>
@@ -2512,6 +2512,11 @@ function initFirebase(){
   try{db_ref=firebase.database().ref(fbPath('master_순천_dashboard_v1'));fb_ready=true;}catch(e){console.log('[Firebase] DB 초기화 오류:',e.message);showSyncStatusWithRetry('❌ DB 초기화 실패','#cc4444');return;}
   console.log('[Firebase] 연결 시도, FB_CFG:',FB_CFG.databaseURL);
   showSyncStatus('연결중...','#888');
+  // DB 접근 테스트
+  fetch('https://master-itv-default-rtdb.asia-southeast1.firebasedatabase.app/.json?shallow=true')
+    .then(function(r){console.log('[DB Test] HTTP status:',r.status);return r.text();})
+    .then(function(t){console.log('[DB Test] 응답:',t.substring(0,100));})
+    .catch(function(e){console.log('[DB Test] 오류:',e.message);});
   db_ref.on('value',function(snap){
     var val=snap.val();
     if(!val){
@@ -2537,7 +2542,7 @@ function initFirebase(){
       if(row[13]!==undefined) D[i][13]=row[13];
     }});syncGroupsFromD();renderAll();renderGrpTable();}
     showSyncStatus('✅ 실시간 연동 '+new Date().toLocaleTimeString('ko-KR'),'#1a8a40');
-  },function(err){console.log('[Firebase] 연동 오류:',err&&err.message);showSyncStatusWithRetry('❌ 서버 연결 오류','#cc0000');});
+  },function(err){var code=err&&(err.code||err.message)||'unknown';console.log('[Firebase] 연동 오류:',code,err);showSyncStatusWithRetry('❌ '+code,'#cc0000');});
 }
 function pushToFirebase(){if(!fb_ready)return;db_ref.set({D:D.map(function(row){return row.slice();}),updatedAt:new Date().toISOString()}).then(function(){showSyncStatus('☁️ 저장완료 '+new Date().toLocaleTimeString('ko-KR'),'#1a8a40');}).catch(function(){showSyncStatus('❌ 저장실패','#cc0000');});}
 
