@@ -358,7 +358,7 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
     <span id="todayLabel">2026년 5월</span><span>|</span>
     <span><span class="dot"></span> 전일마감 기준</span>
     <span id="syncStatus" style="font-size:10px;margin-left:6px;color:#888;">연결중...</span>
-    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.041</span>
+    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.042</span>
   </div>
   <div class="tab-nav">
     <button class="tb on" id="tb-home" onclick="goTab('home',this)">🏠 홈 대시보드</button>
@@ -1827,7 +1827,7 @@ document.getElementById('pg-home').style.display='block';
 document.getElementById('pg-detail').style.display='none';
 document.getElementById('pg-admin').style.display='none';
 document.getElementById('mtoggle').style.display='none';
-window.addEventListener('load',function(){setTimeout(initFirebase,500);});
+
 function closeGrpPopup(){document.getElementById('grpPopup').style.display='none';}
 
 function renderHomeGrp(){
@@ -2184,7 +2184,7 @@ document.getElementById('pg-home').style.display='block';
 document.getElementById('pg-detail').style.display='none';
 document.getElementById('pg-admin').style.display='none';
 document.getElementById('mtoggle').style.display='none';
-window.addEventListener('load',function(){setTimeout(initFirebase,500);});
+
 
 
 function handlePhotoUpload(event){
@@ -2513,7 +2513,7 @@ function initFirebase(){
   console.log('[Firebase] 연결 시도, FB_CFG:',FB_CFG.databaseURL);
   showSyncStatus('연결중...','#888');
   // DB 접근 테스트
-  fetch('https://master-itv-default-rtdb.asia-southeast1.firebasedatabase.app/.json?shallow=true')
+  fetch('https://long-8d6f6-default-rtdb.asia-southeast1.firebasedatabase.app/.json?shallow=true')
     .then(function(r){console.log('[DB Test] HTTP status:',r.status);return r.text();})
     .then(function(t){console.log('[DB Test] 응답:',t.substring(0,100));})
     .catch(function(e){console.log('[DB Test] 오류:',e.message);});
