@@ -2554,7 +2554,7 @@ document.getElementById('mtoggle').style.display='none';
 window.addEventListener('load',function(){setTimeout(initFirebase,500);});
 
 // ── Master Ⅰ/Ⅱ 과정 전환 ──
-var CURRENT_COURSE = (function(){try{return localStorage.getItem('currentCourse')||'1';}catch(e){return '1';}})();
+var CURRENT_COURSE = (function(){try{return localStorage.getItem('currentCourse_suncheon')||'1';}catch(e){return '1';}})();
 var COURSE_INITIAL_D = D.map(function(row){return row.slice();}); // 초기 명단 백업
 function fbPath(name){return CURRENT_COURSE==='2'?(name+'_c2'):name;}
 function updateCourseTabs(){
@@ -2587,7 +2587,7 @@ function switchCourse(c){
   if(c==='compare'){
     // 비교 모드 진입
     CURRENT_COURSE='compare';
-    try{localStorage.setItem('currentCourse',c);}catch(e){}
+    try{localStorage.setItem('currentCourse_suncheon',c);}catch(e){}
     document.getElementById('pg-home').style.display='none';
     document.getElementById('pg-detail').style.display='none';
     document.getElementById('pg-admin').style.display='none';
@@ -2604,7 +2604,7 @@ function switchCourse(c){
   var nav2=document.querySelector('.tab-nav');if(nav2)nav2.style.display='';
   if(CURRENT_COURSE===c){updateCourseTabs();return;}
   CURRENT_COURSE=c;
-  try{localStorage.setItem('currentCourse',c);}catch(e){}
+  try{localStorage.setItem('currentCourse_suncheon',c);}catch(e){}
   // 로컬 D를 초기 상태로 리셋 (실적 데이터 0으로)
   D.length=0;
   COURSE_INITIAL_D.forEach(function(row){

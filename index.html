@@ -3005,7 +3005,7 @@ document.getElementById('mtoggle').style.display='none';
 window.addEventListener('load',function(){setTimeout(initFirebase,500);});
 
 // ── Master Ⅰ/Ⅱ 과정 전환 ──
-var CURRENT_COURSE = (function(){try{return localStorage.getItem('currentCourse')||'1';}catch(e){return '1';}})();
+var CURRENT_COURSE = (function(){try{return localStorage.getItem('currentCourse_honam')||'1';}catch(e){return '1';}})();
 // ── 과정별 초기 명단 분리 (각 과정 독립 관리) ──
 var COURSE_INITIAL_D_1 = D.map(function(row){return row.slice();}); // Master Ⅰ 초기 명단
 var COURSE_INITIAL_D_2 = D.map(function(row){return row.slice();}); // Master Ⅱ 초기 명단
@@ -3055,7 +3055,7 @@ function switchCourse(c){
   if(c==='compare'){
     // 비교 모드 진입
     CURRENT_COURSE='compare';
-    try{localStorage.setItem('currentCourse',c);}catch(e){}
+    try{localStorage.setItem('currentCourse_honam',c);}catch(e){}
     document.getElementById('pg-home').style.display='none';
     document.getElementById('pg-detail').style.display='none';
     document.getElementById('pg-admin').style.display='none';
@@ -3072,7 +3072,7 @@ function switchCourse(c){
   var nav2=document.querySelector('.tab-nav');if(nav2)nav2.style.display='';
   if(CURRENT_COURSE===c){updateCourseTabs();return;}
   CURRENT_COURSE=c;
-  try{localStorage.setItem('currentCourse',c);}catch(e){}
+  try{localStorage.setItem('currentCourse_honam',c);}catch(e){}
   // ⭐ 새 과정의 INITIAL로 D 초기화 (Firebase 응답 전 임시 화면)
   D.length=0;
   getCourseInitial().forEach(function(row){
