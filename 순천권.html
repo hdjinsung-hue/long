@@ -358,7 +358,7 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
     <span id="todayLabel">2026년 5월</span><span>|</span>
     <span><span class="dot"></span> 전일마감 기준</span>
     <span id="syncStatus" style="font-size:10px;margin-left:6px;color:#888;">연결중...</span>
-    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.045</span>
+    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.046</span>
   </div>
   <div class="tab-nav">
     <button class="tb on" id="tb-home" onclick="goTab('home',this)">🏠 홈 대시보드</button>
@@ -1068,7 +1068,23 @@ function renderGrpTable(){
   });
   tb.innerHTML=html;sumHtml+='</div>';if(sm)sm.innerHTML=sumHtml;
 }
-function saveGroupData(){const msg=document.getElementById('grpSaveMsg');if(msg){msg.style.display='inline';setTimeout(()=>msg.style.display='none',2500);}}
+function saveGroupData(){
+  // GROUPS를 localStorage + Firebase에 저장
+  try{localStorage.setItem('순천_groups_backup',JSON.stringify(GROUPS));}catch(e){}
+  if(fb_ready&&typeof firebase!=='undefined'){
+    firebase.database().ref('master_순천_groups').set(GROUPS,function(err){
+      var msg=document.getElementById('grpSaveMsg');
+      if(msg){
+        msg.textContent=err?'⚠️ 로컬저장완료(서버오류)':'✅ 조별명단 저장완료';
+        msg.style.display='inline';
+        setTimeout(function(){msg.style.display='none';},2500);
+      }
+    });
+  } else {
+    var msg=document.getElementById('grpSaveMsg');
+    if(msg){msg.textContent='✅ 로컬 저장완료';msg.style.display='inline';setTimeout(function(){msg.style.display='none';},2500);}
+  }
+}
 
 const VIEWS=['vself','vperf','vrate','vamt','vipum','vgroup'];
 const NAVS=[{id:'home',icon:'🏠',label:'홈'},{id:'perf',icon:'📊',label:'실적 진도'},{id:'rate',icon:'📈',label:'신장률 TOP10'},{id:'amt',icon:'💰',label:'신장액 TOP10'},{id:'ipum',icon:'✨',label:'인품왕 TOP10'},{id:'group',icon:'🏅',label:'그룹 시상'}];
@@ -2549,9 +2565,38 @@ function initFirebase(){
       syncGroupsFromD();renderAll();renderGrpTable();
     }
     showSyncStatus('✅ 실시간 연동 '+new Date().toLocaleTimeString('ko-KR'),'#1a8a40');
+    // GROUPS 로드 (1회만)
+    if(!_groupsLoaded)loadGroups();
   },function(err){var code=err&&(err.code||err.message)||'unknown';console.log('[Firebase] 연동 오류:',code,err);showSyncStatusWithRetry('❌ '+code,'#cc0000');});
 }
 var _fbSaving=false;
+var _groupsLoaded=false;
+function loadGroups(){
+  if(_groupsLoaded)return;
+  _groupsLoaded=true;
+  if(!fb_ready||typeof firebase==='undefined'){_groupsLoaded=false;return;}
+  firebase.database().ref('master_순천_groups').once('value').then(function(snap){
+    var v=snap.val();
+    if(v&&Array.isArray(v)&&v.length>0){
+      GROUPS.length=0;v.forEach(function(g){GROUPS.push(g);});
+      try{localStorage.setItem('순천_groups_backup',JSON.stringify(GROUPS));}catch(e){}
+      try{renderGrpTable();renderHomeGrp&&renderHomeGrp();}catch(e){}
+      console.log('[GROUPS] Firebase에서 '+GROUPS.length+'조 로드완료');
+    } else {
+      // Firebase에 없으면 localStorage 폴백
+      try{
+        var bk=localStorage.getItem('순천_groups_backup');
+        if(bk){var parsed=JSON.parse(bk);if(parsed&&parsed.length>0){GROUPS.length=0;parsed.forEach(function(g){GROUPS.push(g);});try{renderGrpTable();renderHomeGrp&&renderHomeGrp();}catch(e){}console.log('[GROUPS] 로컬백업에서 '+GROUPS.length+'조 복원');}}
+      }catch(e){}
+    }
+  }).catch(function(){
+    // Firebase 실패 시 localStorage 폴백
+    try{
+      var bk=localStorage.getItem('순천_groups_backup');
+      if(bk){var parsed=JSON.parse(bk);if(parsed&&parsed.length>0){GROUPS.length=0;parsed.forEach(function(g){GROUPS.push(g);});try{renderGrpTable();renderHomeGrp&&renderHomeGrp();}catch(e){}}}
+    }catch(e){}
+  });
+}
 function pushToFirebase(){
   if(!fb_ready)return;
   _fbSaving=true;
@@ -3801,7 +3846,8 @@ function applyGroups(){
   if(!confirm('현재 '+GROUPS.length+'조 → '+newGroups.length+'조 ('+totalMembers+'명)로 교체합니다.\n계속하시겠습니까?'))return;
   GROUPS.length=0;newGroups.forEach(function(g){GROUPS.push(g);});
   try{renderAll();renderGrpTable();renderHomeGrp&&renderHomeGrp();}catch(e){}
-  var msg=document.getElementById('groupsMsg');msg.textContent='✅ '+newGroups.length+'조 '+totalMembers+'명 적용완료';msg.style.display='inline';msg.style.color='#1e7e3a';setTimeout(function(){msg.style.display='none';},3500);
+  saveGroupData(); // 적용 즉시 저장
+  var msg=document.getElementById('groupsMsg');msg.textContent='✅ '+newGroups.length+'조 '+totalMembers+'명 적용·저장완료';msg.style.display='inline';msg.style.color='#1e7e3a';setTimeout(function(){msg.style.display='none';},3500);
 }
 
 </script>
