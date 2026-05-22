@@ -358,7 +358,7 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
     <span id="todayLabel">2026년 5월</span><span>|</span>
     <span><span class="dot"></span> 전일마감 기준</span>
     <span id="syncStatus" style="font-size:10px;margin-left:6px;color:#888;">연결중...</span>
-    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.042</span>
+    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.043</span>
   </div>
   <div class="tab-nav">
     <button class="tb on" id="tb-home" onclick="goTab('home',this)">🏠 홈 대시보드</button>
@@ -2508,7 +2508,10 @@ function initFirebase(){
     if(window.location.protocol==='file:'){showSyncStatusWithRetry('⚠️ 파일(file://) 열람 — 브라우저 보안 가능','#cc4444');return;}
     showSyncStatusWithRetry('❌ SDK 로드 실패(광고차단/방화벽)','#cc4444');return;
   }
-  if(!firebase.apps.length)firebase.initializeApp(FB_CFG);
+  if(!firebase.apps.length){
+    firebase.initializeApp(FB_CFG);
+    try{firebase.database().setPersistenceEnabled(true);console.log('[Firebase] 오프라인 지속성 활성화');}catch(pe){console.log('[Firebase] persistence 설정 오류:',pe.message);}
+  }
   try{db_ref=firebase.database().ref(fbPath('master_순천_dashboard_v1'));fb_ready=true;}catch(e){console.log('[Firebase] DB 초기화 오류:',e.message);showSyncStatusWithRetry('❌ DB 초기화 실패','#cc4444');return;}
   console.log('[Firebase] 연결 시도, FB_CFG:',FB_CFG.databaseURL);
   showSyncStatus('연결중...','#888');
@@ -2544,7 +2547,24 @@ function initFirebase(){
     showSyncStatus('✅ 실시간 연동 '+new Date().toLocaleTimeString('ko-KR'),'#1a8a40');
   },function(err){var code=err&&(err.code||err.message)||'unknown';console.log('[Firebase] 연동 오류:',code,err);showSyncStatusWithRetry('❌ '+code,'#cc0000');});
 }
-function pushToFirebase(){if(!fb_ready)return;db_ref.set({D:D.map(function(row){return row.slice();}),updatedAt:new Date().toISOString()}).then(function(){showSyncStatus('☁️ 저장완료 '+new Date().toLocaleTimeString('ko-KR'),'#1a8a40');}).catch(function(){showSyncStatus('❌ 저장실패','#cc0000');});}
+var _fbSaving=false;
+function pushToFirebase(){
+  if(!fb_ready)return;
+  _fbSaving=true;
+  db_ref.set({D:D.map(function(row){return row.slice();}),updatedAt:new Date().toISOString()}).then(function(){
+    _fbSaving=false;
+    showSyncStatus('☁️ 저장완료 '+new Date().toLocaleTimeString('ko-KR'),'#1a8a40');
+  }).catch(function(){
+    _fbSaving=false;
+    showSyncStatus('❌ 저장실패','#cc0000');
+  });
+}
+window.addEventListener('beforeunload',function(e){
+  if(_fbSaving){
+    var msg='데이터 저장 중입니다. 잠시 후 이동해 주세요.';
+    e.preventDefault();e.returnValue=msg;return msg;
+  }
+});
 
 renderAll();renderGrpTable();
 document.getElementById('pg-home').style.display='block';
