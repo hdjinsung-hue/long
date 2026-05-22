@@ -358,7 +358,7 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
     <span id="todayLabel">2026년 5월</span><span>|</span>
     <span><span class="dot"></span> 전일마감 기준</span>
     <span id="syncStatus" style="font-size:10px;margin-left:6px;color:#888;">연결중...</span>
-    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.044</span>
+    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.045</span>
   </div>
   <div class="tab-nav">
     <button class="tb on" id="tb-home" onclick="goTab('home',this)">🏠 홈 대시보드</button>
@@ -2517,6 +2517,8 @@ function initFirebase(){
     .then(function(r){console.log('[DB Test] HTTP status:',r.status);return r.text();})
     .then(function(t){console.log('[DB Test] 응답:',t.substring(0,100));})
     .catch(function(e){console.log('[DB Test] 오류:',e.message);});
+  // 데이터 수신 전 로딩 표시 (빈 화면 노출 방지)
+  showSyncStatus('🔄 데이터 로딩 중...','#888');
   db_ref.on('value',function(snap){
     var val=snap.val();
     if(!val){
@@ -2539,16 +2541,13 @@ function initFirebase(){
       }
       return;
     }
-    if(val.D&&Array.isArray(val.D)){val.D.forEach(function(row,i){if(D[i]){
-      // 이름·기준실적·실적·인품 모두 동기화 (undefined 체크로 0도 정확히 반영)
-      if(row[5]) D[i][5]=row[5];
-      if(row[8]!==undefined) D[i][8]=row[8];
-      if(row[9]!==undefined) D[i][9]=row[9];
-      if(row[10]!==undefined) D[i][10]=row[10];
-      if(row[11]!==undefined) D[i][11]=row[11];
-      if(row[12]!==undefined) D[i][12]=row[12];
-      if(row[13]!==undefined) D[i][13]=row[13];
-    }});syncGroupsFromD();renderAll();renderGrpTable();}
+    if(val.D&&Array.isArray(val.D)){
+      // 완전 교체 (인덱스 병합 버그 방지 — 일괄 업로드 후 학생 수 변경에도 안전)
+      D.length=0;
+      val.D.forEach(function(row){D.push(row.slice());});
+      if(typeof COURSE_INITIAL_D!=='undefined'){COURSE_INITIAL_D.length=0;D.forEach(function(r){COURSE_INITIAL_D.push(r.slice());});}
+      syncGroupsFromD();renderAll();renderGrpTable();
+    }
     showSyncStatus('✅ 실시간 연동 '+new Date().toLocaleTimeString('ko-KR'),'#1a8a40');
   },function(err){var code=err&&(err.code||err.message)||'unknown';console.log('[Firebase] 연동 오류:',code,err);showSyncStatusWithRetry('❌ '+code,'#cc0000');});
 }
@@ -2557,14 +2556,14 @@ function pushToFirebase(){
   if(!fb_ready)return;
   _fbSaving=true;
   var saveData={D:D.map(function(row){return row.slice();}),updatedAt:new Date().toISOString()};
+  // localStorage 백업: Firebase 전송 전 즉시 저장 (동기)
+  try{localStorage.setItem('순천_data_backup_'+fbPath('master_순천_dashboard_v1'),JSON.stringify(saveData));}catch(e){}
   db_ref.set(saveData).then(function(){
     _fbSaving=false;
-    // Firebase 성공 시 localStorage에도 백업
-    try{localStorage.setItem('순천_data_backup_'+fbPath('master_순천_dashboard_v1'),JSON.stringify(saveData));}catch(e){}
     showSyncStatus('☁️ 저장완료 '+new Date().toLocaleTimeString('ko-KR'),'#1a8a40');
   }).catch(function(){
     _fbSaving=false;
-    showSyncStatus('❌ 저장실패','#cc0000');
+    showSyncStatus('❌ 저장실패(로컬백업 유지)','#cc0000');
   });
 }
 window.addEventListener('beforeunload',function(e){
@@ -2776,7 +2775,12 @@ function reloadFirebaseForCourse(){
       }
       return;
     }
-    if(val.D&&Array.isArray(val.D)){val.D.forEach(function(row,i){if(D[i]){if(row[5])D[i][5]=row[5];if(typeof row[8]==='number')D[i][8]=row[8];D[i][9]=row[9]||0;D[i][10]=row[10]||0;D[i][11]=typeof row[11]==='number'?row[11]:(D[i][9]-D[i][8]);D[i][12]=row[12]||0;D[i][13]=row[13]||0;}});syncGroupsFromD();renderAll();renderGrpTable();}
+    if(val.D&&Array.isArray(val.D)){
+      D.length=0;
+      val.D.forEach(function(row){D.push(row.slice());});
+      if(typeof COURSE_INITIAL_D!=='undefined'){COURSE_INITIAL_D.length=0;D.forEach(function(r){COURSE_INITIAL_D.push(r.slice());});}
+      syncGroupsFromD();renderAll();renderGrpTable();
+    }
     showSyncStatus('✅ Master '+(CURRENT_COURSE==='2'?'Ⅱ':'Ⅰ')+' 연동 '+new Date().toLocaleTimeString('ko-KR'),'#1a8a40');
   });
   // meta·award 리스너도 재바인딩 (과정 전환 시 award 리스너 재attach 필수)
