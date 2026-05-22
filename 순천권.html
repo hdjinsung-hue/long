@@ -358,7 +358,7 @@ body.theme-c2 .hd1{background:#7A2500!important;color:#fff;}
     <span id="todayLabel">2026년 5월</span><span>|</span>
     <span><span class="dot"></span> 전일마감 기준</span>
     <span id="syncStatus" style="font-size:10px;margin-left:6px;color:#888;">연결중...</span>
-    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.043</span>
+    <span style="font-size:9px;color:#666;margin-left:6px;background:#ffe066;color:#7a5000;padding:1px 5px;border-radius:6px;font-weight:700;">v1.044</span>
   </div>
   <div class="tab-nav">
     <button class="tb on" id="tb-home" onclick="goTab('home',this)">🏠 홈 대시보드</button>
@@ -2508,10 +2508,7 @@ function initFirebase(){
     if(window.location.protocol==='file:'){showSyncStatusWithRetry('⚠️ 파일(file://) 열람 — 브라우저 보안 가능','#cc4444');return;}
     showSyncStatusWithRetry('❌ SDK 로드 실패(광고차단/방화벽)','#cc4444');return;
   }
-  if(!firebase.apps.length){
-    firebase.initializeApp(FB_CFG);
-    try{firebase.database().setPersistenceEnabled(true);console.log('[Firebase] 오프라인 지속성 활성화');}catch(pe){console.log('[Firebase] persistence 설정 오류:',pe.message);}
-  }
+  if(!firebase.apps.length){firebase.initializeApp(FB_CFG);}
   try{db_ref=firebase.database().ref(fbPath('master_순천_dashboard_v1'));fb_ready=true;}catch(e){console.log('[Firebase] DB 초기화 오류:',e.message);showSyncStatusWithRetry('❌ DB 초기화 실패','#cc4444');return;}
   console.log('[Firebase] 연결 시도, FB_CFG:',FB_CFG.databaseURL);
   showSyncStatus('연결중...','#888');
@@ -2523,15 +2520,23 @@ function initFirebase(){
   db_ref.on('value',function(snap){
     var val=snap.val();
     if(!val){
-      // DB 비어 있으면 로컬 D 자동 초기 업로드
-      console.log('[Firebase] DB 비어 있음 - 로컬 데이터 자동 업로드');
-      showSyncStatus('🔄 초기 데이터 업로드 중...','#888');
-      db_ref.set({D:D.map(function(row){return row.slice();}),updatedAt:new Date().toISOString()}).then(function(){
-        console.log('[Firebase] 초기 업로드 완료');
-      }).catch(function(err){
-        console.log('[Firebase] 초기 업로드 실패:',err&&err.message);
-        showSyncStatus('❌ 초기 업로드 실패(권한 확인)','#cc0000');
-      });
+      // Firebase 데이터 없음 → 로컬 백업 복원 시도
+      var bk=null;
+      try{var bkStr=localStorage.getItem('순천_data_backup_'+fbPath('master_순천_dashboard_v1'));if(bkStr)bk=JSON.parse(bkStr);}catch(e){}
+      if(bk&&bk.D&&Array.isArray(bk.D)){
+        console.log('[Firebase] 로컬 백업 복원');
+        showSyncStatus('🔄 로컬 백업 복원 중...','#e09020');
+        bk.D.forEach(function(row,i){if(D[i]){if(row[5])D[i][5]=row[5];if(typeof row[8]==='number')D[i][8]=row[8];if(typeof row[9]==='number')D[i][9]=row[9];if(typeof row[10]==='number')D[i][10]=row[10];if(typeof row[11]==='number')D[i][11]=row[11];if(typeof row[12]==='number')D[i][12]=row[12];if(typeof row[13]==='number')D[i][13]=row[13];}});
+        syncGroupsFromD();renderAll();renderGrpTable();
+        // 복원 데이터를 Firebase에 재업로드
+        db_ref.set({D:D.map(function(row){return row.slice();}),updatedAt:new Date().toISOString()}).then(function(){
+          showSyncStatus('✅ 백업 복원 완료','#1a8a40');
+        }).catch(function(){showSyncStatus('⚠️ 백업 복원(Firebase 재업로드 실패)','#cc5500');});
+      } else {
+        console.log('[Firebase] 데이터 없음 - 새로 입력 필요');
+        showSyncStatus('📝 새 데이터를 입력 후 저장해주세요','#888');
+        renderAll();renderGrpTable();
+      }
       return;
     }
     if(val.D&&Array.isArray(val.D)){val.D.forEach(function(row,i){if(D[i]){
@@ -2551,8 +2556,11 @@ var _fbSaving=false;
 function pushToFirebase(){
   if(!fb_ready)return;
   _fbSaving=true;
-  db_ref.set({D:D.map(function(row){return row.slice();}),updatedAt:new Date().toISOString()}).then(function(){
+  var saveData={D:D.map(function(row){return row.slice();}),updatedAt:new Date().toISOString()};
+  db_ref.set(saveData).then(function(){
     _fbSaving=false;
+    // Firebase 성공 시 localStorage에도 백업
+    try{localStorage.setItem('순천_data_backup_'+fbPath('master_순천_dashboard_v1'),JSON.stringify(saveData));}catch(e){}
     showSyncStatus('☁️ 저장완료 '+new Date().toLocaleTimeString('ko-KR'),'#1a8a40');
   }).catch(function(){
     _fbSaving=false;
@@ -2757,10 +2765,15 @@ function reloadFirebaseForCourse(){
   db_ref.on('value',function(snap){
     var val=snap.val();
     if(!val){
-      // 새 과정 첫 진입 — 현재 D 자동 업로드
-      console.log('[Firebase] '+fbPath('master_순천_dashboard_v1')+' 비어있음, 초기 업로드');
-      db_ref.set({D:D.map(function(row){return row.slice();}),updatedAt:new Date().toISOString()});
-      renderAll();renderGrpTable();
+      var bk2=null;
+      try{var bkStr2=localStorage.getItem('순천_data_backup_'+fbPath('master_순천_dashboard_v1'));if(bkStr2)bk2=JSON.parse(bkStr2);}catch(e){}
+      if(bk2&&bk2.D&&Array.isArray(bk2.D)){
+        bk2.D.forEach(function(row,i){if(D[i]){if(row[5])D[i][5]=row[5];if(typeof row[8]==='number')D[i][8]=row[8];if(typeof row[9]==='number')D[i][9]=row[9];if(typeof row[10]==='number')D[i][10]=row[10];if(typeof row[11]==='number')D[i][11]=row[11];if(typeof row[12]==='number')D[i][12]=row[12];if(typeof row[13]==='number')D[i][13]=row[13];}});
+        syncGroupsFromD();renderAll();renderGrpTable();
+        db_ref.set({D:D.map(function(row){return row.slice();}),updatedAt:new Date().toISOString()});
+      } else {
+        renderAll();renderGrpTable();
+      }
       return;
     }
     if(val.D&&Array.isArray(val.D)){val.D.forEach(function(row,i){if(D[i]){if(row[5])D[i][5]=row[5];if(typeof row[8]==='number')D[i][8]=row[8];D[i][9]=row[9]||0;D[i][10]=row[10]||0;D[i][11]=typeof row[11]==='number'?row[11]:(D[i][9]-D[i][8]);D[i][12]=row[12]||0;D[i][13]=row[13]||0;}});syncGroupsFromD();renderAll();renderGrpTable();}
